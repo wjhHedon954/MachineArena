@@ -19,7 +19,11 @@ eureka:
     fetch-registry: true
     #入驻哪里
     service-url:
+<<<<<<< HEAD
       defaultZone: http://localhost:7001/eureka
+=======
+      defaultZone: http://eureka7001.com:7001/eureka
+>>>>>>> 7494be6633c6ea0e772db3f7e4bfcfa2f0c77e01
   instance:
     instance-id: commonAlgorithm10001
     prefer-ip-address: true
