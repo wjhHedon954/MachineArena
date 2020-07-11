@@ -55,5 +55,111 @@ public class Algorithm implements Serializable {
 
     private Integer algorithmPythonVersionId;
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
+    public Integer getAlgorithmId() {
+        return algorithmId;
+    }
+
+    public void setAlgorithmId(Integer algorithmId) {
+        this.algorithmId = algorithmId;
+    }
+
+    public String getAlgorithmName() {
+        return algorithmName;
+    }
+
+    public void setAlgorithmName(String algorithmName) {
+        this.algorithmName = algorithmName;
+    }
+
+    public Float getAlgorithmVersion() {
+        return algorithmVersion;
+    }
+
+    public void setAlgorithmVersion(Float algorithmVersion) {
+        this.algorithmVersion = algorithmVersion;
+    }
+
+    public Integer getAlgorithmTypeId() {
+        return algorithmTypeId;
+    }
+
+    public void setAlgorithmTypeId(Integer algorithmTypeId) {
+        this.algorithmTypeId = algorithmTypeId;
+    }
+
+    public Integer getAlgorithmEngineId() {
+        return algorithmEngineId;
+    }
+
+    public void setAlgorithmEngineId(Integer algorithmEngineId) {
+        this.algorithmEngineId = algorithmEngineId;
+    }
+
+    public Integer getAlgorithmDescriptionId() {
+        return algorithmDescriptionId;
+    }
+
+    public void setAlgorithmDescriptionId(Integer algorithmDescriptionId) {
+        this.algorithmDescriptionId = algorithmDescriptionId;
+    }
+
+    public Integer getAlgorithmInstanceTypeId() {
+        return algorithmInstanceTypeId;
+    }
+
+    public void setAlgorithmInstanceTypeId(Integer algorithmInstanceTypeId) {
+        this.algorithmInstanceTypeId = algorithmInstanceTypeId;
+    }
+
+    public String getAlgorithmInputReflect() {
+        return algorithmInputReflect;
+    }
+
+    public void setAlgorithmInputReflect(String algorithmInputReflect) {
+        this.algorithmInputReflect = algorithmInputReflect;
+    }
+
+    public String getAlgorithmOutputReflect() {
+        return algorithmOutputReflect;
+    }
+
+    public void setAlgorithmOutputReflect(String algorithmOutputReflect) {
+        this.algorithmOutputReflect = algorithmOutputReflect;
+    }
+
+    public String getAlgorithmStarterUrl() {
+        return algorithmStarterUrl;
+    }
+
+    public void setAlgorithmStarterUrl(String algorithmStarterUrl) {
+        this.algorithmStarterUrl = algorithmStarterUrl;
+    }
+
+    public String getAlgorithmSaveUrl() {
+        return algorithmSaveUrl;
+    }
+
+    public void setAlgorithmSaveUrl(String algorithmSaveUrl) {
+        this.algorithmSaveUrl = algorithmSaveUrl;
+    }
+
+    public Integer getAlgorithmAllowHyperPara() {
+        return algorithmAllowHyperPara;
+    }
+
+    public void setAlgorithmAllowHyperPara(Integer algorithmAllowHyperPara) {
+        this.algorithmAllowHyperPara = algorithmAllowHyperPara;
+    }
+
+    public Integer getAlgorithmPythonVersionId() {
+        return algorithmPythonVersionId;
+    }
+
+    public void setAlgorithmPythonVersionId(Integer algorithmPythonVersionId) {
+        this.algorithmPythonVersionId = algorithmPythonVersionId;
+    }
 }
