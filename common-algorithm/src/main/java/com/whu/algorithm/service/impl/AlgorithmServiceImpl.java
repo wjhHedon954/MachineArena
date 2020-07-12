@@ -3,9 +3,12 @@ package com.whu.algorithm.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.Algorithm;
 import com.mapper.AlgorithmMapper;
+import com.responsevo.AlgorithmResponseVo;
 import com.whu.algorithm.service.IAlgorithmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -61,5 +64,20 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     public Algorithm getAlgorithmById(Integer id) {
         Algorithm algorithm = algorithmMapper.selectById(id);
         return algorithm;
+    }
+
+    /**
+     * 分页查询算法，附带其他信息
+     * @author Jiahan Wang
+     * @create 2020-07-12 14:40
+     * @update 2020-07-12 14:40
+     * @param keyWord 关键字
+     */
+    @Override
+    public List<AlgorithmResponseVo> getAllFullAlgorithms(String keyWord) {
+        keyWord = "%"+keyWord+"%";
+        List<AlgorithmResponseVo> algorithmResponseVos = algorithmMapper.selectAllFullAlgorithms(keyWord);
+        return algorithmResponseVos;
+
     }
 }

@@ -2,6 +2,9 @@ package com.whu.algorithm.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.Algorithm;
+import com.responsevo.AlgorithmResponseVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -42,4 +45,13 @@ public interface IAlgorithmService extends IService<Algorithm> {
      * @return 删除条目数
      */
     Algorithm getAlgorithmById(Integer id);
+
+    /**
+     * 分页查询算法，附带其他信息
+     * @author Jiahan Wang
+     * @create 2020-07-12 14:40
+     * @update 2020-07-12 14:40
+     * @param  keyWord 关键字
+     */
+    List<AlgorithmResponseVo> getAllFullAlgorithms(String keyWord);
 }

@@ -12,6 +12,12 @@
     <artifactId>common-algorithm</artifactId>
 
     <dependencies>
+        <!--分页查询插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.11</version>
+        </dependency>
         <!--注入 common-utils -->
         <dependency>
             <groupId>com.whu</groupId>
