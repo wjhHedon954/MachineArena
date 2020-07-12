@@ -12,4 +12,11 @@
 
     <artifactId>commom-utils</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.3.8</version>
+        </dependency>
+    </dependencies>
 </project>

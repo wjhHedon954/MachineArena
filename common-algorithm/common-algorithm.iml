@@ -26,6 +26,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="commom-utils" />
+    <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.8" level="project" />
     <orderEntry type="module" module-name="commom-mapper" />
     <orderEntry type="module" module-name="common-pojo" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.16.18" level="project" />

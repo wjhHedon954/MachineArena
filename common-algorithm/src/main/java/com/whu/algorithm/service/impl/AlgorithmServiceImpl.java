@@ -5,6 +5,7 @@ import com.entity.Algorithm;
 import com.mapper.AlgorithmMapper;
 import com.responsevo.AlgorithmResponseVo;
 import com.whu.algorithm.service.IAlgorithmService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,21 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 
     @Autowired
     AlgorithmMapper algorithmMapper;
+
+    /**
+     * 接口 6.1.2 创建算法
+     * @author Huiri Tan
+     * @create 2020-07-12 10:00
+     * @updator Huiri Tan
+     * @update 2020-07-12 10:00
+     * @param algorithm 从前端获取data数据，根据数据创建算法对象
+     * @return  返回算法信息
+     */
+    @Override
+    public int addAlgorithm(Algorithm algorithm) {
+        int result = algorithmMapper.insert(algorithm);
+        return result;
+    }
 
     /**
      * 编辑算法
