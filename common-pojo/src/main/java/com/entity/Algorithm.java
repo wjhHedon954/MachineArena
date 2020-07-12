@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * <p>
@@ -19,6 +18,9 @@ import lombok.EqualsAndHashCode;
  * @since 2020-07-11
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @EqualsAndHashCode(callSuper = false)
 @TableName("tbl_algorithm")
 @ApiModel(value="Algorithm对象", description="")

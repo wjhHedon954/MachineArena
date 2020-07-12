@@ -1,11 +1,15 @@
 package com.whu.python_version.controller;
 
 
+import com.constants.ResultCode;
 import com.entity.AlgorithmType;
 import com.entity.PythonVersion;
 import com.mapper.PythonVersionMapper;
 import com.results.CommonResult;
+import com.whu.python_version.service.IPythonVersionService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,26 +32,31 @@ public class PythonVersionController {
     @Autowired
     private PythonVersionMapper pythonVersionMapper;
 
+    @Autowired
+    IPythonVersionService pythonVersionService;
+
     /**
-     * @Author Izumi Sakai
+     * 查询 Python 版本
+     * @author Yi Zheng
+     * @create 2020-07-11 21:01
+     * @updator Jiahan Wang
+     * @update 2020-07-12 09:12
      * @return 通用返回结果
      */
-    @RequestMapping(value = "/alogrithom/engines",method = RequestMethod.GET)
+    @ApiOperation(value = " 6.1.5 查询 Python 版本",httpMethod = "GET",notes = "")
+    @GetMapping(value = "/algorithm/pythonVersions")
     public CommonResult selectInstanceTypes(){
         //查询获得所有的engines
-        List<PythonVersion> pythonVersions = pythonVersionMapper.selectList(null);
+        List<PythonVersion> pythonVersions = pythonVersionService.getAllPythonVersions();
 
-        //查询到的List空返回错误信息
-        if(pythonVersions==null)
-            return new CommonResult("错误代码*****","查询的List为空");
+        //若为空
+        if( pythonVersions == null || pythonVersions.size() == 0)
+        {
+            return CommonResult.fail(ResultCode.NO_PYTHON_VERSION_DATA);
+        }
 
-        //无engines返回错误信息
-        if (pythonVersions.size()==0)
-            return new CommonResult("错误代码****","无engines");
+        //一切正常
+        return CommonResult.success().add("pythonVersions",pythonVersions);
 
-        //一切正常就往map中put进查询到的对象，返回正确信息
-        Map<String,Object> map=new HashMap<String,Object>();
-        map.put("engines",pythonVersions);
-        return new CommonResult("00000","查询成功",map);
     }
 }

@@ -13,4 +13,7 @@ import com.entity.AlgorithmDescription;
  */
 public interface AlgorithmDescriptionMapper extends BaseMapper<AlgorithmDescription> {
 
+
+
+
 }

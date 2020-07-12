@@ -1,5 +1,6 @@
 package com.whu;
 
+import com.mapper.AlgorithmTypeMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,9 @@ public class TestDruid {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    AlgorithmTypeMapper algorithmTypeMapper;
+
     @Test
     public void test() throws Exception{
         //class com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceWrapper
@@ -24,4 +28,6 @@ public class TestDruid {
         //com.mysql.cj.jdbc.ConnectionImpl@d9f5fce
         System.out.println(dataSource.getConnection());
     }
+
+
 }

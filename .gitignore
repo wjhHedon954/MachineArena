@@ -33,3 +33,10 @@ build/
 .vscode/
 
 generatorConfig.xml
+将删除 .gitignore
+将删除 common-codegenerator/src/test/
+将删除 common-mapper/src/test/
+将删除 common-pojo/src/main/resources/
+将删除 common-pojo/src/test/
+将删除 common-utils/src/
+将删除 eureka-service/src/test/
