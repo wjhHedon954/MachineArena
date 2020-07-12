@@ -14,6 +14,17 @@ import com.entity.Algorithm;
 public interface IAlgorithmService extends IService<Algorithm> {
 
     /**
+     * 接口 6.1.2 创建算法
+     * @author Huiri Tan
+     * @create 2020-07-11 20:00
+     * @updator Huiri Tan
+     * @update 2020-07-12 10:30
+     * @param algorithm 从前端获取data数据，根据数据创建算法对象
+     * @return  返回算法信息
+     */
+    int addAlgorithm(Algorithm algorithm);
+
+    /**
      * 编辑算法
      * @author Jiahan Wang
      * @create 2020-07-12 08:23

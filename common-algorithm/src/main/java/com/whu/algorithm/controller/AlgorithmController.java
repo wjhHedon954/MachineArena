@@ -1,8 +1,13 @@
 package com.whu.algorithm.controller;
 
 
+import cn.hutool.http.server.HttpServerRequest;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.constants.ResultCode;
 import com.entity.Algorithm;
+import com.entity.HyperParameters;
 import com.mapper.AlgorithmMapper;
 import com.results.CommonResult;
 import com.whu.algorithm.service.IAlgorithmService;
@@ -11,8 +16,15 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +42,83 @@ public class AlgorithmController {
     IAlgorithmService algorithmService;
 
     /**
+     * 接口 6.1.2 创建算法
+     * @author Huiri Tan
+     * @create 2020-07-11 20:00
+     * @updator Huiri Tan
+     * @update 2020-07-12 10:30
+     * @param algorithm 从前端获取data数据，根据数据创建算法对象
+     * @return  返回算法信息
+     */
+    @ApiOperation(value = "接口6.1.2", httpMethod = "POST", notes = "创建算法")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "data", value = "算法创建信息")
+    })
+    @PostMapping(value = "/algorithm")
+    public CommonResult addAlgorithm(HttpServletRequest request) {
+        Algorithm algorithm = new Algorithm(); // 要创建的算法对象
+        MultipartHttpServletRequest params =  (MultipartHttpServletRequest)request;
+        List<MultipartFile> files  =  ((MultipartHttpServletRequest)request).getFiles("myfile");
+
+        // 从传入的数据中获取data并转换为JSONObject 顺便获取超参数
+        JSONObject data = null;
+        JSONArray hyperParameters = null;
+        try {
+            JSONObject tmp = new JSONObject(params.getParameter("data"));
+            data = (JSONObject)tmp.get("data");
+            hyperParameters = JSONUtil.parseArray(data.get("hyperparameters"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        algorithm.setAlgorithmName(data.get("name").toString());
+        algorithm.setAlgorithmVersion((float) 0.1);
+        algorithm.setAlgorithmTypeId(0);                        // 接口缺陷，下一版本改进
+        algorithm.setAlgorithmEngineId(0);
+        algorithm.setAlgorithmDescriptionId(0);                  // 外键 先全部设为0
+        algorithm.setAlgorithmInstanceTypeId(0);                 // 外键
+        algorithm.setAlgorithmInputReflect(data.get("inputreflect").toString());
+        algorithm.setAlgorithmOutputReflect(data.get("outputreflect").toString());
+        algorithm.setAlgorithmStarterUrl(data.get("bootfile").toString());
+        algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
+        algorithm.setAlgorithmAllowHyperPara((data.get("customize").toString().equals("true")) ? 1 : 0);
+        algorithm.setAlgorithmPythonVersionId(0);                // 外键
+
+        int addResult = algorithmService.addAlgorithm(algorithm);
+
+        // 循环保存文件
+        for (MultipartFile file : files) {
+            String originName = file.getOriginalFilename();
+            String fileName = originName;
+            String originPath = "";
+            if (originName == null) {
+                return CommonResult.fail(ResultCode.ERROR); // 文件名为空暂时返回未知错误;
+            }
+            if(originName.contains("/")) {
+                fileName = originName.substring(originName.lastIndexOf('/'));
+                originPath = originName.substring(0, originName.lastIndexOf('/'));
+            }
+
+            String filePath = "/Users/thomas/Desktop/Data/" + originPath;
+            File newFile = new File(filePath);
+            if(!newFile.exists()) {
+                newFile.mkdirs();
+            }
+            try {
+                file.transferTo(new File(newFile + "/" + fileName));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        return CommonResult.success();
+    }
+
+
+    /**
      * 接口 6.1.7 编辑算法
      * @author Yi Zheng
      * @create 2020-07-11 20:00
@@ -38,7 +127,7 @@ public class AlgorithmController {
      * @param algorithm 从前端获取得到一个完整的被用户编辑后的对象
      * @return  返回这个被编辑的对象，不一定有用，如果前端需要可以查看里面的数据
      */
-    @ApiOperation(value = "接口6.1.7",httpMethod = "PUT",notes = "更新算法信息")
+    @ApiOperation(value = "接口6.1.7", httpMethod = "PUT", notes = "更新算法信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "algorithm",value = "算法对象",paramType = "body",dataType = "Algorithm",required = true)
     })
