@@ -16,6 +16,7 @@ import com.mapper.AlgorithmMapper;
 import com.results.CommonResult;
 import com.whu.algorithm.service.IAlgorithmService;
 import com.whu.algorithm_description.service.IAlgorithmDescriptionService;
+import com.whu.hyper_parameters.service.IHyperParametersService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -51,6 +52,8 @@ public class AlgorithmController {
 
     @Autowired
     IAlgorithmDescriptionService algorithmDescriptionService;
+    @Autowired
+    IHyperParametersService hyperParametersService;
 
     /**
      * 接口 6.1.2 创建算法
@@ -84,7 +87,7 @@ public class AlgorithmController {
         }
 
         assert data != null;
-
+        // 首先保存算法描述
         AlgorithmDescription algorithmDescription = new AlgorithmDescription();
         algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
         algorithmDescriptionService.addDescription(algorithmDescription);
@@ -102,7 +105,24 @@ public class AlgorithmController {
         algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
         algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
 
+        // 保存算法
         int addResult = algorithmService.addAlgorithm(algorithm);
+
+        // 若有超参数则保存
+        if(hyperParameters != null) {
+            for(int i = 0; i < hyperParameters.size(); i++) {
+                HyperParameters hyperParameter = new HyperParameters();
+                hyperParameter.setHyperParaName(hyperParameters.getJSONObject(i).get("hyper_para_name").toString());
+                hyperParameter.setHyperParaDescription(hyperParameters.getJSONObject(i).get("hyper_para_description").toString());
+                hyperParameter.setHyperParaType((int)hyperParameters.getJSONObject(i).get("hyper_para_type"));
+                hyperParameter.setHyperParaAllowAdjust((boolean)hyperParameters.getJSONObject(i).get("hyper_para_allow_adjust"));
+                hyperParameter.setHyperParaRange(hyperParameters.getJSONObject(i).get("hyper_para_range").toString());
+                hyperParameter.setHyperParaDefaultValue(hyperParameters.getJSONObject(i).get("hyper_para_default_value").toString());
+                hyperParameter.setHyperParaIsNeeded((boolean)hyperParameters.getJSONObject(i).get("hyper_para_is_needed"));
+                hyperParameter.setAlgorithmId(algorithm.getAlgorithmId());
+                hyperParametersService.addHyperParameter(hyperParameter);
+            }
+        }
 
         // 循环保存文件
         for (MultipartFile file : files) {

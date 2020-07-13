@@ -22,7 +22,7 @@ public class AlgorithmDescriptionServiceImpl extends ServiceImpl<AlgorithmDescri
 
     /**
      * @author Huiri Tan
-     * @description TODO 向表中插入算法描述
+     * @description 向表中插入算法描述
      * @create 2020/7/13 11:36 下午
      * @update 2020/7/13 11:36 下午
      * @param [description]
