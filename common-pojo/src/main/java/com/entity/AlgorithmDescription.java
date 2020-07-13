@@ -32,5 +32,13 @@ public class AlgorithmDescription implements Serializable {
 
     private String algorithmDescriptionContent;
 
+    public int getAlgorithmDescriptionId() {
+        return this.algorithmDescriptionId;
+    }
+
+    public void setAlgorithmDescriptionContent(String content) {
+        this.algorithmDescriptionContent = content;
+    }
+
 
 }

@@ -33,7 +33,7 @@ public class Algorithm implements Serializable {
 
     private String algorithmName;
 
-    private Float algorithmVersion;
+    private String algorithmVersion;
 
     private Integer algorithmTypeId;
 
@@ -53,7 +53,7 @@ public class Algorithm implements Serializable {
     @TableField("algorithm_save_URL")
     private String algorithmSaveUrl;
 
-    private Integer algorithmAllowHyperPara;
+    private Boolean algorithmCustomizeHyperPara;
 
     private Integer algorithmPythonVersionId;
 
@@ -77,11 +77,11 @@ public class Algorithm implements Serializable {
         this.algorithmName = algorithmName;
     }
 
-    public Float getAlgorithmVersion() {
+    public String getAlgorithmVersion() {
         return algorithmVersion;
     }
 
-    public void setAlgorithmVersion(Float algorithmVersion) {
+    public void setAlgorithmVersion(String algorithmVersion) {
         this.algorithmVersion = algorithmVersion;
     }
 
@@ -149,12 +149,12 @@ public class Algorithm implements Serializable {
         this.algorithmSaveUrl = algorithmSaveUrl;
     }
 
-    public Integer getAlgorithmAllowHyperPara() {
-        return algorithmAllowHyperPara;
+    public Boolean getAlgorithmCustomizeHyperPara() {
+        return algorithmCustomizeHyperPara;
     }
 
-    public void setAlgorithmAllowHyperPara(Integer algorithmAllowHyperPara) {
-        this.algorithmAllowHyperPara = algorithmAllowHyperPara;
+    public void setAlgorithmCustomizeHyperPara(Boolean algorithmCustomizeHyperPara) {
+        this.algorithmCustomizeHyperPara = algorithmCustomizeHyperPara;
     }
 
     public Integer getAlgorithmPythonVersionId() {

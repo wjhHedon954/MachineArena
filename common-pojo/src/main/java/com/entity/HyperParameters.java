@@ -42,7 +42,7 @@ public class HyperParameters implements Serializable {
 
     private String hyperParaDefaultValue;
 
-    private Integer hyperParaIsNeeded;
+    private Boolean hyperParaIsNeeded;
 
     private Integer algorithmId;
 

@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.constants.ResultCode;
 import com.entity.Algorithm;
+import com.entity.AlgorithmDescription;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.responsevo.AlgorithmResponseVo;
@@ -14,6 +15,7 @@ import com.entity.HyperParameters;
 import com.mapper.AlgorithmMapper;
 import com.results.CommonResult;
 import com.whu.algorithm.service.IAlgorithmService;
+import com.whu.algorithm_description.service.IAlgorithmDescriptionService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -47,13 +49,16 @@ public class AlgorithmController {
     @Autowired
     IAlgorithmService algorithmService;
 
+    @Autowired
+    IAlgorithmDescriptionService algorithmDescriptionService;
+
     /**
      * 接口 6.1.2 创建算法
      * @author Huiri Tan
      * @create 2020-07-11 20:00
      * @updator Huiri Tan
      * @update 2020-07-12 10:30
-     * @param algorithm 从前端获取data数据，根据数据创建算法对象
+     * @param request 从前端获取data数据，根据数据创建算法对象
      * @return  返回算法信息
      */
     @ApiOperation(value = "接口6.1.2", httpMethod = "POST", notes = "创建算法")
@@ -78,18 +83,24 @@ public class AlgorithmController {
             e.printStackTrace();
         }
 
-        algorithm.setAlgorithmName(data.get("name").toString());
-        algorithm.setAlgorithmVersion((float) 0.1);
-        algorithm.setAlgorithmTypeId(0);                        // 接口缺陷，下一版本改进
-        algorithm.setAlgorithmEngineId(0);
-        algorithm.setAlgorithmDescriptionId(0);                  // 外键 先全部设为0
-        algorithm.setAlgorithmInstanceTypeId(0);                 // 外键
-        algorithm.setAlgorithmInputReflect(data.get("inputreflect").toString());
-        algorithm.setAlgorithmOutputReflect(data.get("outputreflect").toString());
-        algorithm.setAlgorithmStarterUrl(data.get("bootfile").toString());
+        assert data != null;
+
+        AlgorithmDescription algorithmDescription = new AlgorithmDescription();
+        algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
+        algorithmDescriptionService.addDescription(algorithmDescription);
+
+        algorithm.setAlgorithmName(data.get("algorithm_name").toString());
+        algorithm.setAlgorithmVersion(data.get("algorithm_version").toString());
+        algorithm.setAlgorithmTypeId((int)data.get("algorithm_type_id"));
+        algorithm.setAlgorithmEngineId((int)data.get("algorithm_engine_id"));
+        algorithm.setAlgorithmDescriptionId(algorithmDescription.getAlgorithmDescriptionId());
+        algorithm.setAlgorithmInstanceTypeId((int)data.get("algorithm_instance_type_id"));
+        algorithm.setAlgorithmInputReflect(data.get("algorithm_input_reflect").toString());
+        algorithm.setAlgorithmOutputReflect(data.get("algorithm_output_reflect").toString());
+        algorithm.setAlgorithmStarterUrl(data.get("algorithm_starter_URL").toString());
         algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
-        algorithm.setAlgorithmAllowHyperPara((data.get("customize").toString().equals("true")) ? 1 : 0);
-        algorithm.setAlgorithmPythonVersionId(0);                // 外键
+        algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
+        algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
 
         int addResult = algorithmService.addAlgorithm(algorithm);
 
@@ -120,7 +131,7 @@ public class AlgorithmController {
         }
 
 
-        return CommonResult.success();
+        return CommonResult.success().add("algorithm id: ", algorithm.getAlgorithmId().toString());
     }
 
 
