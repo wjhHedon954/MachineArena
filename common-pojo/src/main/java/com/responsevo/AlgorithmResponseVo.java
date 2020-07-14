@@ -30,7 +30,7 @@ public class AlgorithmResponseVo {
 
     private String algorithmName;
 
-    private Float algorithmVersion;
+    private String algorithmVersion;
 
     //联合 Type
     private Integer algorithmTypeId;
@@ -55,7 +55,7 @@ public class AlgorithmResponseVo {
 
     private String algorithmSaveUrl;
 
-    private Integer algorithmAllowHyperPara;
+    private Integer algorithmCustomizeHyperPara;
 
     //联合 PythonVersion
     private Integer algorithmPythonVersionId;

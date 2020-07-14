@@ -5,7 +5,7 @@
     <resultMap id="FullResultMap" type="com.responsevo.AlgorithmResponseVo">
         <id column="algorithm_id" jdbcType="INTEGER" property="algorithmId" />
         <result column="algorithm_name" jdbcType="VARCHAR" property="algorithmName" />
-        <result column="algorithm_version" jdbcType="REAL" property="algorithmVersion" />
+        <result column="algorithm_version" jdbcType="VARCHAR" property="algorithmVersion" />
         <result column="algorithm_type_id" jdbcType="INTEGER" property="algorithmTypeId" />
         <result column="algorithm_engine_id" jdbcType="INTEGER" property="algorithmEngineId" />
         <result column="algorithm_description_id" jdbcType="INTEGER" property="algorithmDescriptionId" />
@@ -14,7 +14,7 @@
         <result column="algorithm_output_reflect" jdbcType="VARCHAR" property="algorithmOutputReflect" />
         <result column="algorithm_starter_URL" jdbcType="VARCHAR" property="algorithmStarterUrl" />
         <result column="algorithm_save_URL" jdbcType="VARCHAR" property="algorithmSaveUrl" />
-        <result column="algorithm_allow_hyper_para" jdbcType="TINYINT" property="algorithmAllowHyperPara" />
+        <result column="al.algorithm_customize_hyper_para" jdbcType="TINYINT" property="algorithmCustomizeHyperPara" />
         <result column="algorithm_python_version_id" jdbcType="INTEGER" property="algorithmPythonVersionId" />
         <!--联合 Algorithm Type-->
         <association property="algorithmType" javaType="com.entity.AlgorithmType">
@@ -67,7 +67,7 @@
         LEFT JOIN tbl_algorithm_type alt  ON al.algorithm_type_id = alt.algorithm_type_id
         LEFT JOIN tbl_ai_engine en ON al.algorithm_engine_id = en.algorithm_engine_id
         LEFT JOIN tbl_python_version pyv ON al.algorithm_python_version_id = pyv.python_version_id
-        WHERE al.algorithm_name like #{0}
+        WHERE al.algorithm_name like '%${value}%'
     </select>
 
 
