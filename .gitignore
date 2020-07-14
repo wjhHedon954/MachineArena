@@ -153,7 +153,7 @@ rel/example_project
 .rebar
 
 ### Maven template
-target/
+/target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
