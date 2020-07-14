@@ -7,9 +7,11 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.constants.ResultCode;
 import com.entity.Algorithm;
+import com.entity.AlgorithmAudit;
 import com.entity.AlgorithmDescription;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.oracle.tools.packager.Log;
 import com.responsevo.AlgorithmResponseVo;
 import com.entity.HyperParameters;
 import com.mapper.AlgorithmMapper;
@@ -61,7 +63,7 @@ public class AlgorithmController {
      * @create 2020-07-11 20:00
      * @updator Huiri Tan
      * @update 2020-07-12 10:30
-     * @param request 从前端获取data数据，根据数据创建算法对象
+     * @param algorithm 从前端获取data数据，根据数据创建算法对象
      * @return  返回算法信息
      */
     @ApiOperation(value = "接口6.1.2", httpMethod = "POST", notes = "创建算法")
@@ -69,87 +71,9 @@ public class AlgorithmController {
             @ApiImplicitParam(name = "data", value = "算法创建信息")
     })
     @PostMapping(value = "/algorithm")
-    public CommonResult addAlgorithm(HttpServletRequest request) {
-        Algorithm algorithm = new Algorithm(); // 要创建的算法对象
-        MultipartHttpServletRequest params =  (MultipartHttpServletRequest)request;
-        List<MultipartFile> files  =  ((MultipartHttpServletRequest)request).getFiles("myfile");
+    public CommonResult addAlgorithm(@RequestBody Algorithm algorithm) {
 
-        // 从传入的数据中获取data并转换为JSONObject 顺便获取超参数
-        JSONObject data = null;
-        JSONArray hyperParameters = null;
-        try {
-            JSONObject tmp = new JSONObject(params.getParameter("data"));
-            data = (JSONObject)tmp.get("data");
-            hyperParameters = JSONUtil.parseArray(data.get("hyperparameters"));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        assert data != null;
-        // 首先保存算法描述
-        AlgorithmDescription algorithmDescription = new AlgorithmDescription();
-        algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
-        algorithmDescriptionService.addDescription(algorithmDescription);
-
-        algorithm.setAlgorithmName(data.get("algorithm_name").toString());
-        algorithm.setAlgorithmVersion(data.get("algorithm_version").toString());
-        algorithm.setAlgorithmTypeId((int)data.get("algorithm_type_id"));
-        algorithm.setAlgorithmEngineId((int)data.get("algorithm_engine_id"));
-        algorithm.setAlgorithmDescriptionId(algorithmDescription.getAlgorithmDescriptionId());
-        algorithm.setAlgorithmInstanceTypeId((int)data.get("algorithm_instance_type_id"));
-        algorithm.setAlgorithmInputReflect(data.get("algorithm_input_reflect").toString());
-        algorithm.setAlgorithmOutputReflect(data.get("algorithm_output_reflect").toString());
-        algorithm.setAlgorithmStarterUrl(data.get("algorithm_starter_URL").toString());
-        algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
-        algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
-        algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
-
-        // 保存算法
-        int addResult = algorithmService.addAlgorithm(algorithm);
-
-        // 若有超参数则保存
-        if(hyperParameters != null) {
-            for(int i = 0; i < hyperParameters.size(); i++) {
-                HyperParameters hyperParameter = new HyperParameters();
-                hyperParameter.setHyperParaName(hyperParameters.getJSONObject(i).get("hyper_para_name").toString());
-                hyperParameter.setHyperParaDescription(hyperParameters.getJSONObject(i).get("hyper_para_description").toString());
-                hyperParameter.setHyperParaType((int)hyperParameters.getJSONObject(i).get("hyper_para_type"));
-                hyperParameter.setHyperParaAllowAdjust((boolean)hyperParameters.getJSONObject(i).get("hyper_para_allow_adjust"));
-                hyperParameter.setHyperParaRange(hyperParameters.getJSONObject(i).get("hyper_para_range").toString());
-                hyperParameter.setHyperParaDefaultValue(hyperParameters.getJSONObject(i).get("hyper_para_default_value").toString());
-                hyperParameter.setHyperParaIsNeeded((boolean)hyperParameters.getJSONObject(i).get("hyper_para_is_needed"));
-                hyperParameter.setAlgorithmId(algorithm.getAlgorithmId());
-                hyperParametersService.addHyperParameter(hyperParameter);
-            }
-        }
-
-        // 循环保存文件
-        for (MultipartFile file : files) {
-            String originName = file.getOriginalFilename();
-            String fileName = originName;
-            String originPath = "";
-            if (originName == null) {
-                return CommonResult.fail(ResultCode.ERROR); // 文件名为空暂时返回未知错误;
-            }
-            if(originName.contains("/")) {
-                fileName = originName.substring(originName.lastIndexOf('/'));
-                originPath = originName.substring(0, originName.lastIndexOf('/'));
-            }
-
-            String filePath = "/Users/thomas/Desktop/Data/" + originPath;
-            File newFile = new File(filePath);
-            if(!newFile.exists()) {
-                newFile.mkdirs();
-            }
-            try {
-                file.transferTo(new File(newFile + "/" + fileName));
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+        algorithmService.addAlgorithm(algorithm);
 
         return CommonResult.success().add("algorithm id: ", algorithm.getAlgorithmId().toString());
     }

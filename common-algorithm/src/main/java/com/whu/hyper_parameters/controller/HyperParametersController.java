@@ -1,9 +1,10 @@
 package com.whu.hyper_parameters.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.entity.HyperParameters;
+import com.whu.hyper_parameters.service.IHyperParametersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -14,7 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-07-11
  */
 @RestController
-@RequestMapping("/hyper-parameters/hyper-parameters")
 public class HyperParametersController {
+    @Autowired
+    IHyperParametersService hyperParametersService;
 
+    @PostMapping("/algorithm/hyper-parameters")
+    public HyperParameters addHyperParameters(@RequestBody HyperParameters hyperParameters) {
+        hyperParametersService.addHyperParameter(hyperParameters);
+        return hyperParameters;
+    }
 }

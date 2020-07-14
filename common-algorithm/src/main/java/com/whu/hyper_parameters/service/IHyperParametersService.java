@@ -20,5 +20,5 @@ public interface IHyperParametersService extends IService<HyperParameters> {
      * @param [hyperParameter]
      * @return int
      **/
-    public int addHyperParameter(HyperParameters hyperParameter);
+    int addHyperParameter(HyperParameters hyperParameter);
 }

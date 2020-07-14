@@ -1,14 +1,25 @@
 package com.whu.controller;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.constants.ResultCode;
 import com.entity.Algorithm;
+import com.entity.AlgorithmDescription;
 import com.entity.AlgorithmUser;
+import com.entity.HyperParameters;
 import com.results.CommonResult;
 import com.whu.service.AlgorithmFeignService;
+import feign.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Hedon Wang
@@ -37,4 +48,104 @@ public class AlgorithmController {
 
         return algorithmFeignService.selectAllAlgorithms(pageNum,pageSize,keyWord);
     }
+
+    /**
+     * @author Huiri Tan
+     * @description 创建算法
+     * @create 2020/7/14 5:01 下午
+     * @update 2020/7/14 5:01 下午
+     * @param [request]
+     * @return com.results.CommonResult
+     **/
+    @PostMapping("/algorithm")
+    public CommonResult addAlgorithm(HttpServletRequest request) {
+        Algorithm algorithm = new Algorithm(); // 要创建的算法对象
+        MultipartHttpServletRequest params =  (MultipartHttpServletRequest)request;
+        List<MultipartFile> files  =  ((MultipartHttpServletRequest)request).getFiles("myfile");
+
+        // 从传入的数据中获取data并转换为JSONObject 顺便获取超参数
+        JSONObject data = null;
+        JSONArray hyperParameters = null;
+        try {
+            JSONObject tmp = new JSONObject(params.getParameter("data"));
+            data = (JSONObject)tmp.get("data");
+            hyperParameters = JSONUtil.parseArray(data.get("hyperparameters"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assert data != null;
+        // 首先保存算法描述
+        AlgorithmDescription algorithmDescription = new AlgorithmDescription();
+        algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
+        try{
+            algorithmFeignService.addDescription(algorithmDescription);    // 添加算法描述
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        algorithm.setAlgorithmName(data.get("algorithm_name").toString());
+        algorithm.setAlgorithmVersion(data.get("algorithm_version").toString());
+        algorithm.setAlgorithmTypeId((int)data.get("algorithm_type_id"));
+        algorithm.setAlgorithmEngineId((int)data.get("algorithm_engine_id"));
+        algorithm.setAlgorithmDescriptionId(algorithmDescription.getAlgorithmDescriptionId());
+        algorithm.setAlgorithmInstanceTypeId((int)data.get("algorithm_instance_type_id"));
+        algorithm.setAlgorithmInputReflect(data.get("algorithm_input_reflect").toString());
+        algorithm.setAlgorithmOutputReflect(data.get("algorithm_output_reflect").toString());
+        algorithm.setAlgorithmStarterUrl(data.get("algorithm_starter_URL").toString());
+        algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
+        algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
+        algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
+
+        // 保存算法
+        CommonResult addResult = algorithmFeignService.addAlgorithm(algorithm); //添加算法
+
+        // 若有超参数则保存
+        if(hyperParameters != null) {
+            for(int i = 0; i < hyperParameters.size(); i++) {
+                HyperParameters hyperParameter = new HyperParameters();
+                hyperParameter.setHyperParaName(hyperParameters.getJSONObject(i).get("hyper_para_name").toString());
+                hyperParameter.setHyperParaDescription(hyperParameters.getJSONObject(i).get("hyper_para_description").toString());
+                hyperParameter.setHyperParaType((int)hyperParameters.getJSONObject(i).get("hyper_para_type"));
+                hyperParameter.setHyperParaAllowAdjust((boolean)hyperParameters.getJSONObject(i).get("hyper_para_allow_adjust"));
+                hyperParameter.setHyperParaRange(hyperParameters.getJSONObject(i).get("hyper_para_range").toString());
+                hyperParameter.setHyperParaDefaultValue(hyperParameters.getJSONObject(i).get("hyper_para_default_value").toString());
+                hyperParameter.setHyperParaIsNeeded((boolean)hyperParameters.getJSONObject(i).get("hyper_para_is_needed"));
+                hyperParameter.setAlgorithmId(algorithm.getAlgorithmId());
+                algorithmFeignService.addHyperParameters(hyperParameter);
+            }
+        }
+
+        // 循环保存文件
+        for (MultipartFile file : files) {
+            String originName = file.getOriginalFilename();
+            String fileName = originName;
+            String originPath = "";
+            if (originName == null) {
+                return CommonResult.fail(ResultCode.ERROR); // 文件名为空暂时返回未知错误;
+            }
+            if(originName.contains("/")) {
+                fileName = originName.substring(originName.lastIndexOf('/'));
+                originPath = originName.substring(0, originName.lastIndexOf('/'));
+            }
+
+            String filePath = "/Users/thomas/Desktop/Data/" + originPath;
+            File newFile = new File(filePath);
+            if(!newFile.exists()) {
+                newFile.mkdirs();
+            }
+            try {
+                file.transferTo(new File(newFile + "/" + fileName));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return addResult;
+    }
+
 }

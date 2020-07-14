@@ -42,6 +42,8 @@ public class FeignConfig {
         GateWayMappingJackson2HttpMessageConverter(){
             List<MediaType> mediaTypes = new ArrayList<>();
             mediaTypes.add(MediaType.valueOf(MediaType.TEXT_HTML_VALUE + ";charset=UTF-8"));
+            mediaTypes.add(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
+            mediaTypes.add(MediaType.valueOf(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
             setSupportedMediaTypes(mediaTypes);
         }
     }
