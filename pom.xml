@@ -14,6 +14,7 @@
         <module>eureka-service</module>
         <module>common-utils</module>
         <module>common-algorithm</module>
+        <module>backstage-algorithm</module>
     </modules>
     <packaging>pom</packaging>
 

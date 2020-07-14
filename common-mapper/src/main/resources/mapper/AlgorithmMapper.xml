@@ -39,7 +39,7 @@
     <!--算法-->
         al.algorithm_id, al.algorithm_name, al.algorithm_version, al.algorithm_type_id, al.algorithm_engine_id,
         al.algorithm_description_id, al.algorithm_instance_type_id, al.algorithm_input_reflect, al.algorithm_output_reflect,
-        al.algorithm_starter_URL, al.algorithm_save_URL, al.algorithm_allow_hyper_para, al.algorithm_python_version_id,
+        al.algorithm_starter_URL, al.algorithm_save_URL, al.algorithm_customize_hyper_para, al.algorithm_python_version_id,
     <!--算法类型-->
         alt.algorithm_type_id, alt.algorithm_type_name, alt.algorithm_type_description,
     <!--AI Enigne-->
