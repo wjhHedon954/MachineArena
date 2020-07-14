@@ -22,6 +22,7 @@ public class AlgorithmDescriptionController {
 
     @PostMapping("/algorithm/description")
     public AlgorithmDescription addDescription (@RequestBody AlgorithmDescription description) {
+        System.out.println("description in controller: \n" + description.toString());
         algorithmDescriptionService.addDescription(description);
         return description;
     }

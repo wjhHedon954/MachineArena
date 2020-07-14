@@ -30,12 +30,13 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
      * @author Huiri Tan
      * @create 2020-07-12 10:00
      * @updator Huiri Tan
-     * @update 2020-07-12 10:00
+     * @update 2020-07-15 1:00
      * @param algorithm 从前端获取data数据，根据数据创建算法对象
      * @return  返回算法信息
      */
     @Override
     public int addAlgorithm(Algorithm algorithm) {
+        algorithm.setAlgorithmId(-1);   // 添加之前置为null
         int result = algorithmMapper.insert(algorithm);
         return result;
     }

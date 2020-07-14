@@ -24,12 +24,13 @@ public class HyperParametersServiceImpl extends ServiceImpl<HyperParametersMappe
      * @author Huiri Tan
      * @description 向表中插入参数
      * @create 2020/7/14 1:08 上午
-     * @update 2020/7/14 1:08 上午
+     * @update 2020/7/15 1:08 上午
      * @param [hyperParameter]
      * @return int
      **/
     @Override
     public int addHyperParameter(HyperParameters hyperParameter) {
+        hyperParameter.setHyperParaId(-1);      // 添加之前置为null
         return hyperParametersMapper.insert(hyperParameter);
     }
 }

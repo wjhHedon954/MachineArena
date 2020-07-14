@@ -24,12 +24,13 @@ public class AlgorithmDescriptionServiceImpl extends ServiceImpl<AlgorithmDescri
      * @author Huiri Tan
      * @description 向表中插入算法描述
      * @create 2020/7/13 11:36 下午
-     * @update 2020/7/13 11:36 下午
-     * @param [description]
+     * @update 2020/7/15 1:36 上午
+     * @param description
      * @return int 返回受影响的行数
      **/
     @Override
     public int addDescription(AlgorithmDescription description) {
+        description.setAlgorithmDescriptionId(-1);      // 添加之前置为null
         return descriptionMapper.insert(description);
     }
 }

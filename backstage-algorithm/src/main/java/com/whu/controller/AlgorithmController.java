@@ -53,7 +53,7 @@ public class AlgorithmController {
      * @author Huiri Tan
      * @description 创建算法
      * @create 2020/7/14 5:01 下午
-     * @update 2020/7/14 5:01 下午
+     * @update 2020/7/15 1:50 上午
      * @param [request]
      * @return com.results.CommonResult
      **/
@@ -79,8 +79,9 @@ public class AlgorithmController {
         // 首先保存算法描述
         AlgorithmDescription algorithmDescription = new AlgorithmDescription();
         algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
+        algorithmDescription.setAlgorithmDescriptionId(0);  // 给ID丢个值，不然请求转发的时候报错
         try{
-            algorithmFeignService.addDescription(algorithmDescription);    // 添加算法描述
+            algorithmDescription = algorithmFeignService.addDescription(algorithmDescription);    // 添加算法描述
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -99,9 +100,10 @@ public class AlgorithmController {
         algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
         algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
         algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
+        algorithm.setAlgorithmId(0);    // 丢个数给ID 免得转发会报错
 
         // 保存算法
-        CommonResult addResult = algorithmFeignService.addAlgorithm(algorithm); //添加算法
+        algorithm = algorithmFeignService.addAlgorithm(algorithm); //添加算法
 
         // 若有超参数则保存
         if(hyperParameters != null) {
@@ -115,6 +117,7 @@ public class AlgorithmController {
                 hyperParameter.setHyperParaDefaultValue(hyperParameters.getJSONObject(i).get("hyper_para_default_value").toString());
                 hyperParameter.setHyperParaIsNeeded((boolean)hyperParameters.getJSONObject(i).get("hyper_para_is_needed"));
                 hyperParameter.setAlgorithmId(algorithm.getAlgorithmId());
+                hyperParameter.setHyperParaId(0);       // 丢个数给ID 免得转发会报错
                 algorithmFeignService.addHyperParameters(hyperParameter);
             }
         }
@@ -145,7 +148,7 @@ public class AlgorithmController {
             }
         }
 
-        return addResult;
+        return CommonResult.success();
     }
 
 }

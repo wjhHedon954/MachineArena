@@ -4,13 +4,10 @@ import com.entity.Algorithm;
 import com.entity.AlgorithmDescription;
 import com.entity.HyperParameters;
 import com.results.CommonResult;
-import com.whu.config.FeignConfig;
+//import com.whu.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2020-07-14 10:57
  */
 @Service
-@FeignClient(value = "common-algorithm",configuration = FeignConfig.class)
+@FeignClient(value = "common-algorithm"/*,configuration = FeignConfig.class*/)
 public interface AlgorithmFeignService {
 
     @GetMapping("/algorithms")
@@ -28,7 +25,7 @@ public interface AlgorithmFeignService {
                                             @RequestParam(value = "keyWord")String keyWord);
 
     @PostMapping("/algorithm")
-    public CommonResult addAlgorithm(@RequestBody Algorithm algorithm);
+    public Algorithm addAlgorithm(@RequestBody Algorithm algorithm);
 
     @PostMapping("/algorithm/description")
     public AlgorithmDescription addDescription (@RequestBody AlgorithmDescription description);

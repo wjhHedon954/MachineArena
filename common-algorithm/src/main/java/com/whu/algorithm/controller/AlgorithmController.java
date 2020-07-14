@@ -70,12 +70,11 @@ public class AlgorithmController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "data", value = "算法创建信息")
     })
-    @PostMapping(value = "/algorithm")
-    public CommonResult addAlgorithm(@RequestBody Algorithm algorithm) {
-
+    @PostMapping("/algorithm")
+    public Algorithm addAlgorithm(@RequestBody Algorithm algorithm) {
         algorithmService.addAlgorithm(algorithm);
 
-        return CommonResult.success().add("algorithm id: ", algorithm.getAlgorithmId().toString());
+        return algorithm;
     }
 
 

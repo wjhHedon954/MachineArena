@@ -49,6 +49,10 @@ public class HyperParameters implements Serializable {
     private Integer algorithmId;
 
     public void setHyperParaId(Integer hyperParaId) {
+        if(hyperParaId == -1) {
+            this.hyperParaId = null;
+            return;
+        }
         this.hyperParaId = hyperParaId;
     }
 
