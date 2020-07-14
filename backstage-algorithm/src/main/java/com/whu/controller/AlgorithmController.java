@@ -1,5 +1,7 @@
 package com.whu.controller;
 
+import com.entity.Algorithm;
+import com.entity.AlgorithmUser;
 import com.results.CommonResult;
 import com.whu.service.AlgorithmFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,8 @@ public class AlgorithmController {
     @GetMapping("/algorithms")
     public CommonResult selectAllAlgorithms(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                             @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
-                                            @RequestParam(value = "keyWord")String keyWord){
+                                            @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+
         return algorithmFeignService.selectAllAlgorithms(pageNum,pageSize,keyWord);
     }
 }

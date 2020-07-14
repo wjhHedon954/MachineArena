@@ -17,5 +17,5 @@ public interface AlgorithmFeignService {
     @GetMapping("/algorithms")
     public CommonResult selectAllAlgorithms(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                             @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
-                                            @RequestParam(value = "keyWord")String keyWord);
+                                            @RequestParam(value = "keyWord",defaultValue = "")String keyWord);
 }

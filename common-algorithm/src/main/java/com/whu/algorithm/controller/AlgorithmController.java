@@ -272,7 +272,7 @@ public class AlgorithmController {
     @GetMapping("/algorithms")
     public CommonResult selectAllAlgorithms(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                             @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
-                                            @RequestParam(value = "keyWord")String keyWord){
+                                            @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
         //1. 开启分页查询
         PageHelper.startPage(pageNum,pageSize);
         //2. 从数据库拉取信息
@@ -282,5 +282,6 @@ public class AlgorithmController {
         //4. 传给前端
         return CommonResult.success().add("pageInfo",pageInfo);
     }
+
 
 }

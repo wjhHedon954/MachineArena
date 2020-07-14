@@ -15,6 +15,7 @@
         <module>common-utils</module>
         <module>common-algorithm</module>
         <module>backstage-algorithm</module>
+        <module>frontstage-algorithm</module>
     </modules>
     <packaging>pom</packaging>
 

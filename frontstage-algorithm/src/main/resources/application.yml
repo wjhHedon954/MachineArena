@@ -1,9 +1,9 @@
 server:
-  port: 10001
+  port: 10003
 
 spring:
   application:
-    name: common-algorithm
+    name: frontstage-algorithm
   datasource:
     url: jdbc:mysql://39.97.232.103:3306/MachineArena?useUnicode=true&useSSL=false&characterEncoding=utf8
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -21,12 +21,9 @@ eureka:
     service-url:
       defaultZone: http://eureka7001.com:7001/eureka
   instance:
-    instance-id: commonAlgorithm10001
+    instance-id: frontstageAlgorithm10003
     prefer-ip-address: true
     #Eureka客户端向服务端发送心跳的时间间隔：默认30秒
     #    lease-renewal-interval-in-seconds: 1
     #Eureka服务端在收到最后一次心跳后等待时间上限：默认90秒
     #    lease-expiration-duration-in-seconds: 2
-ribbon:
-  eureka:
-    enabled: true
