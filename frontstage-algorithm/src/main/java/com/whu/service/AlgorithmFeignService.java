@@ -1,7 +1,10 @@
 package com.whu.service;
 
+import com.entity.Algorithm;
+import com.results.CommonResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Hedon Wang
@@ -11,4 +14,81 @@ import org.springframework.stereotype.Service;
 @FeignClient(value = "common-algorithm")
 public interface AlgorithmFeignService {
 
+
+    /**
+     * 接口 6.1.1.1 分页查询当前用户的算法
+     * @author Jiahan Wang
+     * @create 2020-07-15 14:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 14:59
+     * @param userId    用户ID
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
+     */
+    @GetMapping("/algorithms/{userId}")
+    CommonResult getAllAlgorithms(@PathVariable(value = "userId")Integer userId,
+                                 @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                 @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                 @RequestParam(value = "keyWord",defaultValue = "")String keyWord);
+
+    /**
+     * 接口 6.1.1.2 根据ID查询算法基本信息
+     * @param algorithmId 算法ID
+     * @return
+     */
+    @GetMapping("/algorithm/basic/{algorithmId}")
+    CommonResult getAlgorithmBasicById(@PathVariable(value = "algorithmId")Integer algorithmId);
+
+    /**
+     * 接口 6.1.1.3 按ID查询算法训练规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:19
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:19
+     * @param algorithmId 算的ID
+     * @return
+     */
+    @GetMapping("/algorithm/trainStandard/{algorithmId}")
+    CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId") Integer algorithmId);
+
+
+    /**
+     * 接口 6.1.1.4 按ID查询算法超参规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:32
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:32
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/hyperPara/{algorithmId}")
+    CommonResult getAlgorithmHyperPara(@PathVariable("algorithmId")Integer algorithmId);
+
+    /**
+     * 接口 6.1.1.7 编辑算法
+     *
+     * @param algorithm 从前端获取得到一个完整的被用户编辑后的对象
+     * @author Yi Zheng
+     * @create 2020-07-11 20:00
+     * @updator Jiahan Wang
+     * @update 2020-07-12 08:30
+     * @return
+     */
+    @PutMapping(value = "/algorithm")
+    CommonResult updateAlgorithm(@RequestBody Algorithm algorithm);
+
+    /**
+     * 接口 6.1.1.6 删除算法
+     *
+     * @param id 算法的id，要根据这个id来删除算法
+     * @return 通用返回结果
+     * @author Yi Zheng
+     * @create 2020-07-11 20:10
+     * @updator Jiahan Wang
+     * @update 2020-07-12 08:45
+     */
+    @DeleteMapping(value = "/algorithm/{id}")
+    CommonResult deleteAlgorithmById(@PathVariable("id") Integer id);
 }

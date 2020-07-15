@@ -66,4 +66,12 @@ public interface IAlgorithmService extends IService<Algorithm> {
      * @param  keyWord 关键字
      */
     List<AlgorithmResponseVo> getAllFullAlgorithms(String keyWord);
+
+    /**
+     * 根据用户ID和关键字查询算法
+     * @param userId  用户ID
+     * @param keyWord 关键字
+     * @return
+     */
+    List<Algorithm> getAlgorithmsByUserId(Integer userId, String keyWord);
 }

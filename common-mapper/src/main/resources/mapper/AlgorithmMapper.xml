@@ -34,6 +34,7 @@
         </association>
     </resultMap>
 
+
     <!--结果字段-->
     <sql id="Full_Column_List">
     <!--算法-->

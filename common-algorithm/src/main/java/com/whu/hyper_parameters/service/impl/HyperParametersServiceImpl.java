@@ -1,11 +1,16 @@
 package com.whu.hyper_parameters.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.entity.Algorithm;
 import com.entity.HyperParameters;
+import com.mapper.AlgorithmMapper;
 import com.mapper.HyperParametersMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.whu.hyper_parameters.service.IHyperParametersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,6 +22,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HyperParametersServiceImpl extends ServiceImpl<HyperParametersMapper, HyperParameters> implements IHyperParametersService {
+
+    @Autowired
+    AlgorithmMapper algorithmMapper;
+
     @Autowired
     HyperParametersMapper hyperParametersMapper;
 
@@ -32,5 +41,22 @@ public class HyperParametersServiceImpl extends ServiceImpl<HyperParametersMappe
     public int addHyperParameter(HyperParameters hyperParameter) {
         hyperParameter.setHyperParaId(-1);      // 添加之前置为null
         return hyperParametersMapper.insert(hyperParameter);
+    }
+
+    /**
+     * 根据算法ID查询超参规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:32
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:32
+     * @param algorithmId
+     * @return
+     */
+    @Override
+    public List<HyperParameters> getHyperParaByAlgorithmId(Integer algorithmId) {
+        QueryWrapper<HyperParameters> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("algorithm_id",algorithmId);
+        List<HyperParameters> hyperParameters = hyperParametersMapper.selectList(queryWrapper);
+        return hyperParameters;
     }
 }

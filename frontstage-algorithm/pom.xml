@@ -12,6 +12,12 @@
     <artifactId>frontstage-algorithm</artifactId>
 
     <dependencies>
+        <!--分页查询插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.11</version>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

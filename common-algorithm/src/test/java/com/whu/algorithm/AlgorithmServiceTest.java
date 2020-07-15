@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 /**
  * 算法服务层的单元测试
  * @author Hedon Wang
@@ -44,5 +46,21 @@ public class AlgorithmServiceTest {
         Algorithm algorithm = algorithmService.getAlgorithmById(3);
         System.out.println(algorithm);
     }
+
+
+    /**
+     * 根据根据用户ID和关键字查询算法
+     * @author Jiahan Wang
+     * @create 2020-07-12 09:20
+     * @updator Jiahan Wang
+     * @update 2020-07-12 09:20
+     * @result 通过
+     */
+    @Test
+    public void testGetAlgorithmsByUserIdAndKeyWord(){
+        List<Algorithm> algorithmsByUserId = algorithmService.getAlgorithmsByUserId(1, "");
+        System.out.println(algorithmsByUserId);
+    }
+
 
 }

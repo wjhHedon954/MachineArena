@@ -54,7 +54,7 @@ public class AlgorithmController {
      * @description 创建算法
      * @create 2020/7/14 5:01 下午
      * @update 2020/7/15 1:50 上午
-     * @param [request]
+     * @param request
      * @return com.results.CommonResult
      **/
     @PostMapping("/algorithm")

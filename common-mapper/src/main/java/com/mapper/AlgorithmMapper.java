@@ -23,4 +23,6 @@ public interface AlgorithmMapper extends BaseMapper<Algorithm> {
 
     //查询所有的算法数据
     List<AlgorithmResponseVo> selectAllFullAlgorithms(String keyWord);
+
+
 }

@@ -34,7 +34,7 @@ public class CommonResult{
         CommonResult result = new CommonResult();
         result.setCode(resultCode.getCode());
         result.setMessage(resultCode.getMessage());
-        return new CommonResult();
+        return result;
     }
 
     //追加其他数据

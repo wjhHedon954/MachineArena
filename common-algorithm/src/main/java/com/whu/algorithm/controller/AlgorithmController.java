@@ -1,20 +1,13 @@
 package com.whu.algorithm.controller;
 
 
-import cn.hutool.http.server.HttpServerRequest;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.constants.ResultCode;
 import com.entity.Algorithm;
-import com.entity.AlgorithmAudit;
-import com.entity.AlgorithmDescription;
+import com.entity.HyperParameters;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.oracle.tools.packager.Log;
 import com.responsevo.AlgorithmResponseVo;
-import com.entity.HyperParameters;
-import com.mapper.AlgorithmMapper;
 import com.results.CommonResult;
 import com.whu.algorithm.service.IAlgorithmService;
 import com.whu.algorithm_description.service.IAlgorithmDescriptionService;
@@ -22,22 +15,10 @@ import com.whu.hyper_parameters.service.IHyperParametersService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import java.awt.print.Book;
 import java.util.List;
-
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * <p>
  * 前端控制器
@@ -54,11 +35,14 @@ public class AlgorithmController {
 
     @Autowired
     IAlgorithmDescriptionService algorithmDescriptionService;
+
     @Autowired
     IHyperParametersService hyperParametersService;
 
+
+
     /**
-     * 接口 6.1.2 创建算法
+     * 接口 6.1.1.5 创建算法
      * @author Huiri Tan
      * @create 2020-07-11 20:00
      * @updator Huiri Tan
@@ -73,13 +57,12 @@ public class AlgorithmController {
     @PostMapping("/algorithm")
     public Algorithm addAlgorithm(@RequestBody Algorithm algorithm) {
         algorithmService.addAlgorithm(algorithm);
-
         return algorithm;
     }
 
 
     /**
-     * 接口 6.1.7 编辑算法
+     * 接口 6.1.1.7 编辑算法
      *
      * @param algorithm 从前端获取得到一个完整的被用户编辑后的对象
      * @return 返回这个被编辑的对象，不一定有用，如果前端需要可以查看里面的数据
@@ -114,7 +97,7 @@ public class AlgorithmController {
     }
 
     /**
-     * 接口 6.1.6 删除算法
+     * 接口 6.1.1.6 删除算法
      *
      * @param id 算法的id，要根据这个id来删除算法
      * @return 通用返回结果
@@ -147,39 +130,49 @@ public class AlgorithmController {
 
     }
 
+
     /**
-     * 接口 6.1.5 根据 ID 查询算法
-     *
-     * @param id 算法ID
-     * @return 通用返回结果
-     * @author Yizheng
-     * @create 2020-07-11 20:55
+     * 分页查询当前用户的算法
+     * @author Jiahan Wang
+     * @create 2020-07-15 14:59
      * @updator Jiahan Wang
-     * @update 2020-07-12 08:50
+     * @upadte 2020-07-15 14:59
+     * @param userId    用户ID
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
      */
-    @ApiOperation(value = "接口 6.1.5 根据ID查询算法", httpMethod = "GET", notes = "")
+    @ApiOperation(value = "接口 6.1.1.1 分页查询当前用户的算法 ",httpMethod = "GET",notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "算法ID", paramType = "path", dataType = "Integer", required = true)
+            @ApiImplicitParam(name = "userId",value = "当前用户ID",paramType = "path",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
     })
-    @GetMapping(value = "/algorithm/{id}")
-    public CommonResult selectById(@PathVariable("id") Integer id) {
-        //检查ID是否为空
-        if (id == null) {
-            return CommonResult.fail(ResultCode.EMPTY_ALGORITHM_ID);
+    @GetMapping("/algorithms/{userId}")
+    public CommonResult getAllAlgorithms(@PathVariable(value = "userId")Integer userId,
+                                         @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                         @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                         @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        //1. 检查用户ID是否为空
+        if (userId == null){
+            return CommonResult.fail(ResultCode.EMPTY_USER_ID);
         }
-        //执行查询操作
-        Algorithm algorithm = algorithmService.getAlgorithmById(id);
-        //如果对象为空，则说明该算法不存在
-        if (algorithm == null) {
-            return CommonResult.fail(ResultCode.ALGORITHM_NOT_EXIST);
-        }
-        //若一切正常，则将该算法对象封装到 extend 中传给前端
-        return CommonResult.success().add("algorithm", algorithm);
+        //2. 开启分页查询
+        PageHelper.startPage(pageNum, pageSize);
+        //3. 从数据库中拉取数据
+        List<Algorithm> algorithms = algorithmService.getAlgorithmsByUserId(userId,keyWord);
+        //4. 将数据封装到 PageInfo 当中
+        PageInfo pageInfo = new PageInfo(algorithms,5);
+        //5. 返回给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
     }
 
 
+
     /**
-     * 接口 6.1.1 分页查询算法
+     * 分页查询所有算法
      *
      * @return 通用查询到的分页数据
      * @author Jiahan Wang
@@ -187,11 +180,6 @@ public class AlgorithmController {
      * @updator Jiahan Wang
      * @update 2020-07-12 14:55
      */
-    @ApiOperation(value = "接口 6.1.1 分页查询算法",httpMethod = "GET",notes = "")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
-            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true)
-    })
     @GetMapping("/algorithms")
     public CommonResult selectAllAlgorithms(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                             @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
@@ -207,4 +195,77 @@ public class AlgorithmController {
     }
 
 
+
+    /**
+     * 根据ID查询算法基本信息
+     * @author Jiahan Wang
+     * @create 2020-07-15 15:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 15:59
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/basic/{algorithmId}")
+    public CommonResult getAlgorithmBasicById(@PathVariable(value = "algorithmId")Integer algorithmId){
+        return selectAlgorithmById(algorithmId);
+    }
+
+
+
+    /**
+     * 按ID查询算法训练规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:19
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:19
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/trainStandard/{algorithmId}")
+    public CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId")Integer algorithmId) {
+        return selectAlgorithmById(algorithmId);
+    }
+
+
+
+    //通用方法：根据ID查询算法（返回的东西相同，但是不用场景需要的具体数据有所不同）
+    private CommonResult selectAlgorithmById(Integer id){
+        //判断算法ID是否为空
+        if (id == null){
+            return CommonResult.fail(ResultCode.EMPTY_ALGORITHM_ID);
+        }
+        //查询算法
+        Algorithm algorithm = algorithmService.getAlgorithmById(id);
+        if (algorithm == null){
+            return CommonResult.fail(ResultCode.ALGORITHM_NOT_EXIST);
+        }
+
+        //返回结果
+        return CommonResult.success().add("algorithm",algorithm);
+    }
+
+
+    /**
+     * 按ID查询算法超参规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:32
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:32
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/hyperPara/{algorithmId}")
+    public CommonResult getAlgorithmHyperPara(@PathVariable("algorithmId")Integer algorithmId){
+        //检查算法ID是否为空
+        if (algorithmId == null){
+            return CommonResult.fail(ResultCode.EMPTY_ALGORITHM_ID);
+        }
+        List<HyperParameters> hyperParameters = hyperParametersService.getHyperParaByAlgorithmId(algorithmId);
+        if (hyperParameters == null){
+            return CommonResult.fail(ResultCode.EMPTY_HYPER_PARA);
+        }
+        return CommonResult.success()
+                    .add("algorithmId",algorithmId)
+                    .add("hyperParameters",hyperParameters);
+    }
 }

@@ -21,6 +21,7 @@ public enum ResultCode {
      */
     ERROR("E0000","未知错误"),
     EMPTY_OBJECT("E0001","对象不能为空"),
+    EMPTY_USER_ID("E0002","用户ID不能为空"),
 
     /**
      * 数据库操作部分错误码： DB = DataBase
@@ -39,6 +40,8 @@ public enum ResultCode {
      */
     ALGORITHM_NOT_EXIST("AL001","算法不存在"),
     EMPTY_ALGORITHM_ID("AL002","算法ID不能为空"),
+    EMPTY_HYPER_PARA_ID("AL003","算法超参ID不能为空"),
+    EMPTY_HYPER_PARA("AL004","该算法未定义超参规范"),
 
     /**
      * Python 版本错误码
