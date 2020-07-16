@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -100,6 +101,8 @@ public class AlgorithmController {
         algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
         algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
         algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
+        algorithm.setAlgorithmStatus(0);
+        algorithm.setAlgorithmCreateTime(LocalDateTime.now());
         algorithm.setAlgorithmId(0);    // 丢个数给ID 免得转发会报错
 
         // 保存算法
