@@ -32,5 +32,9 @@ public class AiEngine implements Serializable {
 
     private String algorithmEngineName;
 
+    private String algorithm_engine_version;
+
+    private String python_version_name;
+
 
 }
