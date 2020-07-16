@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 public interface AlgorithmFeignService {
 
     @GetMapping("/algorithms")
-    public CommonResult selectAllAlgorithms(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
-                                            @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
-                                            @RequestParam(value = "keyWord")String keyWord);
+    CommonResult selectAllAlgorithms(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                     @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                     @RequestParam(value = "keyWord")String keyWord);
 
     @PostMapping("/algorithm")
     public Algorithm addAlgorithm(@RequestBody Algorithm algorithm);

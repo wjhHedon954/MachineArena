@@ -1,14 +1,11 @@
 package com.whu.controller;
 
-import com.constants.ResultCode;
 import com.entity.Algorithm;
 import com.results.CommonResult;
 import com.whu.service.AlgorithmFeignService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
