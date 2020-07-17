@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.whu.algorithm.AlgorithmServiceTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.652 s - in com.whu.algorithm.AlgorithmServiceTest
