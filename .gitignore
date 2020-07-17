@@ -6,6 +6,18 @@
 *.jar
 *.war
 
+# target 文件夹 #
+backstage-algorithm/target
+common-algorithm/target
+common-codegenerator/target
+common-mapper/target
+common-pojo/target
+common-train/target
+common-utils/target
+eureka-service/target
+frontstage-algorithm/target
+frontstage-train/target
+
 # gwt caches and compiled units #
 war/gwt_bree/
 gwt-unitCache/
