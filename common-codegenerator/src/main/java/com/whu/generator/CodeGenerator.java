@@ -57,9 +57,11 @@ public class CodeGenerator {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl("jdbc:mysql://39.97.232.103:3306/MachineArena?useUnicode=true&useSSL=false&characterEncoding=utf8");
+//        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/id_generator?useUnicode=true&characterEncoding=utf8&useSSL=false");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("Thomas10011");
+//        dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置

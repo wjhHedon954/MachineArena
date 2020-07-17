@@ -27,6 +27,7 @@ public class TestDruid {
         System.out.println(dataSource.getClass());
         //com.mysql.cj.jdbc.ConnectionImpl@d9f5fce
         System.out.println(dataSource.getConnection());
+        System.out.println(algorithmTypeMapper);
     }
 
 
