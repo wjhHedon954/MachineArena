@@ -7,6 +7,7 @@
     <groupId>com.whu</groupId>
     <artifactId>MachineArena</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <modules>
         <module>common-pojo</module>
         <module>common-mapper</module>
@@ -17,14 +18,12 @@
         <module>backstage-algorithm</module>
         <module>frontstage-algorithm</module>
     </modules>
-    <packaging>pom</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.6.RELEASE</version>
     </parent>
-
 
     <!--统一管理 jar 包版本-->
     <properties>
@@ -154,6 +153,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
+                    <classifier>exec</classifier>
                     <addResources>true</addResources>
                 </configuration>
             </plugin>
