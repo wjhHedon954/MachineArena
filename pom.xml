@@ -19,6 +19,8 @@
         <module>frontstage-algorithm</module>
         <module>common-train</module>
         <module>frontstage-train</module>
+        <module>common-model</module>
+        <module>frontstage-model</module>
     </modules>
 
     <parent>
