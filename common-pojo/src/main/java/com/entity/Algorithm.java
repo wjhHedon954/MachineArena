@@ -57,8 +57,6 @@ public class Algorithm implements Serializable {
 
     private Boolean algorithmCustomizeHyperPara;
 
-    private Integer algorithmPythonVersionId;
-
     private Integer algorithmStatus;
 
     private LocalDateTime algorithmCreateTime;

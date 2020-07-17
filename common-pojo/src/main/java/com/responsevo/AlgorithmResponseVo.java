@@ -57,8 +57,4 @@ public class AlgorithmResponseVo {
 
     private Integer algorithmCustomizeHyperPara;
 
-    //联合 PythonVersion
-    private Integer algorithmPythonVersionId;
-    private PythonVersion pythonVersion;
-
 }

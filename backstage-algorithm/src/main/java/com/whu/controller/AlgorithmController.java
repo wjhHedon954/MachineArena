@@ -11,6 +11,7 @@ import com.entity.HyperParameters;
 import com.results.CommonResult;
 import com.whu.service.AlgorithmFeignService;
 import feign.Param;
+import org.omg.CORBA.COMM_FAILURE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,6 +30,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/backstage")
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class AlgorithmController {
 
 
@@ -60,15 +63,21 @@ public class AlgorithmController {
     @PostMapping("/algorithm")
     public CommonResult addAlgorithm(HttpServletRequest request) {
         Algorithm algorithm = new Algorithm(); // 要创建的算法对象
+        List<MultipartFile> files = null;
         MultipartHttpServletRequest params =  (MultipartHttpServletRequest)request;
-        List<MultipartFile> files  =  ((MultipartHttpServletRequest)request).getFiles("myfile");
+        try {
+            files  =  ((MultipartHttpServletRequest)request).getFiles("myfile");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // 从传入的数据中获取data并转换为JSONObject 顺便获取超参数
         JSONObject data = null;
         JSONArray hyperParameters = null;
         try {
-            JSONObject tmp = new JSONObject(params.getParameter("data"));
-            data = (JSONObject)tmp.get("data");
+//            JSONObject tmp = new JSONObject(params.getParameter("data"));
+            data =  new JSONObject(params.getParameter("data"));
             hyperParameters = JSONUtil.parseArray(data.get("hyperparameters"));
         }
         catch (Exception e) {
@@ -78,9 +87,9 @@ public class AlgorithmController {
         assert data != null;
         // 首先保存算法描述
         AlgorithmDescription algorithmDescription = new AlgorithmDescription();
-        algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
-        algorithmDescription.setAlgorithmDescriptionId(0);  // 给ID丢个值，不然请求转发的时候报错
         try{
+            algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
+            algorithmDescription.setAlgorithmDescriptionId(0);  // 给ID丢个值，不然请求转发的时候报错
             algorithmDescription = algorithmFeignService.addDescription(algorithmDescription);    // 添加算法描述
         }
         catch (Exception e) {
@@ -99,7 +108,8 @@ public class AlgorithmController {
         algorithm.setAlgorithmStarterUrl(data.get("algorithm_starter_URL").toString());
         algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
         algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
-        algorithm.setAlgorithmPythonVersionId((int)data.get("algorithm_python_version_id"));
+        algorithm.setAlgorithmStatus(0);
+        algorithm.setAlgorithmCreateTime(LocalDateTime.now());
         algorithm.setAlgorithmId(0);    // 丢个数给ID 免得转发会报错
 
         // 保存算法
@@ -122,6 +132,8 @@ public class AlgorithmController {
             }
         }
 
+        if(files == null)
+            return CommonResult.fail(ResultCode.EMPTY_OBJECT);
         // 循环保存文件
         for (MultipartFile file : files) {
             String originName = file.getOriginalFilename();
