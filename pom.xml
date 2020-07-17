@@ -16,6 +16,8 @@
         <module>common-algorithm</module>
         <module>backstage-algorithm</module>
         <module>frontstage-algorithm</module>
+        <module>common-train</module>
+        <module>frontstage-train</module>
     </modules>
     <packaging>pom</packaging>
 
