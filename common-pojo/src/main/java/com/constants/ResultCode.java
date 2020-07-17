@@ -48,6 +48,10 @@ public enum ResultCode {
      */
     NO_PYTHON_VERSION_DATA("PY001","没有 python 版本的数据");
 
+    /**
+     * 训练管理模块
+     */
+
 
     private String code;     //错误码
     private String message;  //对应的信息
@@ -56,7 +60,5 @@ public enum ResultCode {
         this.code = code;
         this.message = msg;
     }
-
-
 
 }

@@ -53,7 +53,7 @@ public class TrainTaskConf implements Serializable {
 
     private String trainTaskSpecification;
 
-    private String column14;
+    private String trainTaskAiEngine;
 
     private String trainTaskLogOutPath;
 
