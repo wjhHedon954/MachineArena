@@ -44,7 +44,7 @@ public class TrainTaskController {
     CommonResult addTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param){
         //参数不能为空
         if (param==null)
-            return CommonResult.fail(ResultCode.EMPTY_OBJECT);
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
 
         //从包装类中获取两个真正的对象
         TrainTask trainTask = param.getTrainTask();
@@ -59,7 +59,7 @@ public class TrainTaskController {
             int[] ints = trainTaskService.addTrainTask(trainTask,trainTaskConf);
             if (ints[0] == 0 || ints[1]==0) {
                 //如果更新条数为0，则说明该训练作业或训练作业参数不在数据库中，返回数据不存在信息
-                return new CommonResult("T0001","无训练作业或者训练作业参数");
+                return CommonResult.fail(ResultCode.NO_TrainTask_OR_TrainTaskConf);
             } else {
                 //因为是根据ID来更改，所以情况只有 0 和 1，如果不为 0 那必定是成功
                 return CommonResult.success();
@@ -87,13 +87,13 @@ public class TrainTaskController {
     public CommonResult deleteTrainTaskById(@PathVariable("trainTaskID") Integer trainTaskID){
         //检查ID是否为空
         if (trainTaskID == null) {
-            return CommonResult.fail(ResultCode.EMPTY_ALGORITHM_ID);
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
         }
         //执行删除操作
         try {
             int deleteCount = trainTaskService.deleteTrainTaskById(trainTaskID);
             if (deleteCount == 0) {
-                return CommonResult.fail(ResultCode.ALGORITHM_NOT_EXIST);
+                return CommonResult.fail(ResultCode.TRAINTASK_NOT_EXIST);
             } else {
                 return CommonResult.success();
             }
