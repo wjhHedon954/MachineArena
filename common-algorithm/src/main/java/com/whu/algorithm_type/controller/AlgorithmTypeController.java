@@ -8,11 +8,7 @@ import com.results.CommonResult;
 import com.whu.algorithm.service.impl.AlgorithmServiceImpl;
 import com.whu.algorithm_type.service.IAlgorithmTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +23,7 @@ import java.util.Map;
  * @since 2020-07-11
  */
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class AlgorithmTypeController {
     @Autowired
     private IAlgorithmTypeService algorithmTypeService;

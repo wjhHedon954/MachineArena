@@ -78,7 +78,7 @@ public class AlgorithmController {
         try {
 //            JSONObject tmp = new JSONObject(params.getParameter("data"));
             data =  new JSONObject(params.getParameter("data"));
-            hyperParameters = JSONUtil.parseArray(data.get("hyperparameters"));
+            hyperParameters = JSONUtil.parseArray(data.get("hyperParameters"));
         }
         catch (Exception e) {
             e.printStackTrace();
