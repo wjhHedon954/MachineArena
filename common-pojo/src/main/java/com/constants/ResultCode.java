@@ -21,6 +21,7 @@ public enum ResultCode {
      */
     ERROR("E0000","未知错误"),
     EMPTY_OBJECT("E0001","对象不能为空"),
+    EMPTY_PARAM("E0003","参数不能为空"),
     EMPTY_USER_ID("E0002","用户ID不能为空"),
 
     /**
@@ -46,8 +47,13 @@ public enum ResultCode {
     /**
      * Python 版本错误码
      */
-    NO_PYTHON_VERSION_DATA("PY001","没有 python 版本的数据");
+    NO_PYTHON_VERSION_DATA("PY001","没有 python 版本的数据"),
 
+    /**
+     * 训练管理模块
+     */
+    NO_TrainTask_OR_TrainTaskConf("T0001","数据库中无训练作业或训练作业参数"),
+    TRAINTASK_NOT_EXIST("T0002","数据库中无此训练作业");
 
     private String code;     //错误码
     private String message;  //对应的信息
@@ -56,7 +62,5 @@ public enum ResultCode {
         this.code = code;
         this.message = msg;
     }
-
-
 
 }

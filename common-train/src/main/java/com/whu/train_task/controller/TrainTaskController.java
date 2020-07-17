@@ -4,15 +4,15 @@ package com.whu.train_task.controller;
 import com.constants.ResultCode;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.results.CommonResult;
 import com.whu.train_task.service.impl.TrainTaskServiceImpl;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -27,30 +27,74 @@ public class TrainTaskController {
     @Autowired
     private TrainTaskServiceImpl trainTaskService;
 
-    //此接口还未通过测试，目前@RequstBody获取数据报流关闭异常
     /**
      * 接口 6.2.1.1 创建训练作业
      * @author Yi Zheng
      * @create 2020-07-17 13:00
-     * @updator
-     * @update
-     * @param trainTask 从前端获取训练作业数据，根据数据创建训练作业
-     * @param trainTaskConf 从前端获取训练作业参数数据，根据数据创建训练作业参数
+     * @updator Yi Zheng
+     * @update 2020-7-17 16:00
+     * @param param 一个包装类，因为@RequestBody不能使用两次。这个类里封装了TrainTask和TrainTaskConf
      * @return  返回通用数据
      */
+    @ApiOperation(value = "接口6.2.1.1", httpMethod = "POST", notes = "创建训练作业")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "param", value = "训练作业和训练作业参数", paramType = "body", dataType = "TrainTaskAndTrainTaskConfig", required = true),
+    })
     @PostMapping("/trainTask")
-    CommonResult addTrainTask(@RequestBody TrainTask trainTask,@RequestBody TrainTaskConf trainTaskConf){
+    CommonResult addTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param){
+        //参数不能为空
+        if (param==null)
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+
+        //从包装类中获取两个真正的对象
+        TrainTask trainTask = param.getTrainTask();
+        TrainTaskConf trainTaskConf = param.getTrainTaskConf();
+
+        //判断对象是否为空
         if (trainTask == null || trainTaskConf==null) {
             return CommonResult.fail(ResultCode.EMPTY_OBJECT);
         }
         try {
-            //执行更新
-            int[] ints = trainTaskService.addTrainTask(trainTask, trainTaskConf);
+            //执行insert
+            int[] ints = trainTaskService.addTrainTask(trainTask,trainTaskConf);
             if (ints[0] == 0 || ints[1]==0) {
                 //如果更新条数为0，则说明该训练作业或训练作业参数不在数据库中，返回数据不存在信息
-                return CommonResult.fail(ResultCode.ALGORITHM_NOT_EXIST);
+                return CommonResult.fail(ResultCode.NO_TrainTask_OR_TrainTaskConf);
             } else {
                 //因为是根据ID来更改，所以情况只有 0 和 1，如果不为 0 那必定是成功
+                return CommonResult.success();
+            }
+        } catch (Exception e) {
+            return CommonResult.fail(ResultCode.ERROR);
+        }
+    }
+
+
+    /**
+     * 接口 6.2.1.2 根据ID删除训练作业
+     * @author Yi Zheng
+     * @create 2020-07-17 14:00
+     * @updator
+     * @update
+     * @param trainTaskID 删除的ID
+     * @return  返回通用数据
+     */
+    @ApiOperation(value = "接口6.2.1.1", httpMethod = "DELETE", notes = "根据ID删除训练作业")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "trainTaskId", value = "训练作业Id", paramType = "body", dataType = "Integer", required = true)
+    })
+    @DeleteMapping("/trainTask/{trainTaskID}")
+    public CommonResult deleteTrainTaskById(@PathVariable("trainTaskID") Integer trainTaskID){
+        //检查ID是否为空
+        if (trainTaskID == null) {
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        }
+        //执行删除操作
+        try {
+            int deleteCount = trainTaskService.deleteTrainTaskById(trainTaskID);
+            if (deleteCount == 0) {
+                return CommonResult.fail(ResultCode.TRAINTASK_NOT_EXIST);
+            } else {
                 return CommonResult.success();
             }
         } catch (Exception e) {
