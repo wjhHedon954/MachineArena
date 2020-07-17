@@ -27,9 +27,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: com.github.pagehelper:pagehelper:5.1.11" level="project" />
     <orderEntry type="library" name="Maven: com.github.jsqlparser:jsqlparser:2.0" level="project" />
-    <orderEntry type="module" module-name="commom-utils" />
+    <orderEntry type="module" module-name="common-utils" />
     <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.8" level="project" />
-    <orderEntry type="module" module-name="commom-mapper" />
+    <orderEntry type="module" module-name="common-mapper" />
     <orderEntry type="module" module-name="common-pojo" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.16.18" level="project" />
     <orderEntry type="library" name="Maven: com.baomidou:mybatis-plus-boot-starter:3.3.2" level="project" />

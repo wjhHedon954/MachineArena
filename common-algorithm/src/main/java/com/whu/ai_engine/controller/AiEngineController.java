@@ -5,6 +5,7 @@ import com.entity.AiEngine;
 import com.results.CommonResult;
 import com.whu.ai_engine.service.IAiEngineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,12 +22,14 @@ import java.util.List;
  * @since 2020-07-11
  */
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class AiEngineController {
     @Autowired
     IAiEngineService aiEngineService;
 
     /**
      * @author Huiri Tan
+     * @description 查询所有的ai引擎及 python版本
      * @description 查询所有的ai引擎及 python版本
      * @create 2020/7/16 9:04 下午
      * @update 2020/7/16 9:04 下午
