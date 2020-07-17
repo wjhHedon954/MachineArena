@@ -96,7 +96,6 @@ public class AlgorithmController {
             e.printStackTrace();
         }
 
-
         algorithm.setAlgorithmName(data.get("algorithm_name").toString());
         algorithm.setAlgorithmVersion(data.get("algorithm_version").toString());
         algorithm.setAlgorithmTypeId((int)data.get("algorithm_type_id"));
