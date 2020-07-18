@@ -39,4 +39,17 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return  返回删除影响的行数
      */
     int deleteTrainTaskById(Integer trainTaskID);
+
+
+    /**
+     * 接口 6.2.1.4 根据训练作业ID同时更新train_task和train_task_conf
+     * @author Yi Zheng
+     * @create 2020-07-18 10:00
+     * @updator
+     * @update
+     * @param trainTask 训练作业
+     * @param trainTaskConf 训练作业参数
+     * @return  返回更新影响的行数
+     */
+    int[] updateTrainTask(TrainTask trainTask,TrainTaskConf trainTaskConf);
 }
