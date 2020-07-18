@@ -54,7 +54,7 @@ public class AlgorithmController {
 
 
     /**
-     * 接口 6.1.1.2 根据ID查询算法基本信息
+     * 接口 6.1.1.2 根据ID查询算法信息
      * @author Jiahan Wang
      * @create 2020-07-15 15:59
      * @updator Jiahan Wang
@@ -62,29 +62,29 @@ public class AlgorithmController {
      * @param algorithmId
      * @return
      */
-    @ApiOperation(value = "接口 6.1.1.2 按ID查询算法基本信息",httpMethod = "GET",notes = "")
+    @ApiOperation(value = "接口 6.1.1.2 按ID查询算法信息",httpMethod = "GET",notes = "")
     @ApiImplicitParam(value = "algorithmId",name = "算法ID",paramType = "path",dataType = "Integer",required = true)
-    @GetMapping("/algorithm/basic/{algorithmId}")
+    @GetMapping("/algorithm/{algorithmId}")
     public CommonResult getAlgorithmBasicById(@PathVariable(value = "algorithmId")Integer algorithmId){
         return algorithmFeignService.getAlgorithmBasicById(algorithmId);
     }
 
 
-    /**
-     * 接口 6.1.1.3 按ID查询算法训练规范
-     * @author Jiahan Wang
-     * @create 2020-07-15 16:19
-     * @updator Jiahan Wang
-     * @upadte 2020-07-15 16:19
-     * @param algorithmId
-     * @return
-     */
-    @ApiOperation(value = "接口 6.1.1.3 按ID查询算法训练规范",httpMethod = "GET",notes = "")
-    @ApiImplicitParam(value = "algorithmId",name = "算法ID",paramType = "path",dataType = "Integer",required = true)
-    @GetMapping("/algorithm/trainStandard/{algorithmId}")
-    public CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId")Integer algorithmId){
-        return algorithmFeignService.getAlgorithmTrainStandardById(algorithmId);
-    }
+//    /**
+//     * 接口 6.1.1.3 按ID查询算法训练规范
+//     * @author Jiahan Wang
+//     * @create 2020-07-15 16:19
+//     * @updator Jiahan Wang
+//     * @upadte 2020-07-15 16:19
+//     * @param algorithmId
+//     * @return
+//     */
+//    @ApiOperation(value = "接口 6.1.1.3 按ID查询算法训练规范",httpMethod = "GET",notes = "")
+//    @ApiImplicitParam(value = "algorithmId",name = "算法ID",paramType = "path",dataType = "Integer",required = true)
+//    @GetMapping("/algorithm/trainStandard/{algorithmId}")
+//    public CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId")Integer algorithmId){
+//        return algorithmFeignService.getAlgorithmTrainStandardById(algorithmId);
+//    }
 
 
     /**
@@ -140,5 +140,20 @@ public class AlgorithmController {
     @DeleteMapping(value = "/algorithm/{id}")
     public CommonResult deleteAlgorithmById(@PathVariable("id") Integer id) {
         return algorithmFeignService.deleteAlgorithmById(id);
+    }
+
+
+    /**
+     * 查询算法描述
+     * @author Jiahan Wang
+     * @create 2020-07-18 14:00
+     * @updator Jiahan Wang
+     * @update 2020-07-18 14:00
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/description/{algorithmId}")
+    public CommonResult getAlgorithmDescription(@PathVariable("algorithmId")Integer algorithmId){
+        return algorithmFeignService.getAlgorithmDescription(algorithmId);
     }
 }

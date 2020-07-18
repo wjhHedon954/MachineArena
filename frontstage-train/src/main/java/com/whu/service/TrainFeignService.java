@@ -60,4 +60,23 @@ public interface TrainFeignService {
      */
     @PutMapping("/trainTask")
     CommonResult updateTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param);
+
+
+    /**
+     * 接口 6.2.1.8 分页查询当前用户的训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 15:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 15:59
+     * @param userId    用户ID
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
+     */
+    @GetMapping("/trainTasks/{userId}")
+    CommonResult getUserTrainTasks(@PathVariable(value = "userId")Integer userId,
+                                          @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord);
 }

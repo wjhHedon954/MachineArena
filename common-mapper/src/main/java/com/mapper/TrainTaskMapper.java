@@ -2,6 +2,9 @@ package com.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.entity.TrainTask;
+import com.responsevo.TrainTaskResponseVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,6 @@ import com.entity.TrainTask;
  */
 public interface TrainTaskMapper extends BaseMapper<TrainTask> {
 
+    //获取当前用户下的所有训练作业
+    List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord);
 }

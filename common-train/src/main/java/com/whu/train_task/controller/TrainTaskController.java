@@ -4,7 +4,11 @@ package com.whu.train_task.controller;
 import com.constants.ResultCode;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
+import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
 import com.whu.train_task.service.impl.TrainTaskServiceImpl;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,6 +16,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -146,4 +152,45 @@ public class TrainTaskController {
             return CommonResult.fail(ResultCode.ERROR);
         }
     }
+
+
+    /**
+     * 接口 6.2.1.8 分页查询当前用户的训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 15:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 15:59
+     * @param userId    用户ID
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.8 分页查询当前用户的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId",value = "当前用户ID",paramType = "path",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/trainTasks/{userId}")
+    public CommonResult getUserTrainTasks(@PathVariable(value = "userId")Integer userId,
+                                         @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                         @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                         @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        //1. 检查用户ID是否为空
+        if (userId == null){
+            return CommonResult.fail(ResultCode.EMPTY_USER_ID);
+        }
+        //1. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize);
+        //2. 从数据库中拉取数据
+        List<TrainTaskResponseVo> trainTaskReponseVos= trainTaskService.getTrainTasksByUserId(userId,keyWord);
+        //3. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(trainTaskReponseVos,5);
+        //4. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
+    }
+
 }
