@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
 import com.entity.TrainTaskLog;
+import com.entity.TrainTaskResource;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
@@ -103,4 +104,15 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     List<TrainTaskLog> getTrainTaskLog(Integer trainTaskId);
+
+    /**
+     * 接口 6.2.1.6 查询资源占用情况
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:20
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:20
+     * @param trainTaskId
+     * @return
+     */
+    List<TrainTaskResource> getTrainTaskResources(Integer trainTaskId);
 }

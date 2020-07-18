@@ -5,6 +5,7 @@ import com.constants.ResultCode;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
 import com.entity.TrainTaskLog;
+import com.entity.TrainTaskResource;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -268,5 +269,28 @@ public class TrainTaskController {
         }
         return CommonResult.success().add("trainTaskLogs",trainTaskLogs);
 
+    }
+
+    /**
+     * 接口 6.2.1.6 查询资源占用情况
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:20
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:20
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.6 查询资源占用情况",httpMethod = "GET",notes = "")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/resources/{trainTaskId}")
+    public CommonResult getTrainTaskResources(@PathVariable("trainTaskId")Integer trainTaskId){
+        if (trainTaskId == null){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
+        }
+        List<TrainTaskResource> trainTaskResources = trainTaskService.getTrainTaskResources(trainTaskId);
+        if (trainTaskResources == null || trainTaskResources.size() == 0){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_NO_RESOURCES);
+        }
+        return CommonResult.success().add("trainTaskResources",trainTaskResources);
     }
 }
