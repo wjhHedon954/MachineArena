@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.entity.TrainTaskLog;
 import com.mapper.TrainTaskConfMapper;
+import com.mapper.TrainTaskLogMapper;
 import com.mapper.TrainTaskMapper;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
@@ -30,6 +32,8 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     private TrainTaskMapper trainTaskMapper;
     @Autowired
     private TrainTaskConfMapper trainTaskConfMapper;
+    @Autowired
+    private TrainTaskLogMapper trainTaskLogMapper;
 
     /**
      * 接口 6.2.1.1 创建训练作业
@@ -152,5 +156,22 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     @Override
     public List<TrainTaskResponseVo> getTrainTasks(String keyWord) {
         return  trainTaskMapper.getTrainTasks(keyWord);
+    }
+
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    @Override
+    public List<TrainTaskLog> getTrainTaskLog(Integer trainTaskId) {
+        QueryWrapper<TrainTaskLog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("train_task_id",trainTaskId);
+        List<TrainTaskLog> trainTaskLogs = trainTaskLogMapper.selectList(queryWrapper);
+        return trainTaskLogs;
     }
 }

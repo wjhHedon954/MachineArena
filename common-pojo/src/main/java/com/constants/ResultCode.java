@@ -54,7 +54,8 @@ public enum ResultCode {
      */
     NO_TrainTask_OR_TrainTaskConf("T0001","数据库中无训练作业或训练作业参数"),
     TRAINTASK_NOT_EXIST("T0002","数据库中无此训练作业"),
-    TRAIN_TASK_ID_NULL("T0003","训练作业ID不能为空");
+    TRAIN_TASK_ID_NULL("T0003","训练作业ID不能为空"),
+    TRAIN_TASK_NO_LOGS("T0004","该训练作业下没有日志");
 
     private String code;     //错误码
     private String message;  //对应的信息

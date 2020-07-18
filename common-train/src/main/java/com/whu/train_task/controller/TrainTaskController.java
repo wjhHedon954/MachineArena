@@ -4,6 +4,7 @@ package com.whu.train_task.controller;
 import com.constants.ResultCode;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.entity.TrainTaskLog;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -245,5 +246,27 @@ public class TrainTaskController {
 
     }
 
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.5 查看日志",httpMethod = "GET",notes = "")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/log/{trainTaskId}")
+    public CommonResult getTrainTaskLog(@PathVariable("trainTaskId")Integer trainTaskId){
+        if (trainTaskId == null){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
+        }
+        List<TrainTaskLog> trainTaskLogs = trainTaskService.getTrainTaskLog(trainTaskId);
+        if (trainTaskLogs == null || trainTaskLogs.size()==0){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_NO_LOGS);
+        }
+        return CommonResult.success().add("trainTaskLogs",trainTaskLogs);
 
+    }
 }

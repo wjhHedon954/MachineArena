@@ -143,4 +143,20 @@ public class TrainTaskController {
                                           @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
         return service.getUserTrainTasks(pageNum, pageSize, keyWord);
     }
+
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.5 查看日志",httpMethod = "GET",notes = "")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/log/{trainTaskId}")
+    public CommonResult getTrainTaskLog(@PathVariable("trainTaskId")Integer trainTaskId){
+        return service.getTrainTaskLog(trainTaskId);
+    }
 }

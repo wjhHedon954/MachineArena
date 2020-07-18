@@ -110,4 +110,17 @@ public interface TrainFeignService {
     CommonResult getUserTrainTasks(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                           @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
                                           @RequestParam(value = "keyWord",defaultValue = "")String keyWord);
+
+
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    @GetMapping("/trainTask/log/{trainTaskId}")
+     CommonResult getTrainTaskLog(@PathVariable("trainTaskId")Integer trainTaskId);
 }
