@@ -38,21 +38,21 @@ public interface AlgorithmFeignService {
      * @param algorithmId 算法ID
      * @return
      */
-    @GetMapping("/algorithm/basic/{algorithmId}")
+    @GetMapping("/algorithm/{algorithmId}")
     CommonResult getAlgorithmBasicById(@PathVariable(value = "algorithmId")Integer algorithmId);
 
-//    /**
-//     * 接口 6.1.1.3 按ID查询算法训练规范
-//     * @author Jiahan Wang
-//     * @create 2020-07-15 16:19
-//     * @updator Jiahan Wang
-//     * @upadte 2020-07-15 16:19
-//     * @param algorithmId 算的ID
-//     * @return
-//     */
-//    @GetMapping("/algorithm/trainStandard/{algorithmId}")
-//    CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId") Integer algorithmId);
-//
+    /**
+     * 接口 6.1.1.3 按ID查询算法训练规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:19
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:19
+     * @param algorithmId 算的ID
+     * @return
+     */
+    @GetMapping("/algorithm/trainStandard/{algorithmId}")
+    CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId") Integer algorithmId);
+
 
     /**
      * 接口 6.1.1.4 按ID查询算法超参规范

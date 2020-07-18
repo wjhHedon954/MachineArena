@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/frontstage")
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class AlgorithmController {
 
 
@@ -70,21 +71,21 @@ public class AlgorithmController {
     }
 
 
-//    /**
-//     * 接口 6.1.1.3 按ID查询算法训练规范
-//     * @author Jiahan Wang
-//     * @create 2020-07-15 16:19
-//     * @updator Jiahan Wang
-//     * @upadte 2020-07-15 16:19
-//     * @param algorithmId
-//     * @return
-//     */
-//    @ApiOperation(value = "接口 6.1.1.3 按ID查询算法训练规范",httpMethod = "GET",notes = "")
-//    @ApiImplicitParam(value = "algorithmId",name = "算法ID",paramType = "path",dataType = "Integer",required = true)
-//    @GetMapping("/algorithm/trainStandard/{algorithmId}")
-//    public CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId")Integer algorithmId){
-//        return algorithmFeignService.getAlgorithmTrainStandardById(algorithmId);
-//    }
+    /**
+     * 接口 6.1.1.3 按ID查询算法训练规范
+     * @author Jiahan Wang
+     * @create 2020-07-15 16:19
+     * @updator Jiahan Wang
+     * @upadte 2020-07-15 16:19
+     * @param algorithmId
+     * @return
+     */
+    @ApiOperation(value = "接口 6.1.1.3 按ID查询算法训练规范",httpMethod = "GET",notes = "")
+    @ApiImplicitParam(value = "algorithmId",name = "算法ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/algorithm/trainStandard/{algorithmId}")
+    public CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId")Integer algorithmId){
+        return algorithmFeignService.getAlgorithmTrainStandardById(algorithmId);
+    }
 
 
     /**
