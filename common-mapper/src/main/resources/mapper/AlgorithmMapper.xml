@@ -44,8 +44,8 @@
         <association property="aiEngine" javaType="com.entity.AiEngine">
             <id column="algorithm_engine_id" jdbcType="INTEGER" property="algorithmEngineId" />
             <result column="algorithm_engine_name" jdbcType="VARCHAR" property="algorithmEngineName" />
-            <result column="algorithm_engine_version" jdbcType="VARCHAR" property="algorithmEngineVersion"/>
-            <result column="python_version_name" javaType="VARCHAR" property="pythonVersionName"/>
+            <result column="algorithm_engine_version" jdbcType="VARCHAR" property="algorithmEngineVersion" />
+            <result column="python_version_name" jdbcType="VARCHAR" property="pythonVersionName" />
         </association>
         <!--联合 InstanceType-->
         <association property="instanceType" javaType="com.entity.InstanceType">
