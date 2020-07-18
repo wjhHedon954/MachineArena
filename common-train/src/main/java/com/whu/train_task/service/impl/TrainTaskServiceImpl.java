@@ -6,11 +6,13 @@ import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
 import com.mapper.TrainTaskConfMapper;
 import com.mapper.TrainTaskMapper;
+import com.responsevo.TrainTaskResponseVo;
 import com.whu.train_task.service.ITrainTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Wrapper;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -89,5 +91,21 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         //执行更新训练作业配置
         int j = trainTaskConfMapper.update(trainTaskConf,wrapper);
         return new int[]{i,j};
+    }
+
+
+    /**
+     * 6.2.1.8 分页模糊查询当前用户下的训练作业
+     * @author Jihan Wang
+     * @create 2020-07-18 16:00
+     * @updator
+     * @update
+     * @param userId
+     * @param keyWord
+     * @return
+     */
+    @Override
+    public List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord) {
+        return trainTaskMapper.getTrainTasksByUserId(userId,keyWord);
     }
 }

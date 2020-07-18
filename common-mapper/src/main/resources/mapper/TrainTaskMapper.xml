@@ -2,4 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.TrainTaskMapper">
 
+    <resultMap id="BaseResultMap" type="com.entity.TrainTask">
+        <id column="train_task_id" jdbcType="INTEGER" property="trainTaskId" />
+        <result column="train_task_user_id" jdbcType="INTEGER" property="trainTaskUserId" />
+        <result column="train_task_name" jdbcType="VARCHAR" property="trainTaskName" />
+        <result column="train_task_status" jdbcType="TINYINT" property="trainTaskStatus" />
+        <result column="train_task_version" jdbcType="REAL" property="trainTaskVersion" />
+        <result column="train_task_create_time" jdbcType="TIMESTAMP" property="trainTaskCreateTime" />
+        <result column="train_task_update_time" jdbcType="TIMESTAMP" property="trainTaskUpdateTime" />
+        <result column="train_task_running_time" jdbcType="VARCHAR" property="trainTaskRunningTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    train_task_id, train_task_user_id, train_task_name, train_task_status, train_task_version,
+    train_task_create_time, train_task_update_time, train_task_running_time
+    </sql>
+
+    <select id="getTrainTasksByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_train_task
+        where train_task_user_id = '${userId}'
+        and train_task_name like '%${keyWord}%'
+    </select>
 </mapper>

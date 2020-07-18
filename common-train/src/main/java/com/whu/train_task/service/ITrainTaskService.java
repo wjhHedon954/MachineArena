@@ -3,8 +3,10 @@ package com.whu.train_task.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,4 +54,16 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return  返回更新影响的行数
      */
     int[] updateTrainTask(TrainTask trainTask,TrainTaskConf trainTaskConf);
+
+    /**
+     * 6.2.1.8 分页模糊查询当前用户下的训练作业
+     * @author Jihan Wang
+     * @create 2020-07-18 16:00
+     * @updator
+     * @update
+     * @param userId
+     * @param keyWord
+     * @return
+     */
+    List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord);
 }
