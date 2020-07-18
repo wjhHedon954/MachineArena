@@ -30,6 +30,7 @@ import java.util.List;
  * @since 2020-07-11
  */
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class AlgorithmController {
 
     @Autowired

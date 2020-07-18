@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -30,13 +31,18 @@ public class DemoController {
                                  @RequestParam("output") String output){
 
         try {
-            String exe = "/usr/local/Cellar/python/3.7.6_1/bin/python3";
-            String command = "/Users/hedon-/Desktop/ssd-pytorch-master/predict.py";
+            String exe = "/Users/thomas/opt/anaconda3/envs/MachineLearning/bin/python";
+            String command = "/Users/thomas/Desktop/ssd-pytorch-master/predict.py";
             // String arg = "/Users/hedon-/Desktop/ssd-pytorch-master/img/hat1.jpg";
             String inputArg = input;
             //String arg2 = "/Users/hedon-/Desktop/";
             String outputArg = output;
-            String[] cmdArr = new String[] { exe, command ,inputArg,outputArg};
+            System.out.println(input);
+            System.out.println(output);
+            String[] cmdArr = new String[] { exe, command, input, output };
+            for( String cmd : cmdArr) {
+                System.out.println(cmd);
+            }
             Process process = Runtime.getRuntime().exec(cmdArr);
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
