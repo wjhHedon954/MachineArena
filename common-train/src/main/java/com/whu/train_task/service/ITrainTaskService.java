@@ -79,4 +79,16 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     TrainTaskAndTrainTaskConfig getTrainTaskFullInfoById(Integer trainTaskId);
+
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param keyWord
+     * @return
+     */
+    List<TrainTaskResponseVo> getTrainTasks(String keyWord);
 }

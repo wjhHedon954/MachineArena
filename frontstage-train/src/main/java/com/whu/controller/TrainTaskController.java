@@ -119,4 +119,28 @@ public class TrainTaskController {
 
         return service.getTrainTaskById(trainTaskId);
     }
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.8 分页查询当前用户的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/trainTasks")
+    public CommonResult getUserTrainTasks(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        return service.getUserTrainTasks(pageNum, pageSize, keyWord);
+    }
 }

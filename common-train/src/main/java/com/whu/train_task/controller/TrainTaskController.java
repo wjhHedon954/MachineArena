@@ -185,9 +185,9 @@ public class TrainTaskController {
         //1. 开启分页查询
         PageHelper.startPage(pageNum,pageSize);
         //2. 从数据库中拉取数据
-        List<TrainTaskResponseVo> trainTaskReponseVos= trainTaskService.getTrainTasksByUserId(userId,keyWord);
+        List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasksByUserId(userId,keyWord);
         //3. 封装到 PageInfo 中
-        PageInfo pageInfo = new PageInfo(trainTaskReponseVos,5);
+        PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
         //4. 传给前端
         return CommonResult.success().add("pageInfo",pageInfo);
 
@@ -212,5 +212,38 @@ public class TrainTaskController {
         return CommonResult.success().add("trainTaskAndTrainTaskConfig",trainTaskAndTrainTaskConfig);
 
     }
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.8 分页查询当前用户的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/trainTasks")
+    public CommonResult getUserTrainTasks(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        //1. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize);
+        //2. 从数据库中拉取数据
+        List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasks(keyWord);
+        //3. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
+        //4. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
+    }
+
 
 }

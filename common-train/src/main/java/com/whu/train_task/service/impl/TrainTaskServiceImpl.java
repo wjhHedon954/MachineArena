@@ -138,4 +138,19 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         }
         return trainTaskAndTrainTaskConfig;
     }
+
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param keyWord
+     * @return
+     */
+    @Override
+    public List<TrainTaskResponseVo> getTrainTasks(String keyWord) {
+        return  trainTaskMapper.getTrainTasks(keyWord);
+    }
 }
