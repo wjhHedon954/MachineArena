@@ -2,14 +2,8 @@ package com.whu.train_task.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.entity.TrainTask;
-import com.entity.TrainTaskConf;
-import com.entity.TrainTaskLog;
-import com.entity.TrainTaskResource;
-import com.mapper.TrainTaskConfMapper;
-import com.mapper.TrainTaskLogMapper;
-import com.mapper.TrainTaskMapper;
-import com.mapper.TrainTaskResourceMapper;
+import com.entity.*;
+import com.mapper.*;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.whu.train_task.service.ITrainTaskService;
@@ -38,6 +32,8 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     private TrainTaskLogMapper trainTaskLogMapper;
     @Autowired
     private TrainTaskResourceMapper trainTaskResourceMapper;
+    @Autowired
+    private TaskIpContainerMapper taskIpContainerMapper;
 
     /**
      * 接口 6.2.1.1 创建训练作业
@@ -194,5 +190,20 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         QueryWrapper<TrainTaskResource> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("train_task_id",trainTaskId);
         return trainTaskResourceMapper.selectList(queryWrapper);
+    }
+
+
+    /**
+     * 接口 6.2.1.10 insert一条数据
+     * @author Yi Zheng
+     * @create 2020-07-19 00:30
+     * @updator
+     * @upadte
+     * @param ipContainer insert的数据
+     * @return
+     */
+    @Override
+    public int addTaskIpContainer(TaskIpContainer ipContainer) {
+        return taskIpContainerMapper.insert(ipContainer);
     }
 }

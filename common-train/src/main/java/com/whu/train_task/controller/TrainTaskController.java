@@ -1,14 +1,15 @@
 package com.whu.train_task.controller;
 
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.constants.ResultCode;
-import com.entity.TrainTask;
-import com.entity.TrainTaskConf;
-import com.entity.TrainTaskLog;
-import com.entity.TrainTaskResource;
-import com.github.pagehelper.Page;
+import com.entity.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
@@ -293,4 +294,56 @@ public class TrainTaskController {
         }
         return CommonResult.success().add("trainTaskResources",trainTaskResources);
     }
+
+    /**
+     * 接口 6.2.1.10 接收前端数据返回给研发，从研发获取数据存入数据库
+     * @author Yi Zheng
+     * @create 2020-07-19 00:30
+     * @updator Yi Zheng
+     * @upadte
+     * @param vo  研发训练需要的参数封装类
+     * @return
+     */
+    @PostMapping("/trainTask/start")
+    public CommonResult StartTrainTask(@RequestBody TrainStartVO vo){
+        //检查前端返回的数据是否为空
+        if (vo==null)
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        //检查前端核心数据是否为空
+        if (vo.getTrainTaskId()==null || vo.getTrainTaskAlgorithmId()==null)
+            return CommonResult.fail(ResultCode.NO_TrainTaskId_OR_TaskAlgorithmId);
+
+        //向研发发请求，传递数据并等待返回数据
+        String result=null;
+        try {
+            result = HttpRequest.post("localhost:****://container")
+                    .form(vo.toString())
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+        //检查返回数据是否为空
+        if (result==null)
+            return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
+        //JSON解析获取容器ID
+        JSON parse = JSONUtil.parse(result);
+        String containerId = parse.getByPath("containerId",String.class);
+        //判断容器id是否为空
+        if(containerId==null)
+            return CommonResult.fail(ResultCode.FAILE_PARSE_JSON);
+        //创建TaskIpContainer对象并且设值
+        Integer trainTaskId=vo.getTrainTaskId();
+        TaskIpContainer ipContainer=new TaskIpContainer();
+        ipContainer.setContainerId(containerId);
+        ipContainer.setTrainTaskId(trainTaskId);
+        //执行insert操作
+        int i = trainTaskService.addTaskIpContainer(ipContainer);
+        //判断insert操作是否成功
+        if (i==0)
+            return CommonResult.fail(ResultCode.INSERT_ERROR);
+
+        return CommonResult.success().add("message",vo);
+    }
+
 }
