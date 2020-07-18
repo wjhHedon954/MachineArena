@@ -2,6 +2,7 @@ package com.whu.algorithm.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.Algorithm;
+import com.responsevo.AlgorithmFullResponseVo;
 import com.responsevo.AlgorithmResponseVo;
 import com.results.CommonResult;
 
@@ -56,7 +57,7 @@ public interface IAlgorithmService extends IService<Algorithm> {
      * @param id 算法ID
      * @return 删除条目数
      */
-    Algorithm getAlgorithmById(Integer id);
+    AlgorithmFullResponseVo getAlgorithmFullInfoById(Integer id);
 
     /**
      * 分页查询算法，附带其他信息
@@ -73,5 +74,5 @@ public interface IAlgorithmService extends IService<Algorithm> {
      * @param keyWord 关键字
      * @return
      */
-    List<Algorithm> getAlgorithmsByUserId(Integer userId, String keyWord);
+    List<AlgorithmResponseVo> getAlgorithmsByUserId(Integer userId, String keyWord);
 }

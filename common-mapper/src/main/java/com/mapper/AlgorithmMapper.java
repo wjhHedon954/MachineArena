@@ -3,6 +3,7 @@ package com.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.entity.Algorithm;
+import com.responsevo.AlgorithmFullResponseVo;
 import com.responsevo.AlgorithmResponseVo;
 
 import java.util.List;
@@ -18,11 +19,12 @@ import java.util.List;
 public interface AlgorithmMapper extends BaseMapper<Algorithm> {
 
 
-    //查询完整的算法信息
-    AlgorithmResponseVo selectFullAlgorithmInfo(Integer algorithmId);
+    //查询算法的详细数据
+    AlgorithmFullResponseVo selectAllFullAlgorithmInfoById(Integer algorithmId);
 
-    //查询所有的算法数据
-    List<AlgorithmResponseVo> selectAllFullAlgorithms(String keyWord);
+    //根据ID查询算法的基本信息
+    List<AlgorithmResponseVo> selectAlgorithmsBasicInfo(String kewWord);
 
-
+    //查询一个用户下的所有算法数据
+    List<AlgorithmResponseVo> selectUsersAlgorithmsBasicInfo(String keyWord,Integer userId);
 }

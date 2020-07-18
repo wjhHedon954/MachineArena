@@ -1,66 +1,65 @@
-package com.entity;
+package com.responsevo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
+import com.entity.AiEngine;
+import com.entity.AlgorithmDescription;
+import com.entity.AlgorithmType;
+import com.entity.InstanceType;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 /**
- * <p>
- * 
- * </p>
- *
- * @author Hedon
- * @since 2020-07-11
+ * @author Hedon Wang
+ * @create 2020-07-18 14:17
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = false)
-@TableName("tbl_algorithm")
-@ApiModel(value="Algorithm对象", description="")
-public class Algorithm implements Serializable {
+@ApiModel(value="返回给前端的 Algorithm 完整对象", description="")
+public class AlgorithmFullResponseVo {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "algorithm_id", type = IdType.AUTO)
     private Integer algorithmId;
 
     private String algorithmName;
 
     private String algorithmVersion;
 
+    //联合 Type
     private Integer algorithmTypeId;
+    private AlgorithmType algorithmType;
 
+    //联合 AIEngine
     private Integer algorithmEngineId;
+    private AiEngine aiEngine;
 
+    //联合 Description
     private Integer algorithmDescriptionId;
+//    private AlgorithmDescription algorithmDescription;
 
+    //联合 InstanceType
     private Integer algorithmInstanceTypeId;
+    private InstanceType instanceType;
 
     private String algorithmInputReflect;
 
     private String algorithmOutputReflect;
 
-    @TableField("algorithm_starter_URL")
     private String algorithmStarterUrl;
 
-    @TableField("algorithm_save_URL")
     private String algorithmSaveUrl;
 
-    private Boolean algorithmCustomizeHyperPara;
+    private Integer algorithmCustomizeHyperPara;
 
     private Integer algorithmStatus;
 
     private LocalDateTime algorithmCreateTime;
 
     private String algorithmImageId;
+
 }

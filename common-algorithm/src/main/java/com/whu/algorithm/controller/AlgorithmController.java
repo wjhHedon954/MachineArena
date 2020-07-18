@@ -3,10 +3,12 @@ package com.whu.algorithm.controller;
 
 import com.constants.ResultCode;
 import com.entity.Algorithm;
+import com.entity.AlgorithmDescription;
 import com.entity.HyperParameters;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.responsevo.AlgorithmFullResponseVo;
 import com.responsevo.AlgorithmResponseVo;
 import com.results.CommonResult;
 import com.whu.algorithm.service.IAlgorithmService;
@@ -38,6 +40,8 @@ public class AlgorithmController {
 
     @Autowired
     IHyperParametersService hyperParametersService;
+
+
 
 
 
@@ -162,11 +166,12 @@ public class AlgorithmController {
         //2. 开启分页查询
         PageHelper.startPage(pageNum, pageSize);
         //3. 从数据库中拉取数据
-        List<Algorithm> algorithms = algorithmService.getAlgorithmsByUserId(userId,keyWord);
+        List<AlgorithmResponseVo> algorithms = algorithmService.getAlgorithmsByUserId(userId,keyWord);
         //4. 将数据封装到 PageInfo 当中
         PageInfo pageInfo = new PageInfo(algorithms,5);
         //5. 返回给前端
         return CommonResult.success().add("pageInfo",pageInfo);
+
     }
 
 
@@ -197,7 +202,7 @@ public class AlgorithmController {
 
 
     /**
-     * 根据ID查询算法基本信息
+     * 根据ID查询算法信息
      * @author Jiahan Wang
      * @create 2020-07-15 15:59
      * @updator Jiahan Wang
@@ -205,44 +210,20 @@ public class AlgorithmController {
      * @param algorithmId
      * @return
      */
-    @GetMapping("/algorithm/basic/{algorithmId}")
+    @GetMapping("/algorithm/{algorithmId}")
     public CommonResult getAlgorithmBasicById(@PathVariable(value = "algorithmId")Integer algorithmId){
-        return selectAlgorithmById(algorithmId);
-    }
-
-
-
-    /**
-     * 按ID查询算法训练规范
-     * @author Jiahan Wang
-     * @create 2020-07-15 16:19
-     * @updator Jiahan Wang
-     * @upadte 2020-07-15 16:19
-     * @param algorithmId
-     * @return
-     */
-    @GetMapping("/algorithm/trainStandard/{algorithmId}")
-    public CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId")Integer algorithmId) {
-        return selectAlgorithmById(algorithmId);
-    }
-
-
-
-    //通用方法：根据ID查询算法（返回的东西相同，但是不用场景需要的具体数据有所不同）
-    private CommonResult selectAlgorithmById(Integer id){
         //判断算法ID是否为空
-        if (id == null){
+        if (algorithmId == null){
             return CommonResult.fail(ResultCode.EMPTY_ALGORITHM_ID);
         }
         //查询算法
-        Algorithm algorithm = algorithmService.getAlgorithmById(id);
+        AlgorithmFullResponseVo algorithm = algorithmService.getAlgorithmFullInfoById(algorithmId);
         if (algorithm == null){
             return CommonResult.fail(ResultCode.ALGORITHM_NOT_EXIST);
         }
-
-        //返回结果
         return CommonResult.success().add("algorithm",algorithm);
     }
+
 
 
     /**
@@ -267,5 +248,28 @@ public class AlgorithmController {
         return CommonResult.success()
                     .add("algorithmId",algorithmId)
                     .add("hyperParameters",hyperParameters);
+    }
+
+    /**
+     * 查询算法描述
+     * @author Jiahan Wang
+     * @create 2020-07-18 14:00
+     * @updator Jiahan Wang
+     * @update 2020-07-18 14:00
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/description/{algorithmId}")
+    public CommonResult getAlgorithmDescription(@PathVariable("algorithmId")Integer algorithmId){
+        //检查算法ID是否为空
+        if (algorithmId == null){
+            return CommonResult.fail(ResultCode.EMPTY_ALGORITHM_ID);
+        }
+        //查询描述
+        AlgorithmDescription algorithmDescription = algorithmDescriptionService.getAlgorithmDescription(algorithmId);
+        if (algorithmDescription == null) {
+            return CommonResult.fail(ResultCode.ALGORITHM_NOT_EXIST);
+        }
+        return CommonResult.success().add("algorithmDescription",algorithmDescription);
     }
 }

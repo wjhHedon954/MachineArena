@@ -1,6 +1,8 @@
 package com.whu.algorithm;
 
 import com.entity.Algorithm;
+import com.responsevo.AlgorithmFullResponseVo;
+import com.responsevo.AlgorithmResponseVo;
 import com.whu.algorithm.service.IAlgorithmService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class AlgorithmServiceTest {
      */
     @Test
     public void testGetAlgorithmById1_noData(){
-        Algorithm algorithm = algorithmService.getAlgorithmById(999);
+        AlgorithmFullResponseVo algorithm = algorithmService.getAlgorithmFullInfoById(999);
         System.out.println(algorithm);
     }
 
@@ -43,7 +45,7 @@ public class AlgorithmServiceTest {
      */
     @Test
     public void testGetAlgorithmById1_hasData(){
-        Algorithm algorithm = algorithmService.getAlgorithmById(3);
+        AlgorithmFullResponseVo algorithm = algorithmService.getAlgorithmFullInfoById(3);
         System.out.println(algorithm);
     }
 
@@ -58,7 +60,7 @@ public class AlgorithmServiceTest {
      */
     @Test
     public void testGetAlgorithmsByUserIdAndKeyWord(){
-        List<Algorithm> algorithmsByUserId = algorithmService.getAlgorithmsByUserId(1, "");
+        List<AlgorithmResponseVo> algorithmsByUserId = algorithmService.getAlgorithmsByUserId(1, "");
         System.out.println(algorithmsByUserId);
     }
 
