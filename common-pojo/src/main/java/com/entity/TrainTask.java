@@ -43,5 +43,4 @@ public class TrainTask implements Serializable {
 
     private String trainTaskRunningTime;
 
-
 }
