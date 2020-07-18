@@ -21,4 +21,7 @@ public interface IAlgorithmDescriptionService extends IService<AlgorithmDescript
      * @return int
      **/
     int addDescription(AlgorithmDescription description);
+
+    //查询算法描述
+    AlgorithmDescription getAlgorithmDescription(Integer algorithmId);
 }

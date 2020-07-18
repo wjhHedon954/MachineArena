@@ -11,11 +11,16 @@
     <artifactId>common-algorithm</artifactId>
 
     <dependencies>
-        <!--分页查询插件-->
+        <!-- pagehelper 依赖 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
             <version>5.1.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>2.1</version>
         </dependency>
         <!--注入 common-utils -->
         <dependency>

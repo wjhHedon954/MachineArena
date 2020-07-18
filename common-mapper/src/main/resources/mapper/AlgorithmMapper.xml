@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.AlgorithmMapper">
+    <!--简单Algorithm结果集-->
+    <resultMap id="BasicResultMap" type="com.responsevo.AlgorithmResponseVo">
+        <id column="algorithm_id" jdbcType="INTEGER" property="algorithmId" />
+        <result column="algorithm_name" jdbcType="VARCHAR" property="algorithmName" />
+        <result column="algorithm_version" jdbcType="VARCHAR" property="algorithmVersion" />
+        <result column="algorithm_type_id" jdbcType="INTEGER" property="algorithmTypeId" />
+        <result column="algorithm_status" jdbcType="TINYINT" property="algorithmStatus" />
+        <result column="algorithm_create_time" jdbcType="TIMESTAMP" property="algorithmCreateTime" />
+        <result column="algorithm_image_id" jdbcType="VARCHAR" property="algorithmImageId" />
+        <!--联合 Algorithm Type-->
+        <association property="algorithmType" javaType="com.entity.AlgorithmType">
+            <id column="algorithm_type_id" jdbcType="INTEGER" property="algorithmTypeId" />
+            <result column="algorithm_type_name" jdbcType="VARCHAR" property="algorithmTypeName" />
+            <result column="algorithm_type_description" jdbcType="VARCHAR" property="algorithmTypeDescription" />
+        </association>
+    </resultMap>
     <!--完整的Algorithm结果集-->
-    <resultMap id="FullResultMap" type="com.responsevo.AlgorithmResponseVo">
+    <resultMap id="FullResultMap" type="com.responsevo.AlgorithmFullResponseVo">
         <id column="algorithm_id" jdbcType="INTEGER" property="algorithmId" />
         <result column="algorithm_name" jdbcType="VARCHAR" property="algorithmName" />
         <result column="algorithm_version" jdbcType="VARCHAR" property="algorithmVersion" />
@@ -14,7 +30,10 @@
         <result column="algorithm_output_reflect" jdbcType="VARCHAR" property="algorithmOutputReflect" />
         <result column="algorithm_starter_URL" jdbcType="VARCHAR" property="algorithmStarterUrl" />
         <result column="algorithm_save_URL" jdbcType="VARCHAR" property="algorithmSaveUrl" />
-        <result column="al.algorithm_customize_hyper_para" jdbcType="TINYINT" property="algorithmCustomizeHyperPara" />
+        <result column="algorithm_customize_hyper_para" jdbcType="TINYINT" property="algorithmCustomizeHyperPara" />
+        <result column="algorithm_status" jdbcType="TINYINT" property="algorithmStatus" />
+        <result column="algorithm_create_time" jdbcType="TIMESTAMP" property="algorithmCreateTime" />
+        <result column="algorithm_image_id" jdbcType="VARCHAR" property="algorithmImageId" />
         <!--联合 Algorithm Type-->
         <association property="algorithmType" javaType="com.entity.AlgorithmType">
             <id column="algorithm_type_id" jdbcType="INTEGER" property="algorithmTypeId" />
@@ -26,6 +45,11 @@
             <id column="algorithm_engine_id" jdbcType="INTEGER" property="algorithmEngineId" />
             <result column="algorithm_engine_name" jdbcType="VARCHAR" property="algorithmEngineName" />
         </association>
+        <!--联合 InstanceType-->
+        <association property="instanceType" javaType="com.entity.InstanceType">
+            <id column="instance_type_id" jdbcType="INTEGER" property="instanceTypeId" />
+            <result column="instance_type_description" jdbcType="VARCHAR" property="instanceTypeDescription" />
+        </association>
     </resultMap>
 
 
@@ -34,31 +58,54 @@
     <!--算法-->
         al.algorithm_id, al.algorithm_name, al.algorithm_version, al.algorithm_type_id, al.algorithm_engine_id,
         al.algorithm_description_id, al.algorithm_instance_type_id, al.algorithm_input_reflect, al.algorithm_output_reflect,
-        al.algorithm_starter_URL, al.algorithm_save_URL, al.algorithm_customize_hyper_para,
+        al.algorithm_starter_URL, al.algorithm_save_URL, al.algorithm_customize_hyper_para, al.algorithm_status,
+        al.algorithm_create_time, al.algorithm_image_id,
     <!--算法类型-->
         alt.algorithm_type_id, alt.algorithm_type_name, alt.algorithm_type_description,
     <!--AI Enigne-->
-        en.algorithm_engine_id, en.algorithm_engine_name
+        en.algorithm_engine_id, en.algorithm_engine_name, en.algorithm_engine_version, en.python_version_name,
+    <!--联合 InstanceType-->
+        it.instance_type_id, it.instance_type_description
+    </sql>
+
+    <sql id="Basic_Column_List">
+        <!--算法-->
+        al.algorithm_id, al.algorithm_name, al.algorithm_version, al.algorithm_type_id, al.algorithm_status,
+        al.algorithm_create_time, al.algorithm_image_id,
+        <!--算法类型-->
+        alt.algorithm_type_id, alt.algorithm_type_name, alt.algorithm_type_description
     </sql>
 
 
-    <select id="selectFullAlgorithmInfo" parameterType="java.lang.Integer" resultMap="FullResultMap">
+    <select id="selectAlgorithmsBasicInfo" parameterType="java.lang.String" resultMap="BasicResultMap">
         SELECT
-        <include refid="Full_Column_List"></include>
+        <include refid="Basic_Column_List"></include>
         FROM tbl_algorithm al
         LEFT JOIN tbl_algorithm_type alt  ON al.algorithm_type_id = alt.algorithm_type_id
-        LEFT JOIN tbl_ai_engine en ON al.algorithm_engine_id = en.algorithm_engine_id
-        where algorithm_id = #{algorithmId,jdbcType=INTEGER}
+        WHERE al.algorithm_name like '%${value}%'
     </select>
 
 
-    <select id="selectAllFullAlgorithms" parameterType="java.lang.String" resultMap="FullResultMap">
+    <select id="selectUsersAlgorithmsBasicInfo"  resultMap="BasicResultMap">
+        SELECT
+        <include refid="Basic_Column_List"></include>
+        FROM tbl_algorithm al
+        LEFT JOIN tbl_algorithm_user au ON al.algorithm_id = au.algorithm_id
+        LEFT JOIN tbl_algorithm_type alt ON al.algorithm_type_id = alt.algorithm_type_id
+        WHERE
+        al.algorithm_name like '%${keyWord}%' AND
+        au.user_id = '${userId}'
+    </select>
+
+
+    <select id="selectAllFullAlgorithmInfoById" parameterType="java.lang.Integer" resultMap="FullResultMap">
         SELECT
         <include refid="Full_Column_List"></include>
         FROM tbl_algorithm al
         LEFT JOIN tbl_algorithm_type alt  ON al.algorithm_type_id = alt.algorithm_type_id
         LEFT JOIN tbl_ai_engine en ON al.algorithm_engine_id = en.algorithm_engine_id
-        WHERE al.algorithm_name like '%${value}%'
+        LEFT JOIN tbl_instance_type it ON al.algorithm_instance_type_id = it.instance_type_id
+        where algorithm_id = #{algorithmId,jdbcType=INTEGER}
     </select>
 
 

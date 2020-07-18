@@ -11,6 +11,8 @@ import com.entity.PythonVersion;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Hedon Wang
  * @create 2020-07-12 10:54
@@ -36,25 +38,10 @@ public class AlgorithmResponseVo {
     private Integer algorithmTypeId;
     private AlgorithmType algorithmType;
 
-    //联合 AIEngine
-    private Integer algorithmEngineId;
-    private AiEngine aiEngine;
+    private Integer algorithmStatus;
 
-    //联合 Description
-    private Integer algorithmDescriptionId;
-    private AlgorithmDescription algorithmDescription;
+    private LocalDateTime algorithmCreateTime;
 
-    private Integer algorithmInstanceTypeId;
-
-
-    private String algorithmInputReflect;
-
-    private String algorithmOutputReflect;
-
-    private String algorithmStarterUrl;
-
-    private String algorithmSaveUrl;
-
-    private Integer algorithmCustomizeHyperPara;
+    private String algorithmImageId;
 
 }
