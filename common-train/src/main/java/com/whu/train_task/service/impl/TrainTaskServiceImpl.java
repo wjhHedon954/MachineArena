@@ -206,4 +206,13 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     public int addTaskIpContainer(TaskIpContainer ipContainer) {
         return taskIpContainerMapper.insert(ipContainer);
     }
+
+    @Override
+    public int deleteTaskIpContainerByTrainTaskId(Integer trainTaskId) {
+        QueryWrapper wrapper=new QueryWrapper();
+        wrapper.eq("train_task_id",trainTaskId);
+        return taskIpContainerMapper.delete(wrapper);
+    }
+
+
 }

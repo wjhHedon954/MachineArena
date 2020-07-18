@@ -80,12 +80,13 @@ public class TrainTaskController {
     }
 
 
+    //未与研发对接，未进行详尽测试。但删除功能已测试，正常
     /**
-     * 接口 6.2.1.2 根据ID删除训练作业
+     * 接口 6.2.1.2 根据ID删除训练作业,包括容器，
      * @author Yi Zheng
      * @create 2020-07-17 14:00
-     * @updator
-     * @update
+     * @updator Yi Zheng
+     * @update 2020-07-19 00:30
      * @param trainTaskID 删除的ID
      * @return  返回通用数据
      */
@@ -101,15 +102,23 @@ public class TrainTaskController {
         }
         //执行删除操作
         try {
-            int deleteCount = trainTaskService.deleteTrainTaskById(trainTaskID);
-            if (deleteCount == 0) {
-                return CommonResult.fail(ResultCode.TRAINTASK_NOT_EXIST);
-            } else {
-                return CommonResult.success();
-            }
+            int i = trainTaskService.deleteTrainTaskById(trainTaskID);
+            int j = trainTaskService.deleteTaskIpContainerByTrainTaskId(trainTaskID);
+            if (i == 0||j==0)
+                return CommonResult.fail(ResultCode.DELETE_ERROR);
         } catch (Exception e) {
-            return CommonResult.fail(ResultCode.ERROR);
+            return CommonResult.fail(ResultCode.DELETE_ERROR);
         }
+        //向研发发送删除请求
+        try{
+            HttpRequest.delete("localhost:****://container/"+trainTaskID)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+
+        return CommonResult.success();
     }
 
 
@@ -295,6 +304,8 @@ public class TrainTaskController {
         return CommonResult.success().add("trainTaskResources",trainTaskResources);
     }
 
+
+    //未与后台对接，未测试
     /**
      * 接口 6.2.1.10 接收前端数据返回给研发，从研发获取数据存入数据库
      * @author Yi Zheng
@@ -346,4 +357,7 @@ public class TrainTaskController {
         return CommonResult.success().add("message",vo);
     }
 
+//    CommonResult showContainerStatus(){
+//
+//    }
 }
