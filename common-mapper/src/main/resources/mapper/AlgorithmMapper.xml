@@ -15,7 +15,6 @@
         <result column="algorithm_starter_URL" jdbcType="VARCHAR" property="algorithmStarterUrl" />
         <result column="algorithm_save_URL" jdbcType="VARCHAR" property="algorithmSaveUrl" />
         <result column="al.algorithm_customize_hyper_para" jdbcType="TINYINT" property="algorithmCustomizeHyperPara" />
-        <result column="algorithm_python_version_id" jdbcType="INTEGER" property="algorithmPythonVersionId" />
         <!--联合 Algorithm Type-->
         <association property="algorithmType" javaType="com.entity.AlgorithmType">
             <id column="algorithm_type_id" jdbcType="INTEGER" property="algorithmTypeId" />
@@ -27,11 +26,6 @@
             <id column="algorithm_engine_id" jdbcType="INTEGER" property="algorithmEngineId" />
             <result column="algorithm_engine_name" jdbcType="VARCHAR" property="algorithmEngineName" />
         </association>
-        <!--联合 PythonVersion-->
-        <association property="pythonVersion" javaType="com.entity.PythonVersion">
-            <id column="python_version_id" jdbcType="INTEGER" property="pythonVersionId" />
-            <result column="python_version_name" jdbcType="VARCHAR" property="pythonVersionName" />
-        </association>
     </resultMap>
 
 
@@ -40,13 +34,11 @@
     <!--算法-->
         al.algorithm_id, al.algorithm_name, al.algorithm_version, al.algorithm_type_id, al.algorithm_engine_id,
         al.algorithm_description_id, al.algorithm_instance_type_id, al.algorithm_input_reflect, al.algorithm_output_reflect,
-        al.algorithm_starter_URL, al.algorithm_save_URL, al.algorithm_customize_hyper_para, al.algorithm_python_version_id,
+        al.algorithm_starter_URL, al.algorithm_save_URL, al.algorithm_customize_hyper_para,
     <!--算法类型-->
         alt.algorithm_type_id, alt.algorithm_type_name, alt.algorithm_type_description,
     <!--AI Enigne-->
-        en.algorithm_engine_id, en.algorithm_engine_name,
-    <!--Python版本-->
-        pyv.python_version_id, pyv.python_version_name
+        en.algorithm_engine_id, en.algorithm_engine_name
     </sql>
 
 
@@ -56,7 +48,6 @@
         FROM tbl_algorithm al
         LEFT JOIN tbl_algorithm_type alt  ON al.algorithm_type_id = alt.algorithm_type_id
         LEFT JOIN tbl_ai_engine en ON al.algorithm_engine_id = en.algorithm_engine_id
-        LEFT JOIN tbl_python_version pyv ON al.algorithm_python_version_id = pyv.python_version_id
         where algorithm_id = #{algorithmId,jdbcType=INTEGER}
     </select>
 
@@ -67,7 +58,6 @@
         FROM tbl_algorithm al
         LEFT JOIN tbl_algorithm_type alt  ON al.algorithm_type_id = alt.algorithm_type_id
         LEFT JOIN tbl_ai_engine en ON al.algorithm_engine_id = en.algorithm_engine_id
-        LEFT JOIN tbl_python_version pyv ON al.algorithm_python_version_id = pyv.python_version_id
         WHERE al.algorithm_name like '%${value}%'
     </select>
 
