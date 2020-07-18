@@ -1,5 +1,6 @@
 package com.whu.train_task.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
@@ -9,6 +10,7 @@ import com.whu.train_task.service.ITrainTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Wrapper;
 import java.util.Map;
 
 /**
@@ -44,7 +46,6 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         trainTaskConf.setTrainTaskId(trainTask.getTrainTaskId());
 
         int j = trainTaskConfMapper.insert(trainTaskConf);
-        System.out.println("j="+j);
         return new int[]{i,j};
     }
 
@@ -61,5 +62,32 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     @Override
     public int deleteTrainTaskById(Integer trainTaskID) {
         return trainTaskMapper.deleteById(trainTaskID);
+    }
+
+
+    /**
+     * 接口 6.2.1.4 根据训练作业ID同时更新train_task和train_task_conf
+     * @author Yi Zheng
+     * @create 2020-07-18 10:00
+     * @updator
+     * @update
+     * @param trainTask 训练作业
+     * @param trainTaskConf 训练作业参数
+     * @return  返回更新影响的行数
+     */
+    @Override
+    public int[] updateTrainTask(TrainTask trainTask,TrainTaskConf trainTaskConf) {
+        //执行更新训练作业
+        int i = trainTaskMapper.updateById(trainTask);
+
+        //保证更新的执行对象是train_task_conf中训练作业ID等于参数训练作业ID的对象
+        QueryWrapper wrapper = new QueryWrapper();
+        Integer trainTaskId = trainTask.getTrainTaskId();
+        trainTaskConf.setTrainTaskId(trainTaskId);
+        wrapper.eq("train_task_id",trainTaskId);
+
+        //执行更新训练作业配置
+        int j = trainTaskConfMapper.update(trainTaskConf,wrapper);
+        return new int[]{i,j};
     }
 }
