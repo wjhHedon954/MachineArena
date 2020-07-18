@@ -41,18 +41,18 @@ public interface AlgorithmFeignService {
     @GetMapping("/algorithm/basic/{algorithmId}")
     CommonResult getAlgorithmBasicById(@PathVariable(value = "algorithmId")Integer algorithmId);
 
-    /**
-     * 接口 6.1.1.3 按ID查询算法训练规范
-     * @author Jiahan Wang
-     * @create 2020-07-15 16:19
-     * @updator Jiahan Wang
-     * @upadte 2020-07-15 16:19
-     * @param algorithmId 算的ID
-     * @return
-     */
-    @GetMapping("/algorithm/trainStandard/{algorithmId}")
-    CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId") Integer algorithmId);
-
+//    /**
+//     * 接口 6.1.1.3 按ID查询算法训练规范
+//     * @author Jiahan Wang
+//     * @create 2020-07-15 16:19
+//     * @updator Jiahan Wang
+//     * @upadte 2020-07-15 16:19
+//     * @param algorithmId 算的ID
+//     * @return
+//     */
+//    @GetMapping("/algorithm/trainStandard/{algorithmId}")
+//    CommonResult getAlgorithmTrainStandardById(@PathVariable("algorithmId") Integer algorithmId);
+//
 
     /**
      * 接口 6.1.1.4 按ID查询算法超参规范
@@ -91,4 +91,17 @@ public interface AlgorithmFeignService {
      */
     @DeleteMapping(value = "/algorithm/{id}")
     CommonResult deleteAlgorithmById(@PathVariable("id") Integer id);
+
+
+    /**
+     * 查询算法描述
+     * @author Jiahan Wang
+     * @create 2020-07-18 14:00
+     * @updator Jiahan Wang
+     * @update 2020-07-18 14:00
+     * @param algorithmId
+     * @return
+     */
+    @GetMapping("/algorithm/description/{algorithmId}")
+    CommonResult getAlgorithmDescription(@PathVariable("algorithmId")Integer algorithmId);
 }
