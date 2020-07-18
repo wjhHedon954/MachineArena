@@ -101,4 +101,22 @@ public class TrainTaskController {
                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
         return service.getUserTrainTasks(userId,pageNum,pageSize,keyWord);
     }
+
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 17:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 17:59
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "6.2.1.3 按ID查询作业",httpMethod = "GET")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/{trainTaskId}")
+    public CommonResult getTrainTaskById(@PathVariable("trainTaskId")Integer trainTaskId){
+
+        return service.getTrainTaskById(trainTaskId);
+    }
 }

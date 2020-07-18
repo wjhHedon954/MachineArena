@@ -6,6 +6,7 @@ import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
 import com.mapper.TrainTaskConfMapper;
 import com.mapper.TrainTaskMapper;
+import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.whu.train_task.service.ITrainTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +108,34 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     @Override
     public List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord) {
         return trainTaskMapper.getTrainTasksByUserId(userId,keyWord);
+    }
+
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @author Jihan Wang
+     * @create 2020-07-18 17:00
+     * @updator
+     * @update
+     * @param trainTaskId
+     * @return
+     */
+    @Override
+    public TrainTaskAndTrainTaskConfig getTrainTaskFullInfoById(Integer trainTaskId) {
+
+        TrainTaskAndTrainTaskConfig trainTaskAndTrainTaskConfig = new TrainTaskAndTrainTaskConfig();
+        //获得trainTask
+        TrainTask trainTask = trainTaskMapper.selectById(trainTaskId);
+        trainTaskAndTrainTaskConfig.setTrainTask(trainTask);
+        //获得trainTaskConf
+        QueryWrapper<TrainTaskConf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("train_task_id",trainTaskId);
+        List<TrainTaskConf> trainTaskConfs = trainTaskConfMapper.selectList(queryWrapper);
+        if (trainTaskConfs == null || trainTaskConfs.size() == 0){
+            trainTaskAndTrainTaskConfig.setTrainTaskConf(null);
+        }else{
+            trainTaskAndTrainTaskConfig.setTrainTaskConf(trainTaskConfs.get(0));
+        }
+        return trainTaskAndTrainTaskConfig;
     }
 }

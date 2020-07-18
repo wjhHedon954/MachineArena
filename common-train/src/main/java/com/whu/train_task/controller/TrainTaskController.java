@@ -193,4 +193,24 @@ public class TrainTaskController {
 
     }
 
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "6.2.1.3 按ID查询作业",httpMethod = "GET")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/{trainTaskId}")
+    public CommonResult getTrainTaskById(@PathVariable("trainTaskId")Integer trainTaskId){
+        //检查ID是否为空
+        if (trainTaskId == null){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
+        }
+        //查询
+        TrainTaskAndTrainTaskConfig  trainTaskAndTrainTaskConfig = trainTaskService.getTrainTaskFullInfoById(trainTaskId);
+        return CommonResult.success().add("trainTaskAndTrainTaskConfig",trainTaskAndTrainTaskConfig);
+
+    }
+
 }

@@ -3,6 +3,7 @@ package com.whu.train_task.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
 
@@ -66,4 +67,16 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord);
+
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @author Jihan Wang
+     * @create 2020-07-18 17:00
+     * @updator
+     * @update
+     * @param trainTaskId
+     * @return
+     */
+    TrainTaskAndTrainTaskConfig getTrainTaskFullInfoById(Integer trainTaskId);
 }

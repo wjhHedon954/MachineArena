@@ -79,4 +79,19 @@ public interface TrainFeignService {
                                           @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                           @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
                                           @RequestParam(value = "keyWord",defaultValue = "")String keyWord);
+
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 17:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 17:59
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "6.2.1.3 按ID查询作业",httpMethod = "GET")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/{trainTaskId}")
+    CommonResult getTrainTaskById(@PathVariable("trainTaskId")Integer trainTaskId);
 }
