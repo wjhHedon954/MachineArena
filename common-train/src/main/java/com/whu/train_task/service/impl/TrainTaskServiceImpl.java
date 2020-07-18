@@ -4,8 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.entity.TrainTaskLog;
+import com.entity.TrainTaskResource;
 import com.mapper.TrainTaskConfMapper;
+import com.mapper.TrainTaskLogMapper;
 import com.mapper.TrainTaskMapper;
+import com.mapper.TrainTaskResourceMapper;
+import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.whu.train_task.service.ITrainTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,10 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     private TrainTaskMapper trainTaskMapper;
     @Autowired
     private TrainTaskConfMapper trainTaskConfMapper;
+    @Autowired
+    private TrainTaskLogMapper trainTaskLogMapper;
+    @Autowired
+    private TrainTaskResourceMapper trainTaskResourceMapper;
 
     /**
      * 接口 6.2.1.1 创建训练作业
@@ -107,5 +116,83 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     @Override
     public List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord) {
         return trainTaskMapper.getTrainTasksByUserId(userId,keyWord);
+    }
+
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @author Jihan Wang
+     * @create 2020-07-18 17:00
+     * @updator
+     * @update
+     * @param trainTaskId
+     * @return
+     */
+    @Override
+    public TrainTaskAndTrainTaskConfig getTrainTaskFullInfoById(Integer trainTaskId) {
+
+        TrainTaskAndTrainTaskConfig trainTaskAndTrainTaskConfig = new TrainTaskAndTrainTaskConfig();
+        //获得trainTask
+        TrainTask trainTask = trainTaskMapper.selectById(trainTaskId);
+        trainTaskAndTrainTaskConfig.setTrainTask(trainTask);
+        //获得trainTaskConf
+        QueryWrapper<TrainTaskConf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("train_task_id",trainTaskId);
+        List<TrainTaskConf> trainTaskConfs = trainTaskConfMapper.selectList(queryWrapper);
+        if (trainTaskConfs == null || trainTaskConfs.size() == 0){
+            trainTaskAndTrainTaskConfig.setTrainTaskConf(null);
+        }else{
+            trainTaskAndTrainTaskConfig.setTrainTaskConf(trainTaskConfs.get(0));
+        }
+        return trainTaskAndTrainTaskConfig;
+    }
+
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param keyWord
+     * @return
+     */
+    @Override
+    public List<TrainTaskResponseVo> getTrainTasks(String keyWord) {
+        return  trainTaskMapper.getTrainTasks(keyWord);
+    }
+
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    @Override
+    public List<TrainTaskLog> getTrainTaskLog(Integer trainTaskId) {
+        QueryWrapper<TrainTaskLog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("train_task_id",trainTaskId);
+        List<TrainTaskLog> trainTaskLogs = trainTaskLogMapper.selectList(queryWrapper);
+        return trainTaskLogs;
+    }
+
+
+    /**
+     * 接口 6.2.1.6 查询资源占用情况
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:20
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:20
+     * @param trainTaskId
+     * @return
+     */
+    @Override
+    public List<TrainTaskResource> getTrainTaskResources(Integer trainTaskId) {
+        QueryWrapper<TrainTaskResource> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("train_task_id",trainTaskId);
+        return trainTaskResourceMapper.selectList(queryWrapper);
     }
 }

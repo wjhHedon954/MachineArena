@@ -4,6 +4,8 @@ package com.whu.train_task.controller;
 import com.constants.ResultCode;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.entity.TrainTaskLog;
+import com.entity.TrainTaskResource;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -185,12 +187,110 @@ public class TrainTaskController {
         //1. 开启分页查询
         PageHelper.startPage(pageNum,pageSize);
         //2. 从数据库中拉取数据
-        List<TrainTaskResponseVo> trainTaskReponseVos= trainTaskService.getTrainTasksByUserId(userId,keyWord);
+        List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasksByUserId(userId,keyWord);
         //3. 封装到 PageInfo 中
-        PageInfo pageInfo = new PageInfo(trainTaskReponseVos,5);
+        PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
         //4. 传给前端
         return CommonResult.success().add("pageInfo",pageInfo);
 
     }
 
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "6.2.1.3 按ID查询作业",httpMethod = "GET")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/{trainTaskId}")
+    public CommonResult getTrainTaskById(@PathVariable("trainTaskId")Integer trainTaskId){
+        //检查ID是否为空
+        if (trainTaskId == null){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
+        }
+        //查询
+        TrainTaskAndTrainTaskConfig  trainTaskAndTrainTaskConfig = trainTaskService.getTrainTaskFullInfoById(trainTaskId);
+        return CommonResult.success().add("trainTaskAndTrainTaskConfig",trainTaskAndTrainTaskConfig);
+
+    }
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.8 分页查询当前用户的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/trainTasks")
+    public CommonResult getUserTrainTasks(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        //1. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize);
+        //2. 从数据库中拉取数据
+        List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasks(keyWord);
+        //3. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
+        //4. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
+    }
+
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.5 查看日志",httpMethod = "GET",notes = "")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/log/{trainTaskId}")
+    public CommonResult getTrainTaskLog(@PathVariable("trainTaskId")Integer trainTaskId){
+        if (trainTaskId == null){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
+        }
+        List<TrainTaskLog> trainTaskLogs = trainTaskService.getTrainTaskLog(trainTaskId);
+        if (trainTaskLogs == null || trainTaskLogs.size()==0){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_NO_LOGS);
+        }
+        return CommonResult.success().add("trainTaskLogs",trainTaskLogs);
+
+    }
+
+    /**
+     * 接口 6.2.1.6 查询资源占用情况
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:20
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:20
+     * @param trainTaskId
+     * @return
+     */
+    @ApiOperation(value = "接口 6.2.1.6 查询资源占用情况",httpMethod = "GET",notes = "")
+    @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
+    @GetMapping("/trainTask/resources/{trainTaskId}")
+    public CommonResult getTrainTaskResources(@PathVariable("trainTaskId")Integer trainTaskId){
+        if (trainTaskId == null){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
+        }
+        List<TrainTaskResource> trainTaskResources = trainTaskService.getTrainTaskResources(trainTaskId);
+        if (trainTaskResources == null || trainTaskResources.size() == 0){
+            return CommonResult.fail(ResultCode.TRAIN_TASK_NO_RESOURCES);
+        }
+        return CommonResult.success().add("trainTaskResources",trainTaskResources);
+    }
 }

@@ -3,6 +3,9 @@ package com.whu.train_task.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.entity.TrainTaskLog;
+import com.entity.TrainTaskResource;
+import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
 
@@ -66,4 +69,50 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     List<TrainTaskResponseVo> getTrainTasksByUserId(Integer userId, String keyWord);
+
+
+    /**
+     * 6.2.1.3 按ID查询作业
+     * @author Jihan Wang
+     * @create 2020-07-18 17:00
+     * @updator
+     * @update
+     * @param trainTaskId
+     * @return
+     */
+    TrainTaskAndTrainTaskConfig getTrainTaskFullInfoById(Integer trainTaskId);
+
+
+    /**
+     * 接口 6.2.1.7 分页查询训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 18:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 18:59
+     * @param keyWord
+     * @return
+     */
+    List<TrainTaskResponseVo> getTrainTasks(String keyWord);
+
+    /**
+     * 接口 6.2.1.5 查看日志
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:10
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:10
+     * @param trainTaskId
+     * @return
+     */
+    List<TrainTaskLog> getTrainTaskLog(Integer trainTaskId);
+
+    /**
+     * 接口 6.2.1.6 查询资源占用情况
+     * @author Jiahan Wang
+     * @create 2020-07-18 19:20
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 19:20
+     * @param trainTaskId
+     * @return
+     */
+    List<TrainTaskResource> getTrainTaskResources(Integer trainTaskId);
 }

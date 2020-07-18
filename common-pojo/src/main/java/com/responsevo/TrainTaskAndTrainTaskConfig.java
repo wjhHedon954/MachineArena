@@ -4,6 +4,7 @@ import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
 
 public class TrainTaskAndTrainTaskConfig {
+
     private TrainTask trainTask;
     private TrainTaskConf trainTaskConf;
 

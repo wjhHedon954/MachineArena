@@ -25,4 +25,12 @@
         where train_task_user_id = '${userId}'
         and train_task_name like '%${keyWord}%'
     </select>
+
+
+    <select id="getTrainTasks" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_train_task
+        where  train_task_name like '%${keyWord}%'
+    </select>
 </mapper>
