@@ -80,9 +80,8 @@ public class TrainTaskController {
     }
 
 
-    //未与研发对接，未进行详尽测试。但删除功能已测试，正常
     /**
-     * 接口 6.2.1.2 根据ID删除训练作业,包括容器，
+     * 接口 6.2.1.2 根据ID删除训练作业
      * @author Yi Zheng
      * @create 2020-07-17 14:00
      * @updator Yi Zheng
@@ -103,21 +102,11 @@ public class TrainTaskController {
         //执行删除操作
         try {
             int i = trainTaskService.deleteTrainTaskById(trainTaskID);
-            int j = trainTaskService.deleteTaskIpContainerByTrainTaskId(trainTaskID);
-            if (i == 0||j==0)
+            if (i == 0)
                 return CommonResult.fail(ResultCode.DELETE_ERROR);
         } catch (Exception e) {
             return CommonResult.fail(ResultCode.DELETE_ERROR);
         }
-        //向研发发送删除请求
-        try{
-            HttpRequest.delete("localhost:****://container/"+trainTaskID)
-                    .timeout(100000)
-                    .execute().body();
-        }catch (Exception e){
-            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
-        }
-
         return CommonResult.success();
     }
 
@@ -278,7 +267,6 @@ public class TrainTaskController {
             return CommonResult.fail(ResultCode.TRAIN_TASK_NO_LOGS);
         }
         return CommonResult.success().add("trainTaskLogs",trainTaskLogs);
-
     }
 
     /**
@@ -305,7 +293,7 @@ public class TrainTaskController {
     }
 
 
-    //未与后台对接，未测试
+    //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
     /**
      * 接口 6.2.1.10 接收前端数据返回给研发，从研发获取数据存入数据库
      * @author Yi Zheng
@@ -316,7 +304,7 @@ public class TrainTaskController {
      * @return
      */
     @PostMapping("/trainTask/start")
-    public CommonResult StartTrainTask(@RequestBody TrainStartVO vo){
+    public CommonResult startTrainTask(@RequestBody TrainStartVO vo){
         //检查前端返回的数据是否为空
         if (vo==null)
             return CommonResult.fail(ResultCode.EMPTY_PARAM);
@@ -354,10 +342,106 @@ public class TrainTaskController {
         if (i==0)
             return CommonResult.fail(ResultCode.INSERT_ERROR);
 
-        return CommonResult.success().add("message",vo);
+        return CommonResult.success();
     }
 
-//    CommonResult showContainerStatus(){
-//
-//    }
+
+    //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
+    /**
+     * 接口 6.2.1.9 根据ID删除训练有关的镜像
+     * @author Yi Zheng
+     * @create 2020-07-19 13:50
+     * @updator Yi Zheng
+     * @update
+     * @param trainTaskID 删除的ID
+     * @return  返回通用数据
+     */
+    @DeleteMapping("/trainTask/container/{trainTaskID}")
+    public CommonResult deleteTaskIpContainerById(@PathVariable("trainTaskID") Integer trainTaskID){
+        //检查ID是否为空
+        if (trainTaskID == null) {
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        }
+        //执行删除操作
+        try {
+            int j = trainTaskService.deleteTaskIpContainerByTrainTaskId(trainTaskID);
+            if (j==0)
+                return CommonResult.fail(ResultCode.DELETE_ERROR);
+        } catch (Exception e) {
+            return CommonResult.fail(ResultCode.DELETE_ERROR);
+        }
+        //向研发发送删除请求
+        try{
+            HttpRequest.delete("localhost:****://container/"+trainTaskID)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+        return CommonResult.success();
+    }
+
+    //未与后台对接，还未进行详尽测试
+    /**
+     * 接口 6.2.1.11 接收前端返回的训练作业id发送给研发，从研发获取容器详细信息发送给前端
+     * @author Yi Zheng
+     * @create 2020-07-19 02:31
+     * @updator Yi Zheng
+     * @upadte
+     * @param id  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/info/{id}")
+    CommonResult showContainerInfo(@PathVariable("id") Integer id){
+        //判断参数是否为空
+        if (id == null){
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        }
+        //向研发发请求，传递id并等待返回数据
+        String result=null;
+        try {
+            result = HttpRequest.get("localhost:****//container/info/"+id)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+        //检查返回结果是不是为空
+        if (result==null)
+            return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
+
+        return CommonResult.success().add("info",result);
+    }
+
+    //数据库操作已测试正常，但未与后台对接，未进行对接详尽测试。
+    /**
+     * 接口 6.2.1.12 接收前端返回的训练作业id发送给研发，再从研发获取容器详细日志发送给前端
+     * @author Yi Zheng
+     * @create 2020-07-19 02:40
+     * @updator Yi Zheng
+     * @upadte
+     * @param id  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/logs/{id}")
+    CommonResult showContainerLogs(@PathVariable("id") Integer id){
+        //判断参数是否为空
+        if (id == null){
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        }
+        //向研发发请求，传递id并等待返回数据
+        String result=null;
+        try {
+            result = HttpRequest.get("localhost:****//container/logs/"+id)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+        //检查返回结果是不是为空
+        if (result==null)
+            return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
+
+        return CommonResult.success().add("logs",result);
+    }
 }

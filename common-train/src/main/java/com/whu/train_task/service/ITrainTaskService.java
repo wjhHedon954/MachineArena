@@ -127,7 +127,7 @@ public interface ITrainTaskService extends IService<TrainTask> {
     /**
      * 根据trainTaskId(非主键)删除TaskIpContainer
      * @author Yi Zheng
-     * @create 2020-07-19 00:30
+     * @create 2020-07-19 01:30
      * @updator
      * @upadte
      * @param trainTaskId id

@@ -196,7 +196,7 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     /**
      * 接口 6.2.1.10 insert一条数据
      * @author Yi Zheng
-     * @create 2020-07-19 00:30
+     * @create 2020-07-19 00:50
      * @updator
      * @upadte
      * @param ipContainer insert的数据
@@ -207,6 +207,16 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         return taskIpContainerMapper.insert(ipContainer);
     }
 
+
+    /**
+     * 根据trainTaskId(非主键)删除TaskIpContainer
+     * @author Yi Zheng
+     * @create 2020-07-19 01:30
+     * @updator
+     * @upadte
+     * @param trainTaskId id
+     * @return
+     */
     @Override
     public int deleteTaskIpContainerByTrainTaskId(Integer trainTaskId) {
         QueryWrapper wrapper=new QueryWrapper();
