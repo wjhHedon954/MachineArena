@@ -14,6 +14,7 @@ common-mapper/target
 common-pojo/target
 common-train/target
 common-utils/target
+common-model/target
 eureka-service/target
 frontstage-algorithm/target
 frontstage-train/target

@@ -40,7 +40,7 @@ public class AlgorithmFullResponseVo {
 
     //联合 Description
     private Integer algorithmDescriptionId;
-//    private AlgorithmDescription algorithmDescription;
+    private AlgorithmDescription algorithmDescription;
 
     //联合 InstanceType
     private Integer algorithmInstanceTypeId;
