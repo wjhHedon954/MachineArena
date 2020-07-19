@@ -1,10 +1,7 @@
 package com.whu.train_task.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.entity.TrainTask;
-import com.entity.TrainTaskConf;
-import com.entity.TrainTaskLog;
-import com.entity.TrainTaskResource;
+import com.entity.*;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
@@ -115,4 +112,26 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     List<TrainTaskResource> getTrainTaskResources(Integer trainTaskId);
+
+    /**
+     * 接口 6.2.1.10 insert一条数据
+     * @author Yi Zheng
+     * @create 2020-07-19 00:30
+     * @updator
+     * @upadte
+     * @param ipContainer insert的数据
+     * @return
+     */
+    int addTaskIpContainer(TaskIpContainer ipContainer);
+
+    /**
+     * 根据trainTaskId(非主键)删除TaskIpContainer
+     * @author Yi Zheng
+     * @create 2020-07-19 01:30
+     * @updator
+     * @upadte
+     * @param trainTaskId id
+     * @return
+     */
+    int deleteTaskIpContainerByTrainTaskId(Integer trainTaskId);
 }
