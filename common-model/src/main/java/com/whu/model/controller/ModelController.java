@@ -71,4 +71,55 @@ public class ModelController {
 
         return CommonResult.success().add("model",model);
     }
+
+
+    /**
+     * 接口6.3.1.23 根据id删除模型
+     * @description 根据id删除模型
+     * @author Yi Zheng
+     * @create 2020-7-18 13:00
+     * @updator
+     * @update
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/model/{id}")
+    public CommonResult deleteModelById(@PathVariable("id") Integer id){
+        //判断参数是否为空
+        if (id==null)
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+
+        //执行删除操作
+        int i = service.deleteModelById(id);
+        //判断删除是否成功
+        if (i==0)
+            return CommonResult.fail(ResultCode.DELETE_ERROR);
+
+        return CommonResult.success();
+    }
+
+    /**
+     * 接口6.3.1.23 根据id更改模型
+     * @description 根据id更改模型
+     * @author Yi Zheng
+     * @create 2020-7-18 13:30
+     * @updator
+     * @update
+     * @param model  需要更改的墨香
+     * @return int 更改印象的行数
+     */
+    @PutMapping("/model/")
+    public CommonResult updateModelById(@RequestBody Model model){
+        //判断参数是否为空
+        if (model==null)
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+
+        //执行更新操作
+        int i = service.updateModel(model);
+        //判断更新是否成功
+        if (i==0)
+            return CommonResult.fail(ResultCode.DELETE_ERROR);
+
+        return CommonResult.success();
+    }
 }

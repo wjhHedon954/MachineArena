@@ -49,4 +49,36 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     public Model selectModelById(Integer id) {
         return modelMapper.selectById(id);
     }
+
+
+    /**
+     * 接口6.3.1.23 根据id删除模型
+     * @description 根据id删除模型
+     * @author Yi Zheng
+     * @create 2020-7-18 13:00
+     * @updator
+     * @update
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteModelById(Integer id) {
+        return modelMapper.deleteById(id);
+    }
+
+
+    /**
+     * 接口6.3.1.23 根据id更改模型
+     * @description 根据id更改模型
+     * @author Yi Zheng
+     * @create 2020-7-18 13:30
+     * @updator
+     * @update
+     * @param model  需要更改的墨香
+     * @return int 更改印象的行数
+     */
+    @Override
+    public int updateModel(Model model) {
+        return modelMapper.updateById(model);
+    }
 }

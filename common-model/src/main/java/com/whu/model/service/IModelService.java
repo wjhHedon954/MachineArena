@@ -35,4 +35,28 @@ public interface IModelService extends IService<Model> {
      * @return
      */
     Model selectModelById(Integer id);
+
+    /**
+     * 接口6.3.1.23 根据id删除模型
+     * @description 根据id删除模型
+     * @author Yi Zheng
+     * @create 2020-7-18 13:00
+     * @updator
+     * @update
+     * @param id
+     * @return
+     */
+    int deleteModelById(Integer id);
+
+    /**
+     * 接口6.3.1.23 根据id更改模型
+     * @description 根据id更改模型
+     * @author Yi Zheng
+     * @create 2020-7-18 13:30
+     * @updator
+     * @update
+     * @param model  需要更改的墨香
+     * @return int 更改印象的行数
+     */
+    int updateModel(Model model);
 }
