@@ -60,7 +60,12 @@ public enum ResultCode {
     NO_TrainTaskId_OR_TaskAlgorithmId("T0006","前端返回数据无算法ID或训练作业ID"),
     FAIL_TO_SEND_REQUEST("T0007","向研发发送请求失败"),
     NO_RESPONSE_DATA("T0088","研发返回数据失败"),
-    FAILE_PARSE_JSON("T0009","解析json失败");
+    FAILE_PARSE_JSON("T0009","解析json失败"),
+
+    /**
+     * 训练管理模块
+     */
+    NO_MODEL_IN_DATABASE("M0001","数据库中无此模型");
 
     private String code;     //错误码
     private String message;  //对应的信息
