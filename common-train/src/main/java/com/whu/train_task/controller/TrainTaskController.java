@@ -295,11 +295,11 @@ public class TrainTaskController {
 
     //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
     /**
-     * 接口 6.2.1.10 接收前端数据返回给研发，从研发获取数据存入数据库
+     * 接口 6.2.1.10 接收前端数据返回给研发，再从研发获取数据存入数据库
      * @author Yi Zheng
-     * @create 2020-07-19 00:30
+     * @create 2020-07-19 00:25
      * @updator Yi Zheng
-     * @upadte
+     * @upadte 2020-07-19 19:20
      * @param vo  研发训练需要的参数封装类
      * @return
      */
@@ -312,22 +312,28 @@ public class TrainTaskController {
         if (vo.getTrainTaskId()==null || vo.getTrainTaskAlgorithmId()==null)
             return CommonResult.fail(ResultCode.NO_TrainTaskId_OR_TaskAlgorithmId);
 
+        //将从前端获取的数据转换成json格式字符串
+        JSONObject json = JSONUtil.parseObj(vo, false);
+        String s = json.toStringPretty();
         //向研发发请求，传递数据并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.post("localhost:****://container")
-                    .form(vo.toString())
-                    .timeout(100000)
+            result = HttpRequest.post("http://202.114.66.76:8081/container")
+                    .timeout(10000)
+                    .body(s)
                     .execute().body();
         }catch (Exception e){
+            e.printStackTrace();
             return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
         }
         //检查返回数据是否为空
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
         //JSON解析获取容器ID
-        JSON parse = JSONUtil.parse(result);
-        String containerId = parse.getByPath("containerId",String.class);
+        JSON resultParse = JSONUtil.parse(result);
+        String extend = resultParse.getByPath("extend",String.class);
+        JSON extendParse = JSONUtil.parse(extend);
+        String containerId=extendParse.getByPath("containerId",String.class);
         //判断容器id是否为空
         if(containerId==null)
             return CommonResult.fail(ResultCode.FAILE_PARSE_JSON);
