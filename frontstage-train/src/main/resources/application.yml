@@ -5,7 +5,7 @@ spring:
   application:
     name: frontstage-train
   datasource:
-    url: jdbc:mysql://39.97.232.103:3306/MachineArena?useUnicode=true&useSSL=false&characterEncoding=utf8
+    url: jdbc:mysql://39.97.232.103:3306/MachineArena?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: Thomas10011
