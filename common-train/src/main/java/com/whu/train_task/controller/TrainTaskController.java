@@ -333,7 +333,7 @@ public class TrainTaskController {
         JSON resultParse = JSONUtil.parse(result);
         String extend = resultParse.getByPath("extend",String.class);
         JSON extendParse = JSONUtil.parse(extend);
-        String containerId=extendParse.getByPath("containerId",String.class);
+        String containerId=extendParse.getByPath("startContainer",String.class);
         //判断容器id是否为空
         if(containerId==null)
             return CommonResult.fail(ResultCode.FAILE_PARSE_JSON);
@@ -350,6 +350,25 @@ public class TrainTaskController {
 
         return CommonResult.success();
     }
+
+//    public static void main(String[] args) {
+//        String result=null;
+//        try {
+//            result = HttpRequest.post("http://202.114.66.76:8081/container")
+//                    .timeout(10000)
+//                    .body("{\n" +
+//                            "  \"trainTaskAlgorithmId\": 4,\n" +
+//                            "  \"trainTaskId\": 3,\n" +
+//                            "  \"trainTaskParams\": \"10\",\n" +
+//                            "  \"trainTaskSpecification\": \"4\"\n" +
+//                            "}")
+//                    .execute().body();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("post请求出错");
+//        }
+//        System.out.println(result);
+//    }
 
 
     //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
