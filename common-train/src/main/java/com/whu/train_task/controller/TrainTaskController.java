@@ -370,6 +370,16 @@ public class TrainTaskController {
         if (trainTaskID == null) {
             return CommonResult.fail(ResultCode.EMPTY_PARAM);
         }
+
+        //向研发发送删除请求
+        try{
+            HttpRequest.get("http://10.10.10.209:7777/container/"+trainTaskID)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+
         //执行删除操作
         try {
             int j = trainTaskService.deleteTaskIpContainerByTrainTaskId(trainTaskID);
@@ -377,14 +387,6 @@ public class TrainTaskController {
                 return CommonResult.fail(ResultCode.DELETE_ERROR);
         } catch (Exception e) {
             return CommonResult.fail(ResultCode.DELETE_ERROR);
-        }
-        //向研发发送删除请求
-        try{
-            HttpRequest.delete("http://10.10.10.209:7777/container"+trainTaskID)
-                    .timeout(100000)
-                    .execute().body();
-        }catch (Exception e){
-            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
         }
         return CommonResult.success();
     }
