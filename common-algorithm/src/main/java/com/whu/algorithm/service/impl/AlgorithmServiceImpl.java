@@ -84,6 +84,19 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     }
 
     /**
+     * @author Huiri Tan
+     * @description 根据ID查询算法实体
+     * @create 2020/7/20 1:30 下午
+     * @update 2020/7/20 1:30 下午
+     * @param [id]
+     * @return com.entity.Algorithm
+     **/
+    @Override
+    public  Algorithm getAlgorithmObjectById(Integer id) {
+        return algorithmMapper.selectById(id);
+    }
+
+    /**
      * 根据ID查询算法
      * @author Jiahan Wang
      * @create 2020-07-12 08:55

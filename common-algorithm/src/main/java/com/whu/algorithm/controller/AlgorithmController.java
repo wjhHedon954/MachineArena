@@ -225,7 +225,21 @@ public class AlgorithmController {
         return CommonResult.success().add("algorithm",algorithm);
     }
 
-
+    /**
+     * @author Huiri Tan
+     * @description 根据ID查询算法 返回对应的算法实体
+     * @create 2020/7/20 1:26 下午
+     * @update 2020/7/20 1:26 下午
+     * @param
+     * @return
+     **/
+    @GetMapping("/algorithm/object/{algorithmId}")
+    public Algorithm getAlgorithmObjectById(@PathVariable(value = "algorithmId")Integer algorithmId) {
+        if (algorithmId == null) {
+            return null;
+        }
+        return algorithmService.getAlgorithmObjectById(algorithmId);
+    }
 
     /**
      * 按ID查询算法超参规范
