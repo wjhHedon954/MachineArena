@@ -10,17 +10,15 @@ import com.responsevo.TrainStartVO;
 import com.results.CommonResult;
 import com.whu.train_task.service.impl.TrainTaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Test {
     @Autowired
     private TrainTaskServiceImpl trainTaskService;
 
-
-    @PostMapping("/start")
+    //模拟测试后端创建容器
+    @PostMapping("/teststart")
     public CommonResult startTrainTask(@RequestBody TrainStartVO vo){
         //检查前端返回的数据是否为空
         if (vo==null)
@@ -46,7 +44,7 @@ public class Test {
         //检查返回数据是否为空
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
-        //System.out.println(result);
+        System.out.println(result);
         //JSON解析获取容器ID
         JSON resultParse = JSONUtil.parse(result);
         String extend = resultParse.getByPath("extend",String.class);
@@ -69,7 +67,35 @@ public class Test {
 
         return CommonResult.success();
     }
-    
+
+    //模拟后端删除容器
+    @DeleteMapping("/testdelete/{trainTaskID}")
+    public CommonResult deleteTaskIpContainerById(@PathVariable("trainTaskID") Integer trainTaskID){
+        //检查ID是否为空
+        if (trainTaskID == null) {
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        }
+        //执行删除操作
+        try {
+            int j = trainTaskService.deleteTaskIpContainerByTrainTaskId(trainTaskID);
+            if (j==0)
+                return CommonResult.fail(ResultCode.DELETE_ERROR);
+        } catch (Exception e) {
+            return CommonResult.fail(ResultCode.DELETE_ERROR);
+        }
+        //向研发发送删除请求
+        String result=null;
+        try{
+            result=HttpRequest.delete("http://localhost:30001/testdelete/"+trainTaskID)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+        System.out.println(result);
+        return CommonResult.success();
+    }
+
 //    public static void main(String[] args) {
 //        TrainStartVO vo=new TrainStartVO ();
 //        vo.setTrainTaskAlgorithmId(4);
@@ -89,5 +115,26 @@ public class Test {
 //            e.printStackTrace();
 //            return CommonResult.fail(ResultCode.EMPTY_OBJECT);
 //        }
+//    }
+
+
+
+//    public static void main(String[] args) {
+//        String result=null;
+//        try {
+//            result = HttpRequest.post("http://202.114.66.76:8081/container")
+//                    .timeout(10000)
+//                    .body("{\n" +
+//                            "  \"trainTaskAlgorithmId\": 4,\n" +
+//                            "  \"trainTaskId\": 3,\n" +
+//                            "  \"trainTaskParams\": \"10\",\n" +
+//                            "  \"trainTaskSpecification\": \"4\"\n" +
+//                            "}")
+//                    .execute().body();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("post请求出错");
+//        }
+//        System.out.println(result);
 //    }
 }

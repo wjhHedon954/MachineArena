@@ -65,7 +65,15 @@ public enum ResultCode {
     /**
      * 训练管理模块
      */
-    NO_MODEL_IN_DATABASE("M0001","数据库中无此模型");
+    NO_MODEL_IN_DATABASE("M0001","数据库中无此模型"),
+
+
+    /**
+     * 个人中心模块
+     */
+    USER_EXISTS("U0001","用户已存在"),
+    USER_NOT_EXISTS("U0002","用户不存在"),
+    PASSWORD_WRONG("U0003","密码错误"),;
 
     private String code;     //错误码
     private String message;  //对应的信息
