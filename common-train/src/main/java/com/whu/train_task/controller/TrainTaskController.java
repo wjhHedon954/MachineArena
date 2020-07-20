@@ -318,7 +318,7 @@ public class TrainTaskController {
         //向研发发请求，传递数据并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.post("http://202.114.66.76:8081/container")
+            result = HttpRequest.post("http://10.10.10.209:7777/container")
                     .timeout(10000)
                     .body(s)
                     .execute().body();
@@ -380,7 +380,7 @@ public class TrainTaskController {
         }
         //向研发发送删除请求
         try{
-            HttpRequest.delete("http://202.114.66.76:8081/container"+trainTaskID)
+            HttpRequest.delete("http://10.10.10.209:7777/container"+trainTaskID)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
@@ -408,7 +408,7 @@ public class TrainTaskController {
         //向研发发请求，传递id并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.get("http://202.114.66.76:8081/container/info/"+id)
+            result = HttpRequest.get("http://10.10.10.209:7777/container/info/"+id)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
@@ -443,7 +443,7 @@ public class TrainTaskController {
         //向研发发请求，传递id并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.get("http://202.114.66.76:8081/container/logs/"+id)
+            result = HttpRequest.get("http://10.10.10.209:7777/container/logs/"+id)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
@@ -481,7 +481,7 @@ public class TrainTaskController {
         //向研发发请求，传递id并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.get("http://202.114.66.76:8081/worker/"+id)
+            result = HttpRequest.get("http://10.10.10.209:7777/worker/"+id)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
