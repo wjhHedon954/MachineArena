@@ -21,6 +21,7 @@
         <module>frontstage-train</module>
         <module>common-model</module>
         <module>frontstage-model</module>
+        <module>personal-center</module>
     </modules>
 
     <parent>
