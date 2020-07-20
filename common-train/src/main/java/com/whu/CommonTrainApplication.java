@@ -16,7 +16,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan(value = "com.mapper")
 @EnableSwagger2
 public class CommonTrainApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(CommonTrainApplication.class, args);
     }

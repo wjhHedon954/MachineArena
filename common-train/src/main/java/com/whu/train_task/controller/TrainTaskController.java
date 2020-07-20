@@ -333,7 +333,7 @@ public class TrainTaskController {
         JSON resultParse = JSONUtil.parse(result);
         String extend = resultParse.getByPath("extend",String.class);
         JSON extendParse = JSONUtil.parse(extend);
-        String containerId=extendParse.getByPath("containerId",String.class);
+        String containerId=extendParse.getByPath("startContainer",String.class);
         //判断容器id是否为空
         if(containerId==null)
             return CommonResult.fail(ResultCode.FAILE_PARSE_JSON);
@@ -350,6 +350,8 @@ public class TrainTaskController {
 
         return CommonResult.success();
     }
+
+
 
 
     //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
@@ -378,7 +380,7 @@ public class TrainTaskController {
         }
         //向研发发送删除请求
         try{
-            HttpRequest.delete("localhost:****://container/"+trainTaskID)
+            HttpRequest.delete("http://202.114.66.76:8081/container"+trainTaskID)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
@@ -406,7 +408,7 @@ public class TrainTaskController {
         //向研发发请求，传递id并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.get("localhost:****//container/info/"+id)
+            result = HttpRequest.get("http://202.114.66.76:8081/container/info/"+id)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
@@ -416,7 +418,10 @@ public class TrainTaskController {
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
-        return CommonResult.success().add("info",result);
+        //JSON解析获取容器详细信息
+        JSON resultParse = JSONUtil.parse(result);
+        String info = resultParse.getByPath("extend",String.class);
+        return CommonResult.success().add("info",info);
     }
 
     //数据库操作已测试正常，但未与后台对接，未进行对接详尽测试。
@@ -438,7 +443,7 @@ public class TrainTaskController {
         //向研发发请求，传递id并等待返回数据
         String result=null;
         try {
-            result = HttpRequest.get("localhost:****//container/logs/"+id)
+            result = HttpRequest.get("http://202.114.66.76:8081/container/logs/"+id)
                     .timeout(100000)
                     .execute().body();
         }catch (Exception e){
@@ -448,6 +453,49 @@ public class TrainTaskController {
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
-        return CommonResult.success().add("logs",result);
+        //JSON解析获取详细日志信息
+        JSON resultParse = JSONUtil.parse(result);
+        String logs = resultParse.getByPath("extend",String.class);
+
+
+        return CommonResult.success().add("logs",logs);
+    }
+
+
+    //数据库操作已测试正常，但未与后台对接，未进行对接详尽测试。
+    /**
+     * 接口 6.2.1.13 接收前端返回的训练作业id发送给研发，再从研发获取服务器运行状态发送给前端
+     * @author Yi Zheng
+     * @create 2020-07-20 11:40
+     * @updator Yi Zheng
+     * @upadte
+     * @param id  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/workerstatus/{id}")
+    CommonResult showWorkStatus(@PathVariable("id") Integer id){
+        //判断参数是否为空
+        if (id == null){
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+        }
+        //向研发发请求，传递id并等待返回数据
+        String result=null;
+        try {
+            result = HttpRequest.get("http://202.114.66.76:8081/worker/"+id)
+                    .timeout(100000)
+                    .execute().body();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+        //检查返回结果是不是为空
+        if (result==null)
+            return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
+
+        //JSON解析获取详细日志信息
+        JSON resultParse = JSONUtil.parse(result);
+        String status = resultParse.getByPath("extend",String.class);
+
+
+        return CommonResult.success().add("status",status);
     }
 }

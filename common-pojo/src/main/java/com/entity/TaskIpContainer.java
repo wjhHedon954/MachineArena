@@ -25,14 +25,16 @@ public class TaskIpContainer implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId(value = "task_ip_container_id", type = IdType.AUTO)
+    private Integer taskIpContainerId;
+
     private Integer trainTaskId;
 
     private String containerId;
 
     private String workerId;
 
-    @TableId(value = "task_ip_container_id", type = IdType.AUTO)
-    private Integer taskIpContainerId;
+
 
 
 }
