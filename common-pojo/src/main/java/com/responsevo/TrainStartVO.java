@@ -1,12 +1,20 @@
 package com.responsevo;
 
-import io.swagger.models.auth.In;
 
 public class TrainStartVO {
+    private Integer userId;
     private Integer trainTaskAlgorithmId;
     private String trainTaskParams;
     private String trainTaskSpecification;
     private Integer trainTaskId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getTrainTaskAlgorithmId() {
         return trainTaskAlgorithmId;
@@ -43,10 +51,11 @@ public class TrainStartVO {
     @Override
     public String toString() {
         return "TrainStartVO{" +
-                "trainTaskAlgorithmId=" + trainTaskAlgorithmId +
+                "userId=" + userId +
+                ", trainTaskAlgorithmId=" + trainTaskAlgorithmId +
                 ", trainTaskParams='" + trainTaskParams + '\'' +
                 ", trainTaskSpecification='" + trainTaskSpecification + '\'' +
-                ", trainTaskId='" + trainTaskId + '\'' +
+                ", trainTaskId=" + trainTaskId +
                 '}';
     }
 }

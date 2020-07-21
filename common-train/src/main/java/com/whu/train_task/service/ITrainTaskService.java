@@ -134,4 +134,26 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     int deleteTaskIpContainerByTrainTaskId(Integer trainTaskId);
+
+    /**
+     * 根据根据算法id查算法
+     * @author Yi Zheng
+     * @create 2020-07-21 19:00
+     * @updator
+     * @upadte
+     * @param id
+     * @return
+     */
+    Algorithm selectAlgorithmById(Integer id);
+
+    /**
+     * 根据根据算训练任务id查询训练TaskIpContainer
+     * @author Yi Zheng
+     * @create 2020-07-21 19:00
+     * @updator
+     * @upadte
+     * @param id
+     * @return
+     */
+    TaskIpContainer selectTaskIpContainerByTrainTaskId(Integer id);
 }

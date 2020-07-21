@@ -92,7 +92,8 @@ public class ImageController {
     public CommonResult deleteImage(@PathVariable(value = "userId")Integer userId,
                                     @PathVariable(value = "alogrithomId")Integer alogrithomId,
                                     @PathVariable(value = "imageId")String imageId) {
-        String result = HttpRequest.delete("10.10.10.209:7777/image" + "/" + userId.toString() + "/" + alogrithomId.toString() + "/" + imageId)
+        String result = HttpRequest.delete("10.10.10.209:7777/image" + "/" + userId.toString()
+                + "/" + alogrithomId.toString() + "/" + imageId)
                 .execute()
                 .body();
         JSONObject response = JSONUtil.parseObj(result);

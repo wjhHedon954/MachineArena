@@ -17,6 +17,7 @@ public class Test {
     //模拟研发端删除容器
     @DeleteMapping("/testdelete/{id}")
     public CommonResult testDelete(@PathVariable("id") Integer id){
+
         return CommonResult.success().add("id",id);
     }
 }

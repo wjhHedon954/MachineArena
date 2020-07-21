@@ -1,19 +1,18 @@
-package com.whu.service;
+package com.whu.controller;
 
 import com.entity.Model;
 import com.results.CommonResult;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Service;
+import com.whu.service.ModelFeignService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author Hedon Wang
- * @create 2020-07-17 21:58
- */
-
-@Service
-@FeignClient(value = "common-model")
-public interface ModelFeignService {
+@Controller
+@RequestMapping("/frontstage")
+@RestController
+public class ModelController {
+    @Autowired
+    private ModelFeignService service;
 
     /**
      * 接口6.3.1.1  导入模型
@@ -26,7 +25,9 @@ public interface ModelFeignService {
      * @return
      */
     @PostMapping("/model")
-    CommonResult importModel(@RequestBody Model model);
+    CommonResult importModel(@RequestBody Model model){
+        return service.importModel(model);
+    }
 
 
     /**
@@ -40,7 +41,9 @@ public interface ModelFeignService {
      * @return
      */
     @GetMapping("/model/{id}")
-    CommonResult selectModelById(@PathVariable("id") Integer id);
+    CommonResult selectModelById(@PathVariable("id") Integer id){
+        return service.selectModelById(id);
+    }
 
 
     /**
@@ -54,7 +57,9 @@ public interface ModelFeignService {
      * @return
      */
     @DeleteMapping("/model/{id}")
-    CommonResult deleteModelById(@PathVariable("id") Integer id);
+    public CommonResult deleteModelById(@PathVariable("id") Integer id){
+        return service.deleteModelById(id);
+    }
 
     /**
      * 接口6.3.1.23 根据id更改模型
@@ -67,5 +72,7 @@ public interface ModelFeignService {
      * @return int 更改印象的行数
      */
     @PutMapping("/model/")
-    CommonResult updateModelById(@RequestBody Model model);
+    CommonResult updateModelById(@RequestBody Model model){
+        return service.updateModelById(model);
+    }
 }

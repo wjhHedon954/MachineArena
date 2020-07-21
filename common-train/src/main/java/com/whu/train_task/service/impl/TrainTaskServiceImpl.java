@@ -34,6 +34,8 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     private TrainTaskResourceMapper trainTaskResourceMapper;
     @Autowired
     private TaskIpContainerMapper taskIpContainerMapper;
+    @Autowired
+    private AlgorithmMapper algorithmMapper;
 
     /**
      * 接口 6.2.1.1 创建训练作业
@@ -222,6 +224,39 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         QueryWrapper wrapper=new QueryWrapper();
         wrapper.eq("train_task_id",trainTaskId);
         return taskIpContainerMapper.delete(wrapper);
+    }
+
+
+    /**
+     * 根据根据算法id查算法
+     * @author Yi Zheng
+     * @create 2020-07-21 19:00
+     * @updator
+     * @upadte
+     * @param id
+     * @return
+     */
+    @Override
+    public Algorithm selectAlgorithmById(Integer id) {
+        return algorithmMapper.selectById(id);
+    }
+
+
+    /**
+     * 根据根据算训练任务id查询训练TaskIpContainer
+     * @author Yi Zheng
+     * @create 2020-07-21 19:00
+     * @updator
+     * @upadte
+     * @param id
+     * @return
+     */
+    @Override
+    public TaskIpContainer selectTaskIpContainerByTrainTaskId(Integer id) {
+        QueryWrapper<TaskIpContainer> wrapper=new QueryWrapper<>();
+        wrapper.eq("train_task_id",id);
+        TaskIpContainer taskIpContainer = taskIpContainerMapper.selectOne(wrapper);
+        return taskIpContainer;
     }
 
 
