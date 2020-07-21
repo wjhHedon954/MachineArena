@@ -104,7 +104,8 @@ public class Test {
 //        vo.setTrainTaskSpecification("4");
 //
 //        JSONObject json = JSONUtil.parseObj(vo, false);
-//        String s = json.toStringPretty();
+//        String s = json.toString();
+//        System.out.println(s);
 //        //向研发发请求，传递数据并等待返回数据
 //        String result=null;
 //        try {

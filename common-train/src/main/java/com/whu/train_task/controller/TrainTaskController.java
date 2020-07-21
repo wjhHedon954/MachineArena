@@ -9,6 +9,8 @@ import com.constants.ResultCode;
 import com.entity.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mapper.AlgorithmMapper;
+import com.responsevo.ContainerStatusVo;
 import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
@@ -35,6 +37,8 @@ import java.util.List;
 public class TrainTaskController {
     @Autowired
     private TrainTaskServiceImpl trainTaskService;
+
+
 
     /**
      * 接口 6.2.1.1 创建训练作业
@@ -313,7 +317,7 @@ public class TrainTaskController {
 
         //将从前端获取的数据转换成json格式字符串
         JSONObject json = JSONUtil.parseObj(vo, false);
-        String s = json.toStringPretty();
+        String s = json.toString();
         //向研发发请求，传递数据并等待返回数据
         String result=null;
         try {
@@ -498,5 +502,79 @@ public class TrainTaskController {
 
 
         return CommonResult.success().add("status",status);
+    }
+
+    @GetMapping("/trainTask/container/status/{trainTaskId}")
+    public CommonResult showContainerStatus(@PathVariable("trainTaskId") Integer trainTaskId){
+        if (trainTaskId==null)
+            return CommonResult.fail(ResultCode.EMPTY_PARAM);
+
+        //获取TrainTask和TrainTaskConfig的包装类
+        TrainTaskAndTrainTaskConfig trainTaskAndTrainTaskConfig = trainTaskService.getTrainTaskFullInfoById(trainTaskId);
+        System.out.println(trainTaskAndTrainTaskConfig);
+        if (trainTaskAndTrainTaskConfig==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //从包装类获取TrainTask
+        TrainTask trainTask = trainTaskAndTrainTaskConfig.getTrainTask();
+        System.out.println(trainTask);
+        if (trainTask==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //从trainTask获取user_id》
+        Integer userId = trainTask.getTrainTaskUserId();
+        System.out.println(userId);
+        if (userId==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //从包装类获取TrainTaskConf
+        TrainTaskConf trainTaskConf = trainTaskAndTrainTaskConfig.getTrainTaskConf();
+        System.out.println(trainTaskConf);
+        if (trainTaskConf==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //从TrainTaskConf获取算法id
+        Integer trainTaskAlgorithmId = trainTaskConf.getTrainTaskAlgorithmId();
+        System.out.println(trainTaskAlgorithmId);
+        if (trainTaskAlgorithmId==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //根据算法id获取算法
+        Algorithm algorithm = trainTaskService.selectAlgorithmById(trainTaskAlgorithmId);
+        System.out.println(algorithm);
+        if (algorithm==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //根据算法获取模型输出路径
+        String algorithmOutputReflect = algorithm.getAlgorithmOutputReflect();
+        System.out.println(algorithmOutputReflect);
+        if (algorithmOutputReflect==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //根据训练任务id获取TaskIpContainer
+        TaskIpContainer taskIpContainer = trainTaskService.selectTaskIpContainerByTrainTaskId(trainTaskId);
+        System.out.println(taskIpContainer);
+        if (taskIpContainer==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //从taskIpContainer获取容器id
+        String containerId = taskIpContainer.getContainerId();
+        System.out.println(taskIpContainer);
+        if (taskIpContainer==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+
+        ContainerStatusVo containerStatusVo = new ContainerStatusVo();
+
+        containerStatusVo.setUserId(userId);
+        containerStatusVo.setAlgorithmOutputReflect(algorithmOutputReflect);
+        containerStatusVo.setContainerId(containerId);
+        containerStatusVo.setTrainTaskAlgorithmId(trainTaskAlgorithmId);
+        containerStatusVo.setTrainTaskId(trainTaskId);
+
+        JSONObject jsonObject = JSONUtil.parseObj(containerStatusVo,false);
+        String json=jsonObject.toString();
+        System.out.println(json);
+        return CommonResult.success().add("status",json);
     }
 }
