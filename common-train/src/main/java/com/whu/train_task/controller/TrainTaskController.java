@@ -89,10 +89,10 @@ public class TrainTaskController {
      * @param trainTaskID 删除的ID
      * @return  返回通用数据
      */
-    @ApiOperation(value = "接口6.2.1.1", httpMethod = "DELETE", notes = "根据ID删除训练作业")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "trainTaskId", value = "训练作业Id", paramType = "body", dataType = "Integer", required = true)
-    })
+//    @ApiOperation(value = "接口6.2.1.1", httpMethod = "DELETE", notes = "根据ID删除训练作业")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "trainTaskId", value = "训练作业Id", paramType = "body", dataType = "Integer", required = true)
+//    })
     @DeleteMapping("/trainTask/{trainTaskID}")
     public CommonResult deleteTrainTaskById(@PathVariable("trainTaskID") Integer trainTaskID){
         //检查ID是否为空
@@ -203,7 +203,7 @@ public class TrainTaskController {
     @ApiOperation(value = "6.2.1.3 按ID查询作业",httpMethod = "GET")
     @ApiImplicitParam(name = "trainTaskId",value = "作业ID",paramType = "path",dataType = "Integer",required = true)
     @GetMapping("/trainTask/{trainTaskId}")
-    public CommonResult getTrainTaskById(@PathVariable("trainTaskId")Integer trainTaskId){
+    public CommonResult getTrainTaskById(@PathVariable("trainTaskId") Integer trainTaskId){
         //检查ID是否为空
         if (trainTaskId == null){
             return CommonResult.fail(ResultCode.TRAIN_TASK_ID_NULL);
@@ -247,7 +247,7 @@ public class TrainTaskController {
     }
 
     /**
-     * 接口 6.2.1.5 查看日志
+     * 接口 6.2.1.5 查看数据库日志表的内容
      * @author Jiahan Wang
      * @create 2020-07-18 19:10
      * @updator Jiahan Wang
@@ -425,7 +425,7 @@ public class TrainTaskController {
         return CommonResult.success().add("info",info);
     }
 
-    //数据库操作已测试正常，但未与后台对接，未进行对接详尽测试。
+    
     /**
      * 接口 6.2.1.12 接收前端返回的训练作业id发送给研发，再从研发获取容器详细日志发送给前端
      * @author Yi Zheng

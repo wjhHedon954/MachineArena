@@ -154,7 +154,7 @@ public class TrainTaskController {
     }
 
     /**
-     * 接口 6.2.1.5 查看日志
+     * 接口 6.2.1.5 查看数据库日志表的内容
      *
      * @param trainTaskId
      * @return
