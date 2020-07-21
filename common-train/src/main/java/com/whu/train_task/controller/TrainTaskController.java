@@ -293,7 +293,6 @@ public class TrainTaskController {
     }
 
 
-    //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
     /**
      * 接口 6.2.1.10 接收前端数据返回给研发，再从研发获取数据存入数据库
      * @author Yi Zheng
@@ -354,7 +353,7 @@ public class TrainTaskController {
 
 
 
-    //数据库操作已测试正常，但未与后台对接，未进行详尽测试。
+
     /**
      * 接口 6.2.1.9 根据ID删除训练有关的镜像
      * @author Yi Zheng
@@ -474,7 +473,7 @@ public class TrainTaskController {
      * @param id  训练作业id
      * @return CommonResult  通用返回结果
      */
-    @GetMapping("/trainTask/workerstatus/{id}")
+    @GetMapping("/trainTask/workerStatus/{id}")
     CommonResult showWorkStatus(@PathVariable("id") Integer id){
         //判断参数是否为空
         if (id == null){

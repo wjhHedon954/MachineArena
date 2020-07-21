@@ -1,5 +1,10 @@
 package com.whu.controller;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
+import com.constants.ResultCode;
+import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.results.CommonResult;
 import com.whu.service.TrainFeignService;
@@ -180,5 +185,81 @@ public class TrainTaskController {
     @GetMapping("/trainTask/resources/{trainTaskId}")
     public CommonResult getTrainTaskResources(@PathVariable("trainTaskId") Integer trainTaskId) {
         return service.getTrainTaskResources(trainTaskId);
+    }
+
+
+    /**
+     * 接口 6.2.1.10 接收前端数据返回给研发，再从研发获取数据存入数据库
+     * @author Yi Zheng
+     * @create 2020-07-21 10:00
+     * @updator Yi Zheng
+     * @upadte
+     * @param vo  研发训练需要的参数封装类
+     * @return
+     */
+    @PostMapping("/trainTask/start")
+    public CommonResult startTrainTask(@RequestBody TrainStartVO vo){
+        return service.startTrainTask(vo);
+    }
+
+
+    /**
+     * 接口 6.2.1.9 根据ID删除训练有关的镜像
+     * @author Yi Zheng
+     * @create 2020-07-21 10:10
+     * @updator Yi Zheng
+     * @update
+     * @param trainTaskID 删除的ID
+     * @return  返回通用数据
+     */
+    @DeleteMapping("/trainTask/container/{trainTaskID}")
+    public CommonResult deleteTaskIpContainerById(@PathVariable("trainTaskID") Integer trainTaskID){
+        return service.deleteTrainTaskById(trainTaskID);
+    }
+
+
+    /**
+     * 接口 6.2.1.11 接收前端返回的训练作业id发送给研发，从研发获取容器详细信息发送给前端
+     * @author Yi Zheng
+     * @create 2020-07-21 10:10
+     * @updator Yi Zheng
+     * @upadte
+     * @param id  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/info/{id}")
+    CommonResult showContainerInfo(@PathVariable("id") Integer id){
+        return service.showContainerInfo(id);
+    }
+
+
+    /**
+     * 接口 6.2.1.12 接收前端返回的训练作业id发送给研发，再从研发获取容器详细日志发送给前端
+     * @author Yi Zheng
+     * @create 2020-07-21 10:10
+     * @updator Yi Zheng
+     * @upadte
+     * @param id  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/logs/{id}")
+    CommonResult showContainerLogs(@PathVariable("id") Integer id){
+        return service.showContainerLogs(id);
+    }
+
+
+
+    /**
+     * 接口 6.2.1.13 接收前端返回的训练作业id发送给研发，再从研发获取服务器运行状态发送给前端
+     * @author Yi Zheng
+     * @create 2020-07-21 10:10
+     * @updator Yi Zheng
+     * @upadte
+     * @param id  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/workerStatus/{id}")
+    CommonResult showWorkStatus(@PathVariable("id") Integer id){
+        return showWorkStatus(id);
     }
 }
