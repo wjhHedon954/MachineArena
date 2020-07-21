@@ -425,7 +425,7 @@ public class TrainTaskController {
         return CommonResult.success().add("info",info);
     }
 
-    
+
     /**
      * 接口 6.2.1.12 接收前端返回的训练作业id发送给研发，再从研发获取容器详细日志发送给前端
      * @author Yi Zheng
