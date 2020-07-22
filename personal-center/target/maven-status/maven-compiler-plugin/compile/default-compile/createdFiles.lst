@@ -1,4 +1,4 @@
-com\whu\user\service\IUserService.class
-com\whu\PersonalCenterApplication.class
-com\whu\user\controller\UserController.class
-com\whu\user\service\impl\UserServiceImpl.class
+com/whu/user/controller/UserController.class
+com/whu/PersonalCenterApplication.class
+com/whu/user/service/impl/UserServiceImpl.class
+com/whu/user/service/IUserService.class
