@@ -16,6 +16,10 @@ spring:
           uri: lb://frontstage-algorithm   #匹配后提供服务的路由地址
           predicates:
             - Path=/algorithm/frontstage/**
+        - id: algorithm_back_routh
+          uri: lb://backstage-algorithm
+          predicates:
+            - Path=/algorithm/backstage/**
         - id: train_routh
           uri: lb://frontstage-train
           predicates:

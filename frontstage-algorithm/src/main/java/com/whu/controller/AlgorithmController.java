@@ -157,4 +157,6 @@ public class AlgorithmController {
     public CommonResult getAlgorithmDescription(@PathVariable("algorithmId")Integer algorithmId){
         return algorithmFeignService.getAlgorithmDescription(algorithmId);
     }
+
+
 }

@@ -104,4 +104,7 @@ public interface AlgorithmFeignService {
      */
     @GetMapping("/algorithm/description/{algorithmId}")
     CommonResult getAlgorithmDescription(@PathVariable("algorithmId")Integer algorithmId);
+
+    @GetMapping(value = "/algorithm/type")
+    CommonResult getAlgorithmType();
 }

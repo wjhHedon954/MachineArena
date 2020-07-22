@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2020-07-14 10:57
  */
 @Service
-@FeignClient(value = "common-algorithm"/*,configuration = FeignConfig.class*/)
+@FeignClient(value = "common-algorithm")
 public interface AlgorithmFeignService {
 
     @GetMapping("/algorithms")
