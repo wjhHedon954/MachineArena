@@ -3,10 +3,19 @@ package com.whu.model.controller;
 
 import com.constants.ResultCode;
 import com.entity.Model;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.responsevo.ModelResponseVo;
 import com.results.CommonResult;
 import com.whu.model.service.impl.ModelServiceImpl;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.jws.WebParam;
+import java.util.List;
 
 /**
  * <p>
@@ -121,5 +130,76 @@ public class ModelController {
             return CommonResult.fail(ResultCode.DELETE_ERROR);
 
         return CommonResult.success();
+    }
+    /**
+     * 6.3.1.5 查询所有模型
+     * @author Jiahan Wang
+     * @create 2020-7-22 23:15
+     * @updator
+     * @update
+     * @param pageNum 页码
+     * @param pageSize 页面大小
+     * @param keyWord 关键字
+     * @return
+     */
+    @ApiOperation(value = "6.3.1.5 查询所有模型",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/models")
+    public CommonResult getModels(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                     @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                     @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        //1. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize,true,true,true);
+        //2. 从数据库拉取数据
+        List<ModelResponseVo> models =  service.getModels(keyWord);
+        //3. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(models,5);
+        //4. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
+    }
+
+
+    /**
+     * 6.3.1.8 查询用户下的所有模型
+     * @author Jiahan Wang
+     * @create 2020-7-22 22:15
+     * @updator
+     * @update
+     * @param userId  用户ID
+     * @param pageNum 页码
+     * @param pageSize 页面大小
+     * @param keyWord 关键字
+     * @return
+     */
+    @ApiOperation(value = "6.3.1.8 查询用户下的所有模型",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId",value = "用户ID",paramType = "path",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageNum",value = "页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/models/{userId}")
+    public CommonResult getUserModel(@PathVariable("userId")Integer userId,
+                                     @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                     @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                     @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        //1. 检查 UserId 是否为空
+        if (userId == null){
+            return CommonResult.fail(ResultCode.EMPTY_USER_ID);
+        }
+        //2. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize,true,true,true);
+        //3. 从数据库拉取数据
+        List<ModelResponseVo> models =  service.getUserModel(userId,keyWord);
+        //4. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(models,5);
+        //5. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
     }
 }

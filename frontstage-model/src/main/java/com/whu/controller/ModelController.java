@@ -3,6 +3,11 @@ package com.whu.controller;
 import com.entity.Model;
 import com.results.CommonResult;
 import com.whu.service.ModelFeignService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +30,7 @@ public class ModelController {
      * @return
      */
     @PostMapping("/model")
-    CommonResult importModel(@RequestBody Model model){
+    public CommonResult importModel(@RequestBody Model model){
         return service.importModel(model);
     }
 
@@ -41,7 +46,7 @@ public class ModelController {
      * @return
      */
     @GetMapping("/model/{id}")
-    CommonResult selectModelById(@PathVariable("id") Integer id){
+    public CommonResult selectModelById(@PathVariable("id") Integer id){
         return service.selectModelById(id);
     }
 
@@ -72,7 +77,61 @@ public class ModelController {
      * @return int 更改印象的行数
      */
     @PutMapping("/model/")
-    CommonResult updateModelById(@RequestBody Model model){
+    public CommonResult updateModelById(@RequestBody Model model){
         return service.updateModelById(model);
+    }
+
+
+    /**
+     * 6.3.1.5 查询所有模型
+     * @author Jiahan Wang
+     * @create 2020-7-22 23:15
+     * @updator
+     * @update
+     * @param pageNum 页码
+     * @param pageSize 页面大小
+     * @param keyWord 关键字
+     * @return
+     */
+    @ApiOperation(value = "6.3.1.5 查询所有模型",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/models")
+    public CommonResult getUserModel(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                     @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                     @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+        return service.getModels(pageNum,pageSize,keyWord);
+    }
+
+
+    /**
+     * 6.3.1.8 查询用户下的所有模型
+     * @author Jiahan Wang
+     * @create 2020-7-22 22:15
+     * @updator
+     * @update
+     * @param userId  用户ID
+     * @param pageNum 页码
+     * @param pageSize 页面大小
+     * @param keyWord 关键字
+     * @return
+     */
+    @ApiOperation(value = "6.3.1.8 查询用户下的所有模型",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId",value = "用户ID",paramType = "path",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageNum",value = "页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true)
+    })
+    @GetMapping("/models/{userId}")
+    public CommonResult getUserModel(@PathVariable("userId")Integer userId,
+                                     @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                     @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                     @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
+
+        return service.getUserModels(userId,pageNum,pageSize,keyWord);
     }
 }
