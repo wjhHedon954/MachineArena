@@ -9,7 +9,6 @@ import com.constants.ResultCode;
 import com.entity.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mapper.AlgorithmMapper;
 import com.responsevo.ContainerStatusVo;
 import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
@@ -34,6 +33,7 @@ import java.util.List;
  * @since 2020-07-17
  */
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class TrainTaskController {
     @Autowired
     private TrainTaskServiceImpl trainTaskService;
@@ -424,9 +424,10 @@ public class TrainTaskController {
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
         //JSON解析获取容器详细信息
-        JSON resultParse = JSONUtil.parse(result);
-        String info = resultParse.getByPath("extend",String.class);
-        return CommonResult.success().add("info",info);
+        String extendContent = JSONUtil.parse(result).getByPath("extend", String.class);
+        String containerInfoContent = JSONUtil.parse(extendContent).getByPath("containerInfo", String.class);
+
+        return CommonResult.success().add("containerInfo",containerInfoContent);
     }
 
 
@@ -435,7 +436,7 @@ public class TrainTaskController {
      * @author Yi Zheng
      * @create 2020-07-19 02:40
      * @updator Yi Zheng
-     * @upadte
+     * @upadte  2020-7-22 10:30
      * @param id  训练作业id
      * @return CommonResult  通用返回结果
      */
@@ -473,7 +474,7 @@ public class TrainTaskController {
      * @author Yi Zheng
      * @create 2020-07-20 11:40
      * @updator Yi Zheng
-     * @upadte
+     * @upadte  2020-7-22 10:20
      * @param id  训练作业id
      * @return CommonResult  通用返回结果
      */
@@ -497,13 +498,24 @@ public class TrainTaskController {
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
         //JSON解析获取详细日志信息
-        JSON resultParse = JSONUtil.parse(result);
-        String status = resultParse.getByPath("extend",String.class);
+        String extendContent = JSONUtil.parse(result).getByPath("extend", String.class);
+        String serverInfoContent = JSONUtil.parse(extendContent).getByPath("serverInfo", String.class);
+        String memoryContent = JSONUtil.parse(serverInfoContent).getByPath("memory", String.class);
 
 
-        return CommonResult.success().add("status",status);
+        return CommonResult.success().add("memory",memoryContent);
     }
 
+
+    /**
+     * 接口 6.2.1.14 接收前端返回的训练作业id,数据库查询数据封装传给研发，研发返回信息发给前端
+     * @author Yi Zheng
+     * @create 2020-07-22 10:20
+     * @updator Yi Zheng
+     * @upadte
+     * @param trainTaskId  训练作业id
+     * @return CommonResult  通用返回结果
+     */
     @GetMapping("/trainTask/container/status/{trainTaskId}")
     public CommonResult showContainerStatus(@PathVariable("trainTaskId") Integer trainTaskId){
         if (trainTaskId==null)
@@ -563,18 +575,43 @@ public class TrainTaskController {
         if (taskIpContainer==null)
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
 
-
+        //创建一个新的研发需求的返回类型包装类
         ContainerStatusVo containerStatusVo = new ContainerStatusVo();
 
+        //设置包装类属性
         containerStatusVo.setUserId(userId);
         containerStatusVo.setAlgorithmOutputReflect(algorithmOutputReflect);
         containerStatusVo.setContainerId(containerId);
         containerStatusVo.setTrainTaskAlgorithmId(trainTaskAlgorithmId);
         containerStatusVo.setTrainTaskId(trainTaskId);
 
+        //把包装类转换成json字符串
         JSONObject jsonObject = JSONUtil.parseObj(containerStatusVo,false);
         String json=jsonObject.toString();
         System.out.println(json);
-        return CommonResult.success().add("status",json);
+
+        //定义一个变量接收从研发返回的数据
+        String dataFromYanFa =null;
+
+        //向研发发送请求
+        try{
+            dataFromYanFa=HttpRequest.post("http://10.10.10.209:7777/container/status")
+                    .body(json)
+                    .timeout(10000)
+                    .execute().body();
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
+        }
+
+        //判断研发的请求是否为空
+        if (dataFromYanFa==null)
+            return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
+
+        //提取研发里面的有用信息
+        String extendContent = JSONUtil.parse(dataFromYanFa).getByPath("extend", String.class);
+        String messageContent = JSONUtil.parse(extendContent).getByPath("Message", String.class);
+
+        return CommonResult.success().add("status",messageContent);
     }
 }
