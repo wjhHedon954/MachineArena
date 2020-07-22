@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.*;
  * @author Hedon
  * @since 2020-07-11
  */
+
+/**
+ * @author Huiri Tan
+ * @description 创建超参数
+ * @create 2020/7/23 12:24 上午
+ * @update 2020/7/23 12:24 上午
+ **/
 @RestController
 public class HyperParametersController {
     @Autowired

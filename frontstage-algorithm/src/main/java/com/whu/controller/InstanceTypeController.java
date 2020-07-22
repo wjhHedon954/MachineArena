@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @ClassName AlgorithmTypeController
- * @Description 查询算法类型
+ * @ClassName InstanceTypeController
+ * @Description TODO
  * @Author thomas
- * @Date 2020/7/22 11:36 下午
+ * @Date 2020/7/23 12:22 上午
  * @Version 1.0
  */
+
 @RestController
 @RequestMapping("/frontstage")
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
-public class AlgorithmTypeController {
+public class InstanceTypeController {
 
     @Autowired
     AlgorithmFeignService algorithmFeignService;
 
-    @GetMapping("/algorithmType")
-    public CommonResult getAlgorithmType() {
-        return algorithmFeignService.getAlgorithmType();
-
+    @GetMapping("/instanceType")
+    public CommonResult getInstanceType() {
+        return algorithmFeignService.getInstanceType();
     }
 }
