@@ -1,5 +1,8 @@
 package com.whu.controller;
 
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.model.PutObjectRequest;
 import com.entity.Model;
 import com.results.CommonResult;
 import com.whu.service.ModelFeignService;
@@ -11,6 +14,12 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/frontstage")
@@ -32,6 +41,41 @@ public class ModelController {
     @PostMapping("/model")
     public CommonResult importModel(@RequestBody Model model){
         return service.importModel(model);
+    CommonResult importModel(HttpServletRequest request){
+        Model model = new Model();
+        MultipartFile modelImage = ((MultipartHttpServletRequest)request).getFile("modelImage");
+        MultipartFile modelFile = ((MultipartHttpServletRequest)request).getFile("modelFile");
+
+        // Endpoint以杭州为例，其它Region请按实际情况填写。
+        String endpoint = "http://oss-cn-beijing.aliyuncs.com";
+        // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
+        String accessKeyId = "LTAI4G9iw6Da8c5Px6qDGWNA";
+        String accessKeySecret = "GTorRGPG8BrG7hN7UGMCP9XV51q9IK";
+
+        // 创建OSSClient实例。
+//        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+//        ArrayList<String> imageUrls = new ArrayList<>();
+//        for(String url : outPutUrl) {
+//            // 创建PutObjectRequest对象。
+//            PutObjectRequest putObjectRequest = new PutObjectRequest("thomas10011-image", url.substring(url.lastIndexOf('/') + 1), new File(url));
+//            imageUrls.add("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + url.substring(url.lastIndexOf('/') + 1));
+//            // 如果需要上传时设置存储类型与访问权限，请参考以下示例代码。
+//            // ObjectMetadata metadata = new ObjectMetadata();
+//            // metadata.setHeader(OSSHeaders.OSS_STORAGE_CLASS, StorageClass.Standard.toString());
+//            // metadata.setObjectAcl(CannedAccessControlList.Private);
+//            // putObjectRequest.setMetadata(metadata);
+//
+//            // 上传文件。
+//            ossClient.putObject(putObjectRequest);
+//        }
+//
+//        // 关闭OSSClient。
+//        ossClient.shutdown();
+
+
+        return CommonResult.success();
+
+
     }
 
 
@@ -46,7 +90,7 @@ public class ModelController {
      * @return
      */
     @GetMapping("/model/{id}")
-    public CommonResult selectModelById(@PathVariable("id") Integer id){
+    CommonResult selectModelById(@PathVariable("id") Integer id){
         return service.selectModelById(id);
     }
 
