@@ -50,12 +50,16 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     @Override
     public int[] addTrainTask(TrainTask trainTask,TrainTaskConf trainTaskConf) {
         int i = trainTaskMapper.insert(trainTask);
+        int trainTaskId=trainTask.getTrainTaskId();
 
         //训练参数的属性"train_task_id"是上面insert生成的id
-        trainTaskConf.setTrainTaskId(trainTask.getTrainTaskId());
+        trainTaskConf.setTrainTaskId(trainTaskId);
 
         int j = trainTaskConfMapper.insert(trainTaskConf);
-        return new int[]{i,j};
+        int trainTaskConfId = trainTaskConf.getTrainTaskConfId();
+
+        //把生成的两个id一起传过去
+        return new int[]{i,j,trainTaskId,trainTaskConfId};
     }
 
 
@@ -71,6 +75,21 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     @Override
     public int deleteTrainTaskById(Integer trainTaskID) {
         return trainTaskMapper.deleteById(trainTaskID);
+    }
+
+
+    /**
+     * 接口 6.2.1.2 根据ID删除训练作业配置
+     * @author Yi Zheng
+     * @create 2020-07-22 19:00
+     * @updator
+     * @update
+     * @param trainTaskConfId 删除的ID
+     * @return  返回删除影响的行数
+     */
+    @Override
+    public int deleteTrainTaskConfById(Integer trainTaskConfId) {
+        return trainTaskConfMapper.deleteById(trainTaskConfId);
     }
 
 
@@ -98,6 +117,36 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
         //执行更新训练作业配置
         int j = trainTaskConfMapper.update(trainTaskConf,wrapper);
         return new int[]{i,j};
+    }
+
+
+    /**
+     * 接口 6.2.1.1 根据id查询trainTaskConf
+     * @author Yi Zheng
+     * @create 2020-07-22 20:20
+     * @updator
+     * @update
+     * @param trainTaskConfId id
+     * @return  TrainTaskConf
+     */
+    @Override
+    public TrainTaskConf selectTrainTaskConfById(Integer trainTaskConfId) {
+        return trainTaskConfMapper.selectById(trainTaskConfId);
+    }
+
+
+    /**
+     * 接口 6.2.1.1 根据id更改trainTaskConf
+     * @author Yi Zheng
+     * @create 2020-07-22 20:20
+     * @updator
+     * @update
+     * @param trainTaskConf 被更改的对象
+     * @return  影响的行数
+     */
+    @Override
+    public int updateTrainTaskConfById(TrainTaskConf trainTaskConf) {
+        return trainTaskConfMapper.updateById(trainTaskConf);
     }
 
 

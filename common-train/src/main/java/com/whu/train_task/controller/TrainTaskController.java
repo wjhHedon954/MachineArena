@@ -65,30 +65,58 @@ public class TrainTaskController {
         TrainTask trainTask = param.getTrainTask();
         TrainTaskConf trainTaskConf = param.getTrainTaskConf();
 
-        //设置时间属性
-        trainTask.setTrainTaskCreateTime(LocalDateTime.now());
-        trainTask.setTrainTaskUpdateTime(LocalDateTime.now());
-
-        File modelPath=new File("/home/admin/AIServer/"+
-                "userid/"+"algorithmid/"+"traintaskid/"+"model");
         //判断对象是否为空
         if (trainTask == null || trainTaskConf==null) {
             return CommonResult.fail(ResultCode.EMPTY_OBJECT);
         }
-        try {
-            //执行insert
-            int[] ints = trainTaskService.addTrainTask(trainTask,trainTaskConf);
-            System.out.println(ints);
-            if (ints[0] == 0 || ints[1]==0) {
-                //如果更新条数为0，则说明该训练作业或训练作业参数不在数据库中，返回数据不存在信息
-                return CommonResult.fail(ResultCode.NO_TrainTask_OR_TrainTaskConf);
-            } else {
-                //因为是根据ID来更改，所以情况只有 0 和 1，如果不为 0 那必定是成功
-                return CommonResult.success();
-            }
-        } catch (Exception e) {
-            return CommonResult.fail(ResultCode.ERROR);
+
+        //设置一些属性
+        trainTask.setTrainTaskCreateTime(LocalDateTime.now());
+        trainTask.setTrainTaskUpdateTime(LocalDateTime.now());
+        trainTask.setTrainTaskRunningTime("");
+
+        //获取user_id和算法id
+        Integer trainTaskUserId = trainTask.getTrainTaskUserId();
+        Integer trainTaskAlgorithmId = trainTaskConf.getTrainTaskAlgorithmId();
+
+        //执行insert
+        int[] ints = trainTaskService.addTrainTask(trainTask,trainTaskConf);
+
+
+        //判断插入操作是否成功
+        if (ints[0] == 0 || ints[1]==0)
+            return CommonResult.fail(ResultCode.NO_TrainTask_OR_TrainTaskConf);
+
+        //通过id查询到训练作业配置类
+        TrainTaskConf trainTaskConfFromDateBase = trainTaskService.selectTrainTaskConfById(ints[3]);
+
+        //设置model和log路径
+        String modelPath="/home/admin/AITrainTeam/"+
+                        trainTaskUserId+"/"+
+                        trainTaskAlgorithmId+"/"+
+                        ints[2]+"/model";
+        String logPath="/home/admin/AITrainTeam/"+
+                trainTaskUserId+"/"+
+                trainTaskAlgorithmId+"/"+
+                ints[2]+"/log";
+
+        //设置路径并插入
+        trainTaskConfFromDateBase.setTrainTaskLogOutPath(logPath);
+        trainTaskConfFromDateBase.setTrainTaskModelOutPath(modelPath);
+        int i = trainTaskService.updateTrainTaskConfById(trainTaskConfFromDateBase);
+        if (i==0)
+            return CommonResult.fail(ResultCode.UPDATE_ERROR);
+
+        //新建文件
+        File modelPathFile = new File(modelPath);
+        File logPathFile = new File(logPath);
+        try{
+            modelPathFile.mkdirs();
+            logPathFile.mkdirs();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_MKDIRS);
         }
+        return CommonResult.success();
     }
 
 
@@ -111,10 +139,17 @@ public class TrainTaskController {
         if (trainTaskID == null) {
             return CommonResult.fail(ResultCode.EMPTY_PARAM);
         }
+        //由训练id获取训练和训练配置的包装类
+        TrainTaskAndTrainTaskConfig trainTaskFullInfo = trainTaskService.getTrainTaskFullInfoById(trainTaskID);
+
+        //由全包装类获取训练作业和训练作业配置
+        TrainTaskConf trainTaskConf = trainTaskFullInfo.getTrainTaskConf();
+
         //执行删除操作
         try {
-            int i = trainTaskService.deleteTrainTaskById(trainTaskID);
-            if (i == 0)
+            int i=trainTaskService.deleteTrainTaskById(trainTaskID);
+            int j = trainTaskService.deleteTrainTaskConfById(trainTaskConf.getTrainTaskConfId());
+            if (i == 0 || j==0)
                 return CommonResult.fail(ResultCode.DELETE_ERROR);
         } catch (Exception e) {
             return CommonResult.fail(ResultCode.DELETE_ERROR);
@@ -150,6 +185,9 @@ public class TrainTaskController {
         if (trainTask == null || trainTaskConf==null) {
             return CommonResult.fail(ResultCode.EMPTY_OBJECT);
         }
+
+        //设置一些时间属性
+        trainTask.setTrainTaskUpdateTime(LocalDateTime.now());
 
         try {
             //执行更新
@@ -311,17 +349,43 @@ public class TrainTaskController {
      * @create 2020-07-19 00:25
      * @updator Yi Zheng
      * @upadte 2020-07-19 19:20
-     * @param vo  研发训练需要的参数封装类
+     * @param
      * @return
      */
-    @PostMapping("/trainTask/start")
-    public CommonResult startTrainTask(@RequestBody TrainStartVO vo){
+    @PostMapping("/trainTask/start/")
+    public CommonResult startTrainTask(Integer trainTaskId){
         //检查前端返回的数据是否为空
-        if (vo==null)
+        if (trainTaskId==null)
             return CommonResult.fail(ResultCode.EMPTY_PARAM);
-        //检查前端核心数据是否为空
-        if (vo.getTrainTaskId()==null || vo.getTrainTaskAlgorithmId()==null)
-            return CommonResult.fail(ResultCode.NO_TrainTaskId_OR_TaskAlgorithmId);
+
+        //获取包装类
+        TrainTaskAndTrainTaskConfig trainTaskFullInfo = trainTaskService.getTrainTaskFullInfoById(trainTaskId);
+        if (trainTaskFullInfo==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+        //由包装类获取TrainTask和TrainTaskConf
+        TrainTask trainTask = trainTaskFullInfo.getTrainTask();
+        TrainTaskConf trainTaskConf = trainTaskFullInfo.getTrainTaskConf();
+        if (trainTask==null || trainTaskConf==null)
+            return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
+
+        //获取研发需要的属性
+        Integer trainTaskUserId = trainTask.getTrainTaskUserId();
+        Integer trainTaskAlgorithmId = trainTaskConf.getTrainTaskAlgorithmId();
+        String trainTaskParams = trainTaskConf.getTrainTaskParams();
+        String trainTaskSpecification = trainTaskConf.getTrainTaskSpecification();
+
+
+        //新建一个研发需要的包装类
+        TrainStartVO vo = new TrainStartVO();
+
+        //设置属性
+        vo.setTrainTaskParams(trainTaskParams);
+        vo.setTrainTaskAlgorithmId(trainTaskAlgorithmId);
+        vo.setTrainTaskId(trainTaskId);
+        vo.setTrainTaskSpecification(trainTaskSpecification);
+        vo.setTrainTaskUserId(trainTaskUserId);
 
         //将从前端获取的数据转换成json格式字符串
         JSONObject json = JSONUtil.parseObj(vo, false);
@@ -349,7 +413,6 @@ public class TrainTaskController {
         if(containerId==null)
             return CommonResult.fail(ResultCode.FAILE_PARSE_JSON);
         //创建TaskIpContainer对象并且设值
-        Integer trainTaskId=vo.getTrainTaskId();
         TaskIpContainer ipContainer=new TaskIpContainer();
         ipContainer.setContainerId(containerId);
         ipContainer.setTrainTaskId(trainTaskId);
