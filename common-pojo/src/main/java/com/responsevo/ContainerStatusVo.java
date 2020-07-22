@@ -5,7 +5,8 @@ public class ContainerStatusVo {
     private Integer trainTaskAlgorithmId;
     private Integer trainTaskId;
     private String containerId;
-    private String algorithmOutputReflect;
+    private String trainTaskLogOutPath;
+    private String trainTaskModelOutPath;
 
     public Integer getUserId() {
         return userId;
@@ -39,12 +40,20 @@ public class ContainerStatusVo {
         this.containerId = containerId;
     }
 
-    public String getAlgorithmOutputReflect() {
-        return algorithmOutputReflect;
+    public String getTrainTaskLogOutPath() {
+        return trainTaskLogOutPath;
     }
 
-    public void setAlgorithmOutputReflect(String algorithmOutputReflect) {
-        this.algorithmOutputReflect = algorithmOutputReflect;
+    public void setTrainTaskLogOutPath(String trainTaskLogOutPath) {
+        this.trainTaskLogOutPath = trainTaskLogOutPath;
+    }
+
+    public String getTrainTaskModelOutPath() {
+        return trainTaskModelOutPath;
+    }
+
+    public void setTrainTaskModelOutPath(String trainTaskModelOutPath) {
+        this.trainTaskModelOutPath = trainTaskModelOutPath;
     }
 
     @Override
@@ -54,7 +63,8 @@ public class ContainerStatusVo {
                 ", trainTaskAlgorithmId=" + trainTaskAlgorithmId +
                 ", trainTaskId=" + trainTaskId +
                 ", containerId='" + containerId + '\'' +
-                ", algorithmOutputReflect='" + algorithmOutputReflect + '\'' +
+                ", trainTaskLogOutPath='" + trainTaskLogOutPath + '\'' +
+                ", trainTaskModelOutPath='" + trainTaskModelOutPath + '\'' +
                 '}';
     }
 }

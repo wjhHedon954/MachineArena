@@ -1,11 +1,11 @@
 server:
-  port: 10003
+  port: 40001
 
 spring:
   application:
-    name: frontstage-algorithm
+    name: personal-center
   datasource:
-    url: jdbc:mysql://39.97.232.103:3306/MachineArena?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://39.97.232.103:3306/MachineArena?useUnicode=true&useSSL=false&characterEncoding=utf8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: Thomas10011
@@ -19,9 +19,9 @@ eureka:
     fetch-registry: true
     #入驻哪里
     service-url:
-      defaultZone: http://localhost:7001/eureka
+      defaultZone: http://eureka7001.com:7001/eureka
   instance:
-    instance-id: frontstageAlgorithm10003
+    instance-id: personalcenter40001
     prefer-ip-address: true
     #Eureka客户端向服务端发送心跳的时间间隔：默认30秒
     #    lease-renewal-interval-in-seconds: 1

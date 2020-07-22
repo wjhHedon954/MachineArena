@@ -21,6 +21,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -63,6 +65,12 @@ public class TrainTaskController {
         TrainTask trainTask = param.getTrainTask();
         TrainTaskConf trainTaskConf = param.getTrainTaskConf();
 
+        //设置时间属性
+        trainTask.setTrainTaskCreateTime(LocalDateTime.now());
+        trainTask.setTrainTaskUpdateTime(LocalDateTime.now());
+
+        File modelPath=new File("/home/admin/AIServer/"+
+                "userid/"+"algorithmid/"+"traintaskid/"+"model");
         //判断对象是否为空
         if (trainTask == null || trainTaskConf==null) {
             return CommonResult.fail(ResultCode.EMPTY_OBJECT);
@@ -551,17 +559,18 @@ public class TrainTaskController {
         if (trainTaskAlgorithmId==null)
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
 
-        //根据算法id获取算法
-        Algorithm algorithm = trainTaskService.selectAlgorithmById(trainTaskAlgorithmId);
-        System.out.println(algorithm);
-        if (algorithm==null)
+        //从TrainTaskConf获取日志输出路径
+        String trainTaskLogOutPath = trainTaskConf.getTrainTaskLogOutPath();
+        System.out.println(trainTaskLogOutPath);
+        if (trainTaskLogOutPath==null)
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
 
-        //根据算法获取模型输出路径
-        String algorithmOutputReflect = algorithm.getAlgorithmOutputReflect();
-        System.out.println(algorithmOutputReflect);
-        if (algorithmOutputReflect==null)
+        //从TrainTaskConf获取模型输出路径
+        String trainTaskModelOutPath = trainTaskConf.getTrainTaskModelOutPath();
+        System.out.println(trainTaskModelOutPath);
+        if (trainTaskModelOutPath==null)
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
+
 
         //根据训练任务id获取TaskIpContainer
         TaskIpContainer taskIpContainer = trainTaskService.selectTaskIpContainerByTrainTaskId(trainTaskId);
@@ -580,7 +589,8 @@ public class TrainTaskController {
 
         //设置包装类属性
         containerStatusVo.setUserId(userId);
-        containerStatusVo.setAlgorithmOutputReflect(algorithmOutputReflect);
+        containerStatusVo.setTrainTaskLogOutPath(trainTaskLogOutPath);
+        containerStatusVo.setTrainTaskModelOutPath(trainTaskModelOutPath);
         containerStatusVo.setContainerId(containerId);
         containerStatusVo.setTrainTaskAlgorithmId(trainTaskAlgorithmId);
         containerStatusVo.setTrainTaskId(trainTaskId);
