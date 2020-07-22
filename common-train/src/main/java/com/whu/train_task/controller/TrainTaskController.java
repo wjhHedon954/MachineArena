@@ -9,7 +9,6 @@ import com.constants.ResultCode;
 import com.entity.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mapper.AlgorithmMapper;
 import com.responsevo.ContainerStatusVo;
 import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
@@ -34,6 +33,7 @@ import java.util.List;
  * @since 2020-07-17
  */
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class TrainTaskController {
     @Autowired
     private TrainTaskServiceImpl trainTaskService;

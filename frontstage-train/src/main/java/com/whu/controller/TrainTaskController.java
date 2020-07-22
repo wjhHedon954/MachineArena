@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/frontstage")
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class TrainTaskController {
     @Autowired
     private TrainFeignService service;

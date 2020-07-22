@@ -22,6 +22,7 @@ import java.awt.*;
  */
 @RestController
 @RequestMapping("/frontstage")
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class ImageController {
     @Autowired
     ImageFeignService imageFeignService;
