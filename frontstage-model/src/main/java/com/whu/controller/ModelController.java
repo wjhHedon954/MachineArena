@@ -35,13 +35,10 @@ public class ModelController {
      * @create 2020-7-21 13:00
      * @updator
      * @update
-     * @param model
      * @return
      */
     @PostMapping("/model")
-    public CommonResult importModel(@RequestBody Model model){
-        return service.importModel(model);
-    CommonResult importModel(HttpServletRequest request){
+    public CommonResult importModel(HttpServletRequest request){
         Model model = new Model();
         MultipartFile modelImage = ((MultipartHttpServletRequest)request).getFile("modelImage");
         MultipartFile modelFile = ((MultipartHttpServletRequest)request).getFile("modelFile");
