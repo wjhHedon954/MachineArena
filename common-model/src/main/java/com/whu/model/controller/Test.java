@@ -6,6 +6,7 @@ import com.results.CommonResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -35,8 +36,11 @@ public class Test {
         }
         return CommonResult.success();
     }
-//    public static void main(String[] args) {
-//        LocalDateTime now = LocalDateTime.now();
-//        System.out.println(now);
+//    public static void main(String[] args) throws InterruptedException {
+//        LocalDateTime before = LocalDateTime.now();
+//        Thread.sleep(3000);
+//        LocalDateTime after=LocalDateTime.now();
+//        Duration between = Duration.between(before, after);
+//        System.out.println(between.toMillis());
 //    }
 }
