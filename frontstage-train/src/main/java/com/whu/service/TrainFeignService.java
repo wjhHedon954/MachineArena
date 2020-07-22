@@ -213,4 +213,17 @@ public interface TrainFeignService {
      */
     @GetMapping("/trainTask/workerStatus/{id}")
     CommonResult showWorkStatus(@PathVariable("id") Integer id);
+
+
+    /**
+     * 接口 6.2.1.14 接收前端返回的训练作业id,数据库查询数据封装传给研发，研发返回信息发给前端
+     * @author Yi Zheng
+     * @create 2020-07-22 10:40
+     * @updator Yi Zheng
+     * @upadte
+     * @param trainTaskId  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/container/status/{trainTaskId}")
+    CommonResult showContainerStatus(@PathVariable("trainTaskId") Integer trainTaskId);
 }

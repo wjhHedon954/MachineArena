@@ -1,9 +1,5 @@
 package com.whu.controller;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONUtil;
-import com.constants.ResultCode;
 import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.results.CommonResult;
@@ -260,6 +256,20 @@ public class TrainTaskController {
      */
     @GetMapping("/trainTask/workerStatus/{id}")
     CommonResult showWorkStatus(@PathVariable("id") Integer id){
-        return showWorkStatus(id);
+        return service.showWorkStatus(id);
+    }
+
+    /**
+     * 接口 6.2.1.14 接收前端返回的训练作业id,数据库查询数据封装传给研发，研发返回信息发给前端
+     * @author Yi Zheng
+     * @create 2020-07-22 10:20
+     * @updator Yi Zheng
+     * @upadte
+     * @param trainTaskId  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/container/status/{trainTaskId}")
+    public CommonResult showContainerStatus(@PathVariable("trainTaskId") Integer trainTaskId){
+        return service.showContainerStatus(trainTaskId);
     }
 }
