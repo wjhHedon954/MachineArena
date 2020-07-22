@@ -2,18 +2,18 @@ package com.responsevo;
 
 
 public class TrainStartVO {
-    private Integer userId;
+    private Integer trainTaskUserId;
     private Integer trainTaskAlgorithmId;
     private String trainTaskParams;
     private String trainTaskSpecification;
     private Integer trainTaskId;
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getTrainTaskUserId() {
+        return trainTaskUserId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setTrainTaskUserId(Integer trainTaskUserId) {
+        this.trainTaskUserId = trainTaskUserId;
     }
 
     public Integer getTrainTaskAlgorithmId() {
@@ -51,7 +51,7 @@ public class TrainStartVO {
     @Override
     public String toString() {
         return "TrainStartVO{" +
-                "userId=" + userId +
+                "trainTaskUserId=" + trainTaskUserId +
                 ", trainTaskAlgorithmId=" + trainTaskAlgorithmId +
                 ", trainTaskParams='" + trainTaskParams + '\'' +
                 ", trainTaskSpecification='" + trainTaskSpecification + '\'' +
