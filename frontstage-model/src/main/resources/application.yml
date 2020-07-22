@@ -1,5 +1,7 @@
 server:
   port: 30003
+  servlet:
+    context-path: /model
 
 spring:
   application:

@@ -1,5 +1,7 @@
 server:
   port: 20003
+  servlet:
+    context-path: /train
 
 spring:
   application:

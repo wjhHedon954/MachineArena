@@ -213,7 +213,7 @@ public class UserController {
      * @return
      */
     @ApiOperation(value = "接口 6.5.6 退出登录",httpMethod = "GET")
-    @GetMapping("/logout")
+    @GetMapping("/user/logout")
     public CommonResult logout(HttpSession session){
         session.removeAttribute("user");
         return CommonResult.success();

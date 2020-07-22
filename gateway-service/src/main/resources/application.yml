@@ -1,0 +1,43 @@
+server:
+  port: 9527
+  servlet:
+    context-path:
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true   #开启从注册中心动态创建路由的功能，利用微服务名进行路由
+      routes:
+        - id: algorithm_routh         #路由的ID
+          uri: lb://frontstage-algorithm   #匹配后提供服务的路由地址
+          predicates:
+            - Path=/algorithm/frontstage/**
+        - id: train_routh
+          uri: lb://frontstage-train
+          predicates:
+            - Path=/train/frontstage/**
+        - id: model_routh
+          uri: lb://frontstage-model
+          predicates:
+            - Path=/model/frontstage/**
+
+eureka:
+  client:
+    register-with-eureka: true  #注册进Eureka
+    #是否从EurekaServer抓取已有的注册信息，默认为true。
+    #单节点无所谓，集群必须设为为true才能诶和ribbon使用负载均衡
+    fetch-registry: true
+    #入驻哪里
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+  instance:
+    instance-id: GateWay9527
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔：默认30秒
+    #    lease-renewal-interval-in-seconds: 1
+    #Eureka服务端在收到最后一次心跳后等待时间上限：默认90秒
+    #    lease-expiration-duration-in-seconds: 2
