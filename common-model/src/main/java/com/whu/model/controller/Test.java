@@ -5,6 +5,11 @@ import com.responsevo.TrainStartVO;
 import com.results.CommonResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @RestController
 public class Test {
     //模拟研发端创建容器
@@ -20,4 +25,22 @@ public class Test {
 
         return CommonResult.success().add("id",id);
     }
+
+    @GetMapping("/testMkdir")
+    public CommonResult testMkdir(@RequestParam("path") String path){
+        try {
+            File file=new File(path);
+            file.mkdirs();
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.INSERT_ERROR);
+        }
+        return CommonResult.success();
+    }
+//    public static void main(String[] args) throws InterruptedException {
+//        LocalDateTime before = LocalDateTime.now();
+//        Thread.sleep(3000);
+//        LocalDateTime after=LocalDateTime.now();
+//        Duration between = Duration.between(before, after);
+//        System.out.println(between.toMillis());
+//    }
 }

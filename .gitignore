@@ -18,6 +18,7 @@ common-model/target
 eureka-service/target
 frontstage-algorithm/target
 frontstage-train/target
+frontstage-model/target
 
 # gwt caches and compiled units #
 war/gwt_bree/

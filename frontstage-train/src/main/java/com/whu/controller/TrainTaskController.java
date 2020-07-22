@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/frontstage")
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class TrainTaskController {
 
 
@@ -258,6 +259,20 @@ public class TrainTaskController {
      */
     @GetMapping("/trainTask/workerStatus/{id}")
     CommonResult showWorkStatus(@PathVariable("id") Integer id){
-        return showWorkStatus(id);
+        return service.showWorkStatus(id);
+    }
+
+    /**
+     * 接口 6.2.1.14 接收前端返回的训练作业id,数据库查询数据封装传给研发，研发返回信息发给前端
+     * @author Yi Zheng
+     * @create 2020-07-22 10:20
+     * @updator Yi Zheng
+     * @upadte
+     * @param trainTaskId  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/container/status/{trainTaskId}")
+    public CommonResult showContainerStatus(@PathVariable("trainTaskId") Integer trainTaskId){
+        return service.showContainerStatus(trainTaskId);
     }
 }

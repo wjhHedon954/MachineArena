@@ -61,6 +61,8 @@ public enum ResultCode {
     FAIL_TO_SEND_REQUEST("T0007","向研发发送请求失败"),
     NO_RESPONSE_DATA("T0088","研发返回数据失败"),
     FAILE_PARSE_JSON("T0009","解析json失败"),
+    SELECT_CONTAINER_STATUS("T0010","数据库连锁查询中某一步出错，详情看控制台打印"),
+     FAIL_MKDIRS("T0011","linux创建文件夹失败"),
 
     /**
      * 训练管理模块

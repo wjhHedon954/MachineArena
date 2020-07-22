@@ -42,6 +42,17 @@ public interface ITrainTaskService extends IService<TrainTask> {
      */
     int deleteTrainTaskById(Integer trainTaskID);
 
+    /**
+     * 接口 6.2.1.2 根据ID删除训练作业配置
+     * @author Yi Zheng
+     * @create 2020-07-22 19:00
+     * @updator
+     * @update
+     * @param trainTaskConfId 删除的ID
+     * @return  返回删除影响的行数
+     */
+    int deleteTrainTaskConfById(Integer trainTaskConfId);
+
 
     /**
      * 接口 6.2.1.4 根据训练作业ID同时更新train_task和train_task_conf
@@ -54,6 +65,31 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return  返回更新影响的行数
      */
     int[] updateTrainTask(TrainTask trainTask,TrainTaskConf trainTaskConf);
+
+
+    /**
+     * 接口 6.2.1.1 根据id查询trainTaskConf
+     * @author Yi Zheng
+     * @create 2020-07-22 20:20
+     * @updator
+     * @update
+     * @param trainTaskConfId id
+     * @return  TrainTaskConf
+     */
+    TrainTaskConf selectTrainTaskConfById(Integer trainTaskConfId);
+
+
+    /**
+     * 接口 6.2.1.1 根据id更改trainTaskConf
+     * @author Yi Zheng
+     * @create 2020-07-22 20:20
+     * @updator
+     * @update
+     * @param trainTaskConf 被更改的对象
+     * @return  影响的行数
+     */
+    int updateTrainTaskConfById(TrainTaskConf trainTaskConf);
+
 
     /**
      * 6.2.1.8 分页模糊查询当前用户下的训练作业
@@ -134,4 +170,26 @@ public interface ITrainTaskService extends IService<TrainTask> {
      * @return
      */
     int deleteTaskIpContainerByTrainTaskId(Integer trainTaskId);
+
+    /**
+     * 根据根据算法id查算法
+     * @author Yi Zheng
+     * @create 2020-07-21 19:00
+     * @updator
+     * @upadte
+     * @param id
+     * @return
+     */
+    Algorithm selectAlgorithmById(Integer id);
+
+    /**
+     * 根据根据算训练任务id查询训练TaskIpContainer
+     * @author Yi Zheng
+     * @create 2020-07-21 19:00
+     * @updator
+     * @upadte
+     * @param id
+     * @return
+     */
+    TaskIpContainer selectTaskIpContainerByTrainTaskId(Integer id);
 }

@@ -1,3 +1,4 @@
 com\whu\service\ModelFeignService.class
 com\whu\controller\DemoController.class
+com\whu\controller\ModelController.class
 com\whu\FrontStageModelApplication.class
