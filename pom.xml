@@ -22,6 +22,7 @@
         <module>common-model</module>
         <module>frontstage-model</module>
         <module>personal-center</module>
+        <module>gateway-service</module>
     </modules>
 
     <parent>

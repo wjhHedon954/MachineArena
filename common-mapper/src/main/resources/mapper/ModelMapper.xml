@@ -2,4 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.ModelMapper">
 
+
+    <resultMap id="ModelWithTypeMap" type="com.responsevo.ModelResponseVo">
+        <id column="model_id" jdbcType="INTEGER" property="modelId" />
+        <result column="model_name" jdbcType="VARCHAR" property="modelName" />
+        <result column="model_type_id" jdbcType="INTEGER" property="modelTypeId" />
+        <result column="model_status" jdbcType="TINYINT" property="modelStatus" />
+        <result column="model_photo_url" jdbcType="VARCHAR" property="modelPhotoUrl" />
+        <result column="model_url" jdbcType="VARCHAR" property="modelUrl" />
+        <result column="model_api" jdbcType="VARCHAR" property="modelApi" />
+        <result column="model_is_successful" jdbcType="TINYINT" property="modelIsSuccessful" />
+        <association property="modelType" javaType="com.entity.ModelType">
+            <id column="model_type_id" jdbcType="INTEGER" property="modelTypeId" />
+            <result column="model_type_name" jdbcType="VARCHAR" property="modelTypeName" />
+        </association>
+    </resultMap>
+
+    <sql id="Model_With_Type_Column_List">
+        <!--model部分-->
+        tm.model_id, tm.model_name, tm.model_type_id, tm.model_status, tm.model_photo_url, tm.model_url, tm.model_api,
+        tm.model_is_successful,
+        <!--modelType部分-->
+        tmt.model_type_id, tmt.model_type_name
+    </sql>
+
+    <select id="selectModelsWithType" resultMap="ModelWithTypeMap">
+        SELECT
+        <include refid="Model_With_Type_Column_List"></include>
+        FROM tbl_model tm
+        LEFT JOIN tbl_model_type tmt  ON tm.model_type_id = tmt.model_type_id
+        WHERE tm.model_name like '%${value}%'
+    </select>
+
+    <select id="selectUsersModelsWithType" resultMap="ModelWithTypeMap">
+        SELECT
+        <include refid="Model_With_Type_Column_List"></include>
+        FROM tbl_model tm
+        LEFT JOIN tbl_model_type tmt  ON tm.model_type_id = tmt.model_type_id
+        LEFT JOIN tbl_model_user tmu ON tm.model_id = tmu.model_id
+        WHERE
+        tm.model_name like '%${keyWord}%' AND
+        tmu.model_owner_id = '${userId}'
+    </select>
 </mapper>

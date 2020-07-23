@@ -29,7 +29,7 @@ public class AlgorithmTypeController {
     private IAlgorithmTypeService algorithmTypeService;
 
     @GetMapping(value = "/algorithm/type")
-    public CommonResult selectInstanceTypes(){
+    public CommonResult getAlgorithmType() {
         return CommonResult.success().add("algorithmType", algorithmTypeService.getAlgorithmType());
     }
 }
