@@ -194,7 +194,7 @@ public class TrainTaskController {
      * @param vo  研发训练需要的参数封装类
      * @return
      */
-    @PostMapping("/trainTask/start")
+    @GetMapping("/trainTask/start")
     public CommonResult startTrainTask(@RequestBody TrainStartVO vo){
         return service.startTrainTask(vo);
     }
