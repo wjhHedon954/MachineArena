@@ -1,7 +1,9 @@
 package com.whu.service;
 
 import com.entity.Algorithm;
+import com.entity.AlgorithmDescription;
 import com.entity.HyperParameters;
+import com.entity.ModelDescription;
 import com.results.CommonResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
@@ -128,5 +130,38 @@ public interface AlgorithmFeignService {
     @GetMapping("/instanceType")
     CommonResult getInstanceType();
 
-    
+    /**
+     * @author Huiri Tan
+     * @description 添加超参数
+     * @create 2020/7/23 12:15 下午
+     * @update 2020/7/23 12:15 下午
+     * @param
+     * @return
+     **/
+    @PostMapping("/algorithm/hyper-parameters")
+    HyperParameters addHyperParameters(@RequestBody HyperParameters hyperParameters);
+
+
+    /**
+     * @author Huiri Tan
+     * @description 添加算法转发
+     * @create 2020/7/23 12:16 下午
+     * @update 2020/7/23 12:16 下午
+     * @param [algorithm]
+     * @return com.entity.Algorithm
+     **/
+    @PostMapping("/algorithm")
+    Algorithm addAlgorithm(@RequestBody Algorithm algorithm);
+
+    /**
+     * @author Huiri Tan
+     * @description 添加算法描述
+     * @create 2020/7/23 12:17 下午
+     * @update 2020/7/23 12:17 下午
+     * @param [description]
+     * @return com.entity.AlgorithmDescription
+     **/
+    @PostMapping("/algorithm/description")
+    AlgorithmDescription addDescription (@RequestBody AlgorithmDescription description);
+
 }

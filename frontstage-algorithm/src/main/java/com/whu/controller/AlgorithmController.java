@@ -1,6 +1,16 @@
 package com.whu.controller;
 
+import cn.hutool.core.util.ZipUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.constants.ResultCode;
 import com.entity.Algorithm;
+import com.entity.AlgorithmDescription;
+import com.entity.HyperParameters;
 import com.results.CommonResult;
 import com.whu.service.AlgorithmFeignService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -8,6 +18,15 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Hedon Wang
@@ -22,6 +41,157 @@ public class AlgorithmController {
 
     @Autowired
     AlgorithmFeignService algorithmFeignService;
+
+    /**
+     * @author Huiri Tan
+     * @description 前台创建算法
+     * @create 2020/7/23 11:00 上午
+     * @update 2020/7/23 11:00 上午
+     * @param [request]
+     * @return com.results.CommonResult
+     **/
+    @PostMapping("/algorithm")
+    public CommonResult addAlgorithm(HttpServletRequest request) {
+        Algorithm algorithm = new Algorithm(); // 要创建的算法对象
+        List<MultipartFile> files = null;
+        MultipartHttpServletRequest params =  (MultipartHttpServletRequest)request;
+        try {
+            files  =  ((MultipartHttpServletRequest)request).getFiles("myfile");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 从传入的数据中获取data并转换为JSONObject 顺便获取超参数
+        JSONObject data = null;
+        JSONArray hyperParameters = null;
+        try {
+//            JSONObject tmp = new JSONObject(params.getParameter("data"));
+            data =  new JSONObject(params.getParameter("data"));
+            hyperParameters = JSONUtil.parseArray(data.get("hyperParameters"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assert data != null;
+        // 首先保存算法描述
+        AlgorithmDescription algorithmDescription = new AlgorithmDescription();
+        try{
+            algorithmDescription.setAlgorithmDescriptionContent(data.get("algorithm_description").toString());
+            algorithmDescription.setAlgorithmDescriptionId(0);  // 给ID丢个值，不然请求转发的时候报错
+            algorithmDescription = algorithmFeignService.addDescription(algorithmDescription);    // 添加算法描述
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        algorithm.setAlgorithmName(data.get("algorithm_name").toString());
+        algorithm.setAlgorithmVersion(data.get("algorithm_version").toString());
+        algorithm.setAlgorithmTypeId((int)data.get("algorithm_type_id"));
+        algorithm.setAlgorithmEngineId((int)data.get("algorithm_engine_id"));
+        algorithm.setAlgorithmDescriptionId(algorithmDescription.getAlgorithmDescriptionId());
+        algorithm.setAlgorithmInstanceTypeId((int)data.get("algorithm_instance_type_id"));
+        algorithm.setAlgorithmInputReflect(data.get("algorithm_input_reflect").toString());
+        algorithm.setAlgorithmOutputReflect(data.get("algorithm_output_reflect").toString());
+        algorithm.setAlgorithmStarterUrl(data.get("algorithm_starter_URL").toString());
+        algorithm.setAlgorithmSaveUrl("/Users/thomas/Desktop/Data");    // 暂时写死
+        algorithm.setAlgorithmCustomizeHyperPara((boolean)data.get("algorithm_customize_hyper_para"));
+        algorithm.setAlgorithmStatus(0);
+        algorithm.setAlgorithmCreateTime(LocalDateTime.now());
+        algorithm.setAlgorithmId(0);    // 丢个数给ID 免得转发会报错
+
+        // 保存算法
+        algorithm = algorithmFeignService.addAlgorithm(algorithm); //添加算法
+
+        // 若有超参数则保存
+        if(hyperParameters != null) {
+            for(int i = 0; i < hyperParameters.size(); i++) {
+                HyperParameters hyperParameter = new HyperParameters();
+                hyperParameter.setHyperParaName(hyperParameters.getJSONObject(i).get("hyper_para_name").toString());
+                hyperParameter.setHyperParaDescription(hyperParameters.getJSONObject(i).get("hyper_para_description").toString());
+                hyperParameter.setHyperParaType((int)hyperParameters.getJSONObject(i).get("hyper_para_type"));
+                hyperParameter.setHyperParaAllowAdjust((boolean)hyperParameters.getJSONObject(i).get("hyper_para_allow_adjust"));
+                hyperParameter.setHyperParaRange(hyperParameters.getJSONObject(i).get("hyper_para_range").toString());
+                hyperParameter.setHyperParaDefaultValue(hyperParameters.getJSONObject(i).get("hyper_para_default_value").toString());
+                hyperParameter.setHyperParaIsNeeded((boolean)hyperParameters.getJSONObject(i).get("hyper_para_is_needed"));
+                hyperParameter.setAlgorithmId(algorithm.getAlgorithmId());
+                hyperParameter.setHyperParaId(0);       // 丢个数给ID 免得转发会报错
+                algorithmFeignService.addHyperParameters(hyperParameter);
+            }
+        }
+
+        if(files == null)
+            return CommonResult.fail(ResultCode.EMPTY_OBJECT);
+
+        String fileDir = null;
+
+        File dataDir = new File("data");
+        if(!dataDir.exists())
+            dataDir.mkdirs();
+        System.out.println(dataDir.getAbsolutePath());
+        // 循环保存文件
+        for (MultipartFile file : files) {
+            String originName = file.getOriginalFilename();
+            String fileName = originName;
+            String originPath = "";
+
+            if (originName == null) {
+                return CommonResult.fail(ResultCode.ERROR); // 文件名为空暂时返回未知错误;
+            }
+
+            if (originName.contains("/")) {
+                fileName = originName.substring(originName.lastIndexOf('/') + 1);
+                originPath = originName.substring(0, originName.lastIndexOf('/') + 1);
+                if(fileDir == null)
+                    fileDir = "/var/tmp/" + originName.substring(0, originName.indexOf('/'));        // 文件夹最终存储路径
+
+            }
+            else {
+                // 单个文件的情况
+                if(fileDir == null)
+                    fileDir = "/var/tmp/" + fileName;
+            }
+
+            String filePath = "/var/tmp/" + originPath;
+            File newFile = new File(filePath);
+            if(!newFile.exists()) {
+                newFile.mkdirs();
+            }
+            try {
+                file.transferTo(new File(newFile + "/" + fileName));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ZipUtil.zip(fileDir, fileDir + ".zip",true);
+
+
+        // Endpoint以杭州为例，其它Region请按实际情况填写。
+        String endpoint = "http://oss-cn-beijing.aliyuncs.com";
+        // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
+        String accessKeyId = "LTAI4G9iw6Da8c5Px6qDGWNA";
+        String accessKeySecret = "GTorRGPG8BrG7hN7UGMCP9XV51q9IK";
+
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        // 创建PutObjectRequest对象。
+        String objPath = "1/" + algorithm.getAlgorithmId().toString() + "/code" + fileDir.substring(fileDir.lastIndexOf('/')) + ".zip";
+        PutObjectRequest putObjectRequest = new PutObjectRequest("thomas10011-image",
+                objPath,
+                new File(fileDir + ".zip"));
+
+        // 上传文件。
+        ossClient.putObject(putObjectRequest);
+        // 关闭OSSClient。
+        ossClient.shutdown();
+
+        algorithm.setAlgorithmSaveUrl("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + objPath);
+
+        return algorithmFeignService.updateAlgorithm(algorithm);
+    }
 
 
     /**
