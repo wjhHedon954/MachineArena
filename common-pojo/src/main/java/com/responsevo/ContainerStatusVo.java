@@ -1,19 +1,19 @@
 package com.responsevo;
 
 public class ContainerStatusVo {
-    private Integer userId;
+    private Integer trainTaskUserId;
     private Integer trainTaskAlgorithmId;
     private Integer trainTaskId;
     private String containerId;
     private String trainTaskLogOutPath;
     private String trainTaskModelOutPath;
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getTrainTaskUserId() {
+        return trainTaskUserId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setTrainTaskUserId(Integer trainTaskUserId) {
+        this.trainTaskUserId = trainTaskUserId;
     }
 
     public Integer getTrainTaskAlgorithmId() {
@@ -59,7 +59,7 @@ public class ContainerStatusVo {
     @Override
     public String toString() {
         return "ContainerStatusVo{" +
-                "userId=" + userId +
+                "trainTaskUserId=" + trainTaskUserId +
                 ", trainTaskAlgorithmId=" + trainTaskAlgorithmId +
                 ", trainTaskId=" + trainTaskId +
                 ", containerId='" + containerId + '\'' +

@@ -352,8 +352,8 @@ public class TrainTaskController {
      * @param
      * @return
      */
-    @PostMapping("/trainTask/start/")
-    public CommonResult startTrainTask(Integer trainTaskId){
+    @GetMapping("/trainTask/start/{trainTaskId}")
+    public CommonResult startTrainTask(@PathVariable("trainTaskId") Integer trainTaskId){
         //检查前端返回的数据是否为空
         if (trainTaskId==null)
             return CommonResult.fail(ResultCode.EMPTY_PARAM);
@@ -605,9 +605,9 @@ public class TrainTaskController {
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
 
         //从trainTask获取user_id》
-        Integer userId = trainTask.getTrainTaskUserId();
-        System.out.println(userId);
-        if (userId==null)
+        Integer trainTaskUserId = trainTask.getTrainTaskUserId();
+        System.out.println(trainTaskUserId);
+        if (trainTaskUserId==null)
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
 
         //从包装类获取TrainTaskConf
@@ -651,7 +651,7 @@ public class TrainTaskController {
         ContainerStatusVo containerStatusVo = new ContainerStatusVo();
 
         //设置包装类属性
-        containerStatusVo.setUserId(userId);
+        containerStatusVo.setTrainTaskUserId(trainTaskUserId);
         containerStatusVo.setTrainTaskLogOutPath(trainTaskLogOutPath);
         containerStatusVo.setTrainTaskModelOutPath(trainTaskModelOutPath);
         containerStatusVo.setContainerId(containerId);
