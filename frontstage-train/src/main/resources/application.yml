@@ -13,6 +13,10 @@ spring:
     password: Thomas10011
     type: com.alibaba.druid.pool.DruidDataSource   #配置阿里巴巴的Druid数据源
 
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+
 eureka:
   client:
     register-with-eureka: true  #注册进Eureka

@@ -192,13 +192,13 @@ public class TrainTaskController {
      * @author Yi Zheng
      * @create 2020-07-21 10:00
      * @updator Yi Zheng
-     * @upadte
-     * @param vo  研发训练需要的参数封装类
+     * @upadte  2020-7-22 10:20
+     * @param trainTaskId  研发训练需要的参数封装类
      * @return
      */
-    @GetMapping("/trainTask/start")
-    public CommonResult startTrainTask(@RequestBody TrainStartVO vo){
-        return service.startTrainTask(vo);
+    @GetMapping("/trainTask/start/{trainTaskId}")
+    public CommonResult startTrainTask(@PathVariable("trainTaskId") Integer trainTaskId){
+        return service.startTrainTask(trainTaskId);
     }
 
 

@@ -154,12 +154,12 @@ public interface TrainFeignService {
      * @author Yi Zheng
      * @create 2020-07-21 10:00
      * @updator Yi Zheng
-     * @upadte
-     * @param vo  研发训练需要的参数封装类
+     * @upadte  2020-7-22 10:20
+     * @param trainTaskId 训练任务id
      * @return
      */
-    @PostMapping("/trainTask/start")
-    CommonResult startTrainTask(@RequestBody TrainStartVO vo);
+    @GetMapping("/trainTask/start/{trainTaskId}")
+    CommonResult startTrainTask(@PathVariable("trainTaskId") Integer trainTaskId);
 
     /**
      * 接口 6.2.1.9 根据ID删除训练有关的镜像
