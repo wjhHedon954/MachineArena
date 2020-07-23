@@ -94,7 +94,7 @@ public class ModelController {
         model.setModelPhotoUrl("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + fileName);        // 保存图片url
 
         content = modelFile.getBytes();
-        fileName = "model-file/" + model.getModelId().toString() + "-" + modelImage.getOriginalFilename();
+        fileName = "model-file/" + model.getModelId().toString() + "-" + modelFile.getOriginalFilename();
         ossClient.putObject("thomas10011-image", fileName, new ByteArrayInputStream(content));
         model.setModelUrl("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + fileName);             // 保存文件url
 
