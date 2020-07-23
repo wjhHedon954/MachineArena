@@ -1,5 +1,6 @@
 package com.whu.train_task.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
@@ -9,6 +10,7 @@ import com.entity.TaskIpContainer;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
 import com.responsevo.ContainerStatusVo;
+import com.responsevo.TrainProcessStatusVO;
 import com.responsevo.TrainStartVO;
 import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.results.CommonResult;
@@ -388,7 +390,7 @@ public class TrainTaskWithYanFaController {
         //向研发发送请求
         String dataFromYanFa=null;
         try{
-            dataFromYanFa=HttpRequest.get("http://10.10.10.209:7777/container/logs/"+trainTaskId)
+            dataFromYanFa=HttpRequest.get("http://202.114.66.76:7777//contianer/logs/short/"+trainTaskId)
                     .timeout(10000)
                     .execute().body();
         }catch (Exception e){
@@ -400,6 +402,136 @@ public class TrainTaskWithYanFaController {
         if(dataFromYanFa==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
-        return null;
+        //全部转化为小写
+        String dataFromYanFaLowerCase = dataFromYanFa.toLowerCase();
+
+        //去掉换行和空格
+        String dataWithoutBackspace = dataFromYanFaLowerCase.replaceAll("\\s", "");
+
+        //获取最后一个test字样的位置
+        int testIndex = dataWithoutBackspace.lastIndexOf("test");
+
+        //判断是否有test
+        if (testIndex!=-1){
+            //省略对test的处理
+            return CommonResult.success().add("test","暂时不知道test是什么");
+        }
+
+
+        //获取train字样的index
+        int trainIndex = dataWithoutBackspace.lastIndexOf("train");
+
+        //如果没有train
+        if (trainIndex==-1)
+            return CommonResult.success().add("message","没有正在训练的作业");
+
+        String trainData = dataWithoutBackspace.substring(trainIndex);
+
+
+        //分隔
+        String[] splitData = trainData.split(":|\\[|/|\\(|%|:");
+
+        //从分隔中获取值
+        Integer epoch = Integer.valueOf(splitData[1]);
+        Integer batchIndex = Integer.valueOf(splitData[2]);
+        Integer len = Integer.valueOf(splitData[3]);
+        Double finishRate = Double.valueOf(splitData[4]) / 100;
+        Double trainLoss = Double.valueOf(Double.valueOf(splitData[6].substring(0,4)));
+
+        //创建一个返回对象VO
+        TrainProcessStatusVO vo = new TrainProcessStatusVO();
+        vo.setBatchIndex(batchIndex);
+        vo.setEpoch(epoch);
+        vo.setFinishRate(finishRate);
+        vo.setLen(len);
+        vo.setTrainLoss(trainLoss);
+
+        //转换成json
+        JSONObject jsonObject = JSONUtil.parseObj(vo);
+        String train = jsonObject.toString();
+        return CommonResult.success().add("train",train);
     }
+
+
+
+//    //测试字符串返回给前端处理
+//    public static void main(String[] args) {
+//        //向研发发送请求
+//        String dataFromYanFa="           \"epoch\":2,\n" +
+//                "            \"batchIndex\":1223,\n" +
+//                "            \"len\":1500,\n" +
+//                "            \"finishRate\":0.23,\n" +
+//                "            \"trainLoss\":32.2,\n" +
+//                "fdsfh  Train Epoch: 5 [1920/8572 (22%)]\tLoss: 0.239170  fdsfgsdg\n" +
+//                "/n\n" +
+//                "Downloading http://yann.lecun.com/exdb/mnist";
+//
+//
+//
+//        //全部转化为小写
+//        String dataFromYanFaLowerCase = dataFromYanFa.toLowerCase();
+//
+//        //去掉换行和空格
+//        String dataWithoutBackspace = dataFromYanFaLowerCase.replaceAll("\\s", "");
+//
+//
+//
+//        //获取train字样的index
+//        int trainIndex = dataWithoutBackspace.lastIndexOf("train");
+//
+//
+//        String trainData = dataWithoutBackspace.substring(trainIndex);
+//
+//
+//        //分隔
+//        String[] splitData = trainData.split(":|\\[|/|\\(|%|:");
+//
+//        //从分隔中获取值
+//        Integer epoch = Integer.valueOf(splitData[1]);
+//        Integer batchIndex = Integer.valueOf(splitData[2]);
+//        Integer len = Integer.valueOf(splitData[3]);
+//        Double finishRate = Double.valueOf(splitData[4]) / 100;
+//        Double trainLoss = Double.valueOf(Double.valueOf(splitData[6].substring(0,4)));
+//
+//        //创建一个返回对象VO
+//        TrainProcessStatusVO vo = new TrainProcessStatusVO();
+//        vo.setBatchIndex(batchIndex);
+//        vo.setEpoch(epoch);
+//        vo.setFinishRate(finishRate);
+//        vo.setLen(len);
+//        vo.setTrainLoss(trainLoss);
+//
+//        //转换成json
+//        JSONObject jsonObject = JSONUtil.parseObj(vo);
+//        String train = jsonObject.toString();
+//        System.out.println(train);
+//    }
+
+
+//    //测试除去所有空格和换行符
+//    public static void main(String[] args) {
+//        String dataFromYanFa="{\n" +
+//                "    \"code\": \"00002\",\n" +
+//                "    \"message\": \"处理成功！\",\n" +
+//                "    \"extend\": {\n" +
+//                "       \"test\":{\n" +
+//                "            \"averageLoss\":0,\n" +
+//                "            \"accuracy\":0\n" +
+//                "        }\n" +
+//                "    }\n" +
+//                "}";
+//        String s = dataFromYanFa.replaceAll("\\s", "");
+//        System.out.println(s);
+//    }
+
+
+     //测试数组的json解析
+//    public static void main(String[] args) {
+//        String str="{\"extend\": [1,2,3,4]}, \"message\": \"处理成功！\"}";
+//        String gpus = JSONUtil.parse(str).getByPath("extend", String.class);
+//        System.out.println(gpus);
+//        String message = JSONUtil.parse(str).getByPath("message", String.class);
+//        System.out.println(message);
+//
+//    }
 }
