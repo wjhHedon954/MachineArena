@@ -12,11 +12,11 @@ spring:
         locator:
           enabled: true   #开启从注册中心动态创建路由的功能，利用微服务名进行路由
       routes:
-        - id: algorithm_routh         #路由的ID
+        - id: algorithm_frontstage_routh         #路由的ID
           uri: lb://frontstage-algorithm   #匹配后提供服务的路由地址
           predicates:
             - Path=/algorithm/frontstage/**
-        - id: algorithm_back_routh
+        - id: algorithm_backstage_routh
           uri: lb://backstage-algorithm
           predicates:
             - Path=/algorithm/backstage/**

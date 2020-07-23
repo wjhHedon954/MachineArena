@@ -1,6 +1,7 @@
 package com.whu.service;
 
 import com.entity.Model;
+import com.entity.ModelDescription;
 import com.results.CommonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -94,4 +95,16 @@ public interface ModelFeignService {
     CommonResult getModels(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                            @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
                            @RequestParam(value = "keyWord",defaultValue = "")String keyWord);
+
+    /**
+     * @author Huiri Tan
+     * @description 保存模型描述
+     * @create 2020/7/23 1:32 上午
+     * @update 2020/7/23 1:32 上午
+     * @param
+     * @return
+     **/
+
+    @PostMapping("/model-description")
+    ModelDescription addModelDescription(ModelDescription modelDescription);
 }

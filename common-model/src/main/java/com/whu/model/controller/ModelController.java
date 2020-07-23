@@ -52,7 +52,7 @@ public class ModelController {
         if (i==0)
             return CommonResult.fail(ResultCode.INSERT_ERROR);
 
-        return CommonResult.success();
+        return CommonResult.success().add("modelId", model.getModelId());
     }
 
 

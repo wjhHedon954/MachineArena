@@ -1,16 +1,18 @@
 package com.whu.controller;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.entity.Model;
+import com.entity.ModelDescription;
 import com.results.CommonResult;
 import com.whu.service.ModelFeignService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Controller
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 @RestController
 public class ModelController {
     @Autowired
-    private ModelFeignService service;
+    private ModelFeignService modelFeignService;
 
     /**
      * 接口6.3.1.1  导入模型
@@ -38,10 +42,36 @@ public class ModelController {
      * @return
      */
     @PostMapping("/model")
-    public CommonResult importModel(HttpServletRequest request){
+    public CommonResult importModel(HttpServletRequest request) throws IOException {
         Model model = new Model();
+        ModelDescription modelDescription = new ModelDescription();
         MultipartFile modelImage = ((MultipartHttpServletRequest)request).getFile("modelImage");
         MultipartFile modelFile = ((MultipartHttpServletRequest)request).getFile("modelFile");
+        MultipartHttpServletRequest params =  (MultipartHttpServletRequest)request;
+
+        // 从传入的数据中获取data并转换为JSONObject 顺便获取超参数
+        JSONObject data = null;
+        try {
+            data =  new JSONObject(params.getParameter("data"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        assert data != null;
+        model.setModelName(data.get("modelName").toString());
+        model.setModelTypeId((Integer) data.get("modelTypeId"));
+        model.setModelIsSuccessful((Integer)data.get("modelIsSuccessful"));
+        model.setModelStatus(0);
+        model.setModelApi("");
+        model.setModelPhotoUrl("");
+        model.setModelUrl("");
+        CommonResult result = modelFeignService.importModel(model);
+        model.setModelId((Integer) JSONUtil.parseObj(result.getExtend()).get("modelId"));   // 保存到数据库里以后设置id
+
+        modelDescription.setModelId(model.getModelId());
+        modelDescription.setModelDescriptionContent(data.get("modelDescription").toString());
+//        modelDescription.setModelDescriptionId(1);     // 给个id 否则会报错
+        modelFeignService.addModelDescription(modelDescription);        // 保存模型描述
 
         // Endpoint以杭州为例，其它Region请按实际情况填写。
         String endpoint = "http://oss-cn-beijing.aliyuncs.com";
@@ -50,29 +80,30 @@ public class ModelController {
         String accessKeySecret = "GTorRGPG8BrG7hN7UGMCP9XV51q9IK";
 
         // 创建OSSClient实例。
-//        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-//        ArrayList<String> imageUrls = new ArrayList<>();
-//        for(String url : outPutUrl) {
-//            // 创建PutObjectRequest对象。
-//            PutObjectRequest putObjectRequest = new PutObjectRequest("thomas10011-image", url.substring(url.lastIndexOf('/') + 1), new File(url));
-//            imageUrls.add("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + url.substring(url.lastIndexOf('/') + 1));
-//            // 如果需要上传时设置存储类型与访问权限，请参考以下示例代码。
-//            // ObjectMetadata metadata = new ObjectMetadata();
-//            // metadata.setHeader(OSSHeaders.OSS_STORAGE_CLASS, StorageClass.Standard.toString());
-//            // metadata.setObjectAcl(CannedAccessControlList.Private);
-//            // putObjectRequest.setMetadata(metadata);
-//
-//            // 上传文件。
-//            ossClient.putObject(putObjectRequest);
-//        }
-//
-//        // 关闭OSSClient。
-//        ossClient.shutdown();
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        ArrayList<String> imageUrls = new ArrayList<>();
+
+        byte[] content;
+        String fileName;
+        assert modelImage != null;
+        // 上传文件。
+
+        content = modelImage.getBytes();
+        fileName = "model-image/" + model.getModelId().toString() + "-" + modelImage.getOriginalFilename();
+        ossClient.putObject("thomas10011-image", fileName, new ByteArrayInputStream(content));
+        model.setModelPhotoUrl("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + fileName);        // 保存图片url
+
+        content = modelFile.getBytes();
+        fileName = "model-file/" + model.getModelId().toString() + "-" + modelImage.getOriginalFilename();
+        ossClient.putObject("thomas10011-image", fileName, new ByteArrayInputStream(content));
+        model.setModelUrl("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + fileName);             // 保存文件url
 
 
-        return CommonResult.success();
+        // 关闭OSSClient。
+        ossClient.shutdown();
 
-
+        // 更新model并返回
+        return modelFeignService.updateModelById(model);
     }
 
 
@@ -88,7 +119,7 @@ public class ModelController {
      */
     @GetMapping("/model/{id}")
     CommonResult selectModelById(@PathVariable("id") Integer id){
-        return service.selectModelById(id);
+        return modelFeignService.selectModelById(id);
     }
 
 
@@ -104,7 +135,7 @@ public class ModelController {
      */
     @DeleteMapping("/model/{id}")
     public CommonResult deleteModelById(@PathVariable("id") Integer id){
-        return service.deleteModelById(id);
+        return modelFeignService.deleteModelById(id);
     }
 
     /**
@@ -119,7 +150,7 @@ public class ModelController {
      */
     @PutMapping("/model/")
     public CommonResult updateModelById(@RequestBody Model model){
-        return service.updateModelById(model);
+        return modelFeignService.updateModelById(model);
     }
 
 
@@ -144,7 +175,7 @@ public class ModelController {
     public CommonResult getUserModel(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                                      @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
                                      @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
-        return service.getModels(pageNum,pageSize,keyWord);
+        return modelFeignService.getModels(pageNum,pageSize,keyWord);
     }
 
 
@@ -173,6 +204,6 @@ public class ModelController {
                                      @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
                                      @RequestParam(value = "keyWord",defaultValue = "")String keyWord){
 
-        return service.getUserModels(userId,pageNum,pageSize,keyWord);
+        return modelFeignService.getUserModels(userId,pageNum,pageSize,keyWord);
     }
 }
