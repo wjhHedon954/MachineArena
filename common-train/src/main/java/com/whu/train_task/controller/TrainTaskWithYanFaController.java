@@ -390,7 +390,7 @@ public class TrainTaskWithYanFaController {
         //向研发发送请求
         String dataFromYanFa=null;
         try{
-            dataFromYanFa=HttpRequest.get("http://202.114.66.76:7777//contianer/logs/short/"+trainTaskId)
+            dataFromYanFa=HttpRequest.get("http://202.114.66.76:7777/container/logs/short/"+trainTaskId)
                     .timeout(10000)
                     .execute().body();
         }catch (Exception e){
@@ -401,6 +401,7 @@ public class TrainTaskWithYanFaController {
         //判断返回的数据是否为空
         if(dataFromYanFa==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
+        System.out.println("到底是啥"+dataFromYanFa);
 
         //全部转化为小写
         String dataFromYanFaLowerCase = dataFromYanFa.toLowerCase();
@@ -419,7 +420,7 @@ public class TrainTaskWithYanFaController {
 
 
         //获取train字样的index
-        int trainIndex = dataWithoutBackspace.lastIndexOf("train");
+        int trainIndex = dataWithoutBackspace.lastIndexOf("trainepoch");
 
         //如果没有train
         if (trainIndex==-1)
