@@ -21,4 +21,10 @@ public interface TrainTaskMapper extends BaseMapper<TrainTask> {
 
     //获取所有训练作业
     List<TrainTaskResponseVo> getTrainTasks(String keyWord);
+
+    //根据状态查询所有训练作业
+    List<TrainTaskResponseVo> getTrainTasksByStatus(String keyWord,Integer status);
+
+    //根据状态查询某用户下所有训练作业
+    List<TrainTaskResponseVo> getUsersTrainTasksByStatus(Integer userId,String keyWord,Integer status);
 }

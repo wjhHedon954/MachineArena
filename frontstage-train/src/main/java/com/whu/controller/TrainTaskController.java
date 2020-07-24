@@ -290,4 +290,63 @@ public class TrainTaskController {
     CommonResult showTrainTaskProcessdata(@PathVariable("trainTaskId") Integer trainTaskId){
         return service.showTrainTaskProcessdata(trainTaskId);
     }
+
+
+    /**
+     * 分页查询某状态的训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-24 10:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-24 10:59
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @param status 状态
+     * @return
+     */
+    @ApiOperation(value = " 分页查询某状态的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true),
+            @ApiImplicitParam(name = "status",value = "状态",paramType = "query",dataType = "Integer",required = true)
+    })
+    @GetMapping("/trainTasks/status")
+    public CommonResult getUserTrainTasksWithStatus(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                                    @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                                    @RequestParam(value = "keyWord",defaultValue = "")String keyWord,
+                                                    @RequestParam(value = "status")Integer status){
+        return service.getUserTrainTasksWithStatus(pageNum,pageSize,keyWord,status);
+    }
+
+
+    /**
+     * 分页查询当前用户下的某状态的训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 15:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 15:59
+     * @param userId    用户ID
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @param status 状态
+     * @return
+     */
+    @ApiOperation(value = " 分页查询当前用户下的某状态的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId",value = "当前用户ID",paramType = "path",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true),
+            @ApiImplicitParam(name = "status",value = "状态",paramType = "query",dataType = "Integer",required = true)
+    })
+    @GetMapping("/trainTasks/status/{userId}")
+    public CommonResult getUserTrainTasksWithStatus(@PathVariable(value = "userId")Integer userId,
+                                          @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord,
+                                          @RequestParam(value = "status")Integer status){
+        return service.getUserTrainTasksWithStatus(userId,pageNum,pageSize,keyWord,status);
+    }
 }

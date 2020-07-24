@@ -24,9 +24,9 @@ public class ImageVO {
 
     Integer userId;
 
-    Integer aigorithmId;
+    Integer algorithmId;
 
-    Integer alogrithm_engine_id;
+    Integer algorithm_engine_id;
 
     String algorithm_input_reflect;
 

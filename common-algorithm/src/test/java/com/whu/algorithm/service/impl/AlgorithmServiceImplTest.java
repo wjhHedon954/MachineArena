@@ -76,11 +76,11 @@ class AlgorithmServiceImplTest {
      */
     @Test
     void updateAlgorithm() {
-        Algorithm algorithmObjectById = algorithmService.getAlgorithmObjectById(83);
+        Algorithm algorithmObjectById = algorithmService.getAlgorithmObjectById(84);
         System.out.println(algorithmObjectById);
         algorithmObjectById.setAlgorithmName("单元测试更新算法");
         algorithmService.updateAlgorithm(algorithmObjectById);
-        Algorithm algorithmObjectById1 = algorithmService.getAlgorithmObjectById(83);
+        Algorithm algorithmObjectById1 = algorithmService.getAlgorithmObjectById(84);
         System.out.println(algorithmObjectById1);
     }
 

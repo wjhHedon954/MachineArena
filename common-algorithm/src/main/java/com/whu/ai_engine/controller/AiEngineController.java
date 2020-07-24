@@ -36,7 +36,7 @@ public class AiEngineController {
      * @param []
      * @return java.util.List<com.entity.AiEngine>
      **/
-    @GetMapping("algorithm/engines")
+    @GetMapping("/engines")
     public CommonResult getAiEngines() {
 
         return CommonResult.success().add("engines", aiEngineService.getAiEngines());
