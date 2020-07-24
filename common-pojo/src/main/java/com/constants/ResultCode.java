@@ -63,6 +63,7 @@ public enum ResultCode {
     FAILE_PARSE_JSON("T0009","解析json失败"),
     SELECT_CONTAINER_STATUS("T0010","数据库连锁查询中某一步出错，详情看控制台打印"),
      FAIL_MKDIRS("T0011","linux创建文件夹失败"),
+    FAIL_TO_PARSE_JSON("T0012","研发返回的json数据不对，解析失败"),
 
     /**
      * 训练管理模块
