@@ -12,6 +12,8 @@ spring:
     username: root
     password: Thomas10011
     type: com.alibaba.druid.pool.DruidDataSource   #配置阿里巴巴的Druid数据源
+  mvc:
+    static-path-pattern: /static/**/**
 
 eureka:
   client:

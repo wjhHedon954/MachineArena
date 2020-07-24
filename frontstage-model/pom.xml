@@ -12,6 +12,11 @@
     <artifactId>frontstage-model</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>2.2.4.RELEASE</version>
+        </dependency>
         <!--分页查询插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>

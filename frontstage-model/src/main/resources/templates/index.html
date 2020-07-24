@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/static/jquery-3.1.1.min.js}"></script>
+</head>
+<body>
+    <h1>请选择照片：</h1>
+    <input type="file" id="minist_pic"/>
+    <button type="submit" id="submit_minist_pic">检测</button>
+    <p id="result"></p>
+</body>
+
+<script type="text/javascript">
+    $("#submit_minist_pic").click(function () {
+        $.ajax({
+            url: "http://localhost:30003/model/model/minist",
+            type:"POST",
+            data: "imageName="+$("#minist_pic").val(),
+            success:function (result) {
+                console.log($("#minist_pic").val());
+                var end = result.extend.result;
+                $("#result").empty();
+                $("#result").append(end);
+            }
+        })
+    })
+</script>
+</html>

@@ -75,7 +75,14 @@ public enum ResultCode {
      */
     USER_EXISTS("U0001","用户已存在"),
     USER_NOT_EXISTS("U0002","用户不存在"),
-    PASSWORD_WRONG("U0003","密码错误"),;
+    PASSWORD_WRONG("U0003","密码错误"),
+
+    /**
+     * 模型管理模块
+     */
+    NO_PIC_INPUT("M0001","没有上传图片"),
+    INSPECT_ERROR("M0001","检测过程出错"),
+    ;
 
     private String code;     //错误码
     private String message;  //对应的信息

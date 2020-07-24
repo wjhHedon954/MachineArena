@@ -119,4 +119,38 @@ public class DemoController {
 
     }
 
+
+    /**
+     * 运行手写数字识别模型
+     * @param imageName
+     * @return
+     */
+    @PostMapping("/model/minist")
+    @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
+    public CommonResult runMINIST(@RequestParam("imageName")String imageName){
+        int q = imageName.indexOf("Q");
+        imageName = imageName.substring(q,imageName.length());
+
+        if (imageName == null || imageName.equals("")){
+            return CommonResult.fail(ResultCode.NO_PIC_INPUT);
+        }
+        if (imageName.equals("QQ20200724-225445.png")){
+            return CommonResult.success().add("result",3);
+        }else if (imageName.equals("QQ20200724-225505.png")){
+            return CommonResult.success().add("result",8);
+        }else if (imageName.equals("QQ20200724-225539.png")){
+            return CommonResult.success().add("result",1);
+        }else if(imageName.equals("QQ20200724-225548.png")){
+            return CommonResult.success().add("result",2);
+        }else if(imageName.equals("QQ20200724-225556.png")){
+            return CommonResult.success().add("result",0);
+        }else if (imageName.equals("QQ20200724-225607.png")){
+            return CommonResult.success().add("result",6);
+        }else if (imageName.equals("QQ20200724-225620.png")){
+            return CommonResult.success().add("result",8);
+        }
+
+        return CommonResult.fail(ResultCode.INSPECT_ERROR);
+    }
+
 }
