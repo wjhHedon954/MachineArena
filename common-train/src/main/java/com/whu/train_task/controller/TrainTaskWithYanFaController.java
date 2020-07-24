@@ -51,6 +51,11 @@ public class TrainTaskWithYanFaController {
         if (trainTask==null || trainTaskConf==null)
             return CommonResult.fail(ResultCode.SELECT_CONTAINER_STATUS);
 
+        //设置状态为开始训练,修改数据库
+        trainTaskConf.setTrainTaskStatus(1);
+        int trainTaskConfUpdate = trainTaskService.updateTrainTaskConfById(trainTaskConf);
+        if (trainTaskConfUpdate==0)
+            return CommonResult.fail(ResultCode.UPDATE_ERROR);
 
         //获取研发需要的属性
         Integer trainTaskUserId = trainTask.getTrainTaskUserId();
@@ -367,7 +372,16 @@ public class TrainTaskWithYanFaController {
         String extendContent = JSONUtil.parse(dataFromYanFa).getByPath("extend", String.class);
         String messageContent = JSONUtil.parse(extendContent).getByPath("Message", String.class);
 
-        return CommonResult.success().add("status",messageContent);
+        //根据message内容修改训练任务的状态值
+        //判断是否训练完成
+        if (messageContent.indexOf("运行完成")!=-1){
+            trainTaskConf.setTrainTaskStatus(2);
+            int trainTaskConfUpdate = trainTaskService.updateTrainTaskConfById(trainTaskConf);
+            if (trainTaskConfUpdate==0)
+                return CommonResult.fail(ResultCode.UPDATE_ERROR);
+        }
+
+        return CommonResult.success().add("Message",messageContent);
     }
 
 
