@@ -3,12 +3,14 @@ package com.whu.train_task.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.constants.ResultCode;
 import com.entity.TaskIpContainer;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.google.gson.internal.$Gson$Preconditions;
 import com.responsevo.ContainerStatusVo;
 import com.responsevo.TrainProcessStatusVO;
 import com.responsevo.TrainStartVO;
@@ -177,15 +179,24 @@ public class TrainTaskWithYanFaController {
         }catch (Exception e){
             return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
         }
+
+
         //检查返回结果是不是为空
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
-        //JSON解析获取容器详细信息
-        String extendContent = JSONUtil.parse(result).getByPath("extend", String.class);
-        String containerInfoContent = JSONUtil.parse(extendContent).getByPath("containerInfo", String.class);
+        //打印下研发返回了啥
+        System.out.println("研发返回的数据: "+result);
 
-        return CommonResult.success().add("containerInfo",containerInfoContent);
+        //JSON解析获取容器详细信息
+        JSONObject containerInfoObject=null;
+        try {
+            containerInfoObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("containerInfo");
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
+
+        return CommonResult.success().add("containerInfo",containerInfoObject);
     }
 
 
@@ -217,10 +228,18 @@ public class TrainTaskWithYanFaController {
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
-        //JSON解析获取详细日志信息
-        String extendContent = JSONUtil.parse(result).getByPath("extend", String.class);
-        String logContent = JSONUtil.parse(extendContent).getByPath("log", String.class);
+        //打印研发返回了啥
+        System.out.println("研发返回的内容:  "+result);
 
+        //JSON解析获取详细日志信息
+        String extendContent=null;
+        String logContent=null;
+        try {
+            extendContent= JSONUtil.parseObj(result).getByPath("extend",String.class);
+            logContent = JSONUtil.parseObj(extendContent).get("log", String.class);
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
         return CommonResult.success().add("logs",logContent);
     }
 
@@ -241,6 +260,8 @@ public class TrainTaskWithYanFaController {
         if (id == null){
             return CommonResult.fail(ResultCode.EMPTY_PARAM);
         }
+
+
         //向研发发请求，传递id并等待返回数据
         String result=null;
         try {
@@ -250,19 +271,25 @@ public class TrainTaskWithYanFaController {
         }catch (Exception e){
             return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
         }
+
+
         //检查返回结果是不是为空
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
-
         //JSON解析获取详细日志信息
-        String extendContent = JSONUtil.parse(result).getByPath("extend", String.class);
-        String serverInfoContent = JSONUtil.parse(extendContent).getByPath("serverInfo", String.class);
-        String memoryContent = JSONUtil.parse(serverInfoContent).getByPath("memory", String.class);
-        String GPUSContent = JSONUtil.parse(serverInfoContent).getByPath("GPUs", String.class);
+        JSONObject memoryObject=null;
+        JSONArray GPUsArray=null;
+        try {
+            memoryObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("serverInfo").getJSONObject("memory");
+            GPUsArray = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("serverInfo").getJSONArray("GPUs");
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
 
-
-        return CommonResult.success().add("memory",memoryContent).add("GPUS",GPUSContent);
+        return CommonResult.success().add("memory",memoryObject).add("GPUS",GPUsArray);
     }
+
+
 
 
     /**
@@ -368,9 +395,19 @@ public class TrainTaskWithYanFaController {
         if (dataFromYanFa==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
+        //打印研发到底返回了啥
+        System.out.println(dataFromYanFa);
+
         //提取研发里面的有用信息
-        String extendContent = JSONUtil.parse(dataFromYanFa).getByPath("extend", String.class);
-        String messageContent = JSONUtil.parse(extendContent).getByPath("Message", String.class);
+        String extendContent=null;
+        String messageContent=null;
+        try{
+            extendContent = JSONUtil.parse(dataFromYanFa).getByPath("extend", String.class);
+            messageContent = JSONUtil.parse(extendContent).getByPath("Message", String.class);
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
+
 
         //根据message内容修改训练任务的状态值
         //判断是否训练完成
@@ -404,7 +441,7 @@ public class TrainTaskWithYanFaController {
         //向研发发送请求
         String dataFromYanFa=null;
         try{
-            dataFromYanFa=HttpRequest.get("http://202.114.66.76:7777/container/logs/short/"+trainTaskId)
+            dataFromYanFa=HttpRequest.get("http://10.10.10.209:7777/container/logs/short/"+trainTaskId)
                     .timeout(10000)
                     .execute().body();
         }catch (Exception e){
@@ -462,91 +499,58 @@ public class TrainTaskWithYanFaController {
         vo.setTrainLoss(trainLoss);
 
         //转换成json
-        JSONObject jsonObject = JSONUtil.parseObj(vo);
-        String train = jsonObject.toString();
-        return CommonResult.success().add("train",train);
+        JSONObject trainObject = JSONUtil.parseObj(vo);
+        return CommonResult.success().add("train",trainObject);
     }
 
+    @PostMapping("/processdata/test")
+    public CommonResult testProcess(@RequestBody  String dataFromYanFa){
+        //全部转化为小写
+        String dataFromYanFaLowerCase = dataFromYanFa.toLowerCase();
+
+        //去掉换行和空格
+        String dataWithoutBackspace = dataFromYanFaLowerCase.replaceAll("\\s", "");
+
+        //获取最后一个test字样的位置
+        int testIndex = dataWithoutBackspace.lastIndexOf("test");
+
+        //判断是否有test
+        if (testIndex!=-1){
+            //省略对test的处理
+            return CommonResult.success().add("test","暂时不知道test是什么");
+        }
 
 
-//    //测试字符串返回给前端处理
-//    public static void main(String[] args) {
-//        //向研发发送请求
-//        String dataFromYanFa="           \"epoch\":2,\n" +
-//                "            \"batchIndex\":1223,\n" +
-//                "            \"len\":1500,\n" +
-//                "            \"finishRate\":0.23,\n" +
-//                "            \"trainLoss\":32.2,\n" +
-//                "fdsfh  Train Epoch: 5 [1920/8572 (22%)]\tLoss: 0.239170  fdsfgsdg\n" +
-//                "/n\n" +
-//                "Downloading http://yann.lecun.com/exdb/mnist";
-//
-//
-//
-//        //全部转化为小写
-//        String dataFromYanFaLowerCase = dataFromYanFa.toLowerCase();
-//
-//        //去掉换行和空格
-//        String dataWithoutBackspace = dataFromYanFaLowerCase.replaceAll("\\s", "");
-//
-//
-//
-//        //获取train字样的index
-//        int trainIndex = dataWithoutBackspace.lastIndexOf("train");
-//
-//
-//        String trainData = dataWithoutBackspace.substring(trainIndex);
-//
-//
-//        //分隔
-//        String[] splitData = trainData.split(":|\\[|/|\\(|%|:");
-//
-//        //从分隔中获取值
-//        Integer epoch = Integer.valueOf(splitData[1]);
-//        Integer batchIndex = Integer.valueOf(splitData[2]);
-//        Integer len = Integer.valueOf(splitData[3]);
-//        Double finishRate = Double.valueOf(splitData[4]) / 100;
-//        Double trainLoss = Double.valueOf(Double.valueOf(splitData[6].substring(0,4)));
-//
-//        //创建一个返回对象VO
-//        TrainProcessStatusVO vo = new TrainProcessStatusVO();
-//        vo.setBatchIndex(batchIndex);
-//        vo.setEpoch(epoch);
-//        vo.setFinishRate(finishRate);
-//        vo.setLen(len);
-//        vo.setTrainLoss(trainLoss);
-//
-//        //转换成json
-//        JSONObject jsonObject = JSONUtil.parseObj(vo);
-//        String train = jsonObject.toString();
-//        System.out.println(train);
-//    }
+        //获取train字样的index
+        int trainIndex = dataWithoutBackspace.lastIndexOf("trainepoch");
+
+        //如果没有train
+        if (trainIndex==-1)
+            return CommonResult.success().add("message","没有正在训练的作业");
+
+        String trainData = dataWithoutBackspace.substring(trainIndex);
 
 
-//    //测试除去所有空格和换行符
-//    public static void main(String[] args) {
-//        String dataFromYanFa="{\n" +
-//                "    \"code\": \"00002\",\n" +
-//                "    \"message\": \"处理成功！\",\n" +
-//                "    \"extend\": {\n" +
-//                "       \"test\":{\n" +
-//                "            \"averageLoss\":0,\n" +
-//                "            \"accuracy\":0\n" +
-//                "        }\n" +
-//                "    }\n" +
-//                "}";
-//        String s = dataFromYanFa.replaceAll("\\s", "");
-//        System.out.println(s);
-//    }
+        //分隔
+        String[] splitData = trainData.split(":|\\[|/|\\(|%|:");
 
+        //从分隔中获取值
+        Integer epoch = Integer.valueOf(splitData[1]);
+        Integer batchIndex = Integer.valueOf(splitData[2]);
+        Integer len = Integer.valueOf(splitData[3]);
+        Double finishRate = Double.valueOf(splitData[4]) / 100;
+        Double trainLoss = Double.valueOf(Double.valueOf(splitData[6].substring(0,4)));
 
-     //测试数组的json解析
-//    public static void main(String[] args) {
-//        String str="{\"extend\": [1,2,3,4]}, \"message\": \"处理成功！\"}";
-//        String gpus = JSONUtil.parse(str).getByPath("extend", String.class);
-//        System.out.println(gpus);
-//        String message = JSONUtil.parse(str).getByPath("message", String.class);
-//        System.out.println(message);
-//
-//    }
+        //创建一个返回对象VO
+        TrainProcessStatusVO vo = new TrainProcessStatusVO();
+        vo.setBatchIndex(batchIndex);
+        vo.setEpoch(epoch);
+        vo.setFinishRate(finishRate);
+        vo.setLen(len);
+        vo.setTrainLoss(trainLoss);
+
+        //转换成json
+        JSONObject trainObject = JSONUtil.parseObj(vo);
+        return CommonResult.success().add("train",trainObject);
+    }
 }

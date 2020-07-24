@@ -190,7 +190,7 @@ public class AlgorithmController {
 
         algorithm.setAlgorithmSaveUrl("https://thomas10011-image.oss-cn-beijing.aliyuncs.com/" + objPath);
 
-        return algorithmFeignService.updateAlgorithm(algorithm);
+        return algorithmFeignService.updateAlgorithm(algorithm).add("algorithmId", algorithm.getAlgorithmId());
     }
 
 

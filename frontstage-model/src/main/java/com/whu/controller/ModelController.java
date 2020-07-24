@@ -28,6 +28,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/frontstage")
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class ModelController {
     @Autowired
     private ModelFeignService modelFeignService;
