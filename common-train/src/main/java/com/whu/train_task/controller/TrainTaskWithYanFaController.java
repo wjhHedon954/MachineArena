@@ -10,6 +10,7 @@ import com.constants.ResultCode;
 import com.entity.TaskIpContainer;
 import com.entity.TrainTask;
 import com.entity.TrainTaskConf;
+import com.google.gson.internal.$Gson$Preconditions;
 import com.responsevo.ContainerStatusVo;
 import com.responsevo.TrainProcessStatusVO;
 import com.responsevo.TrainStartVO;
@@ -178,12 +179,23 @@ public class TrainTaskWithYanFaController {
         }catch (Exception e){
             return CommonResult.fail(ResultCode.FAIL_TO_SEND_REQUEST);
         }
+
+
         //检查返回结果是不是为空
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
+        //打印下研发返回了啥
+        System.out.println("研发返回的数据: "+result);
+
         //JSON解析获取容器详细信息
-        JSONObject containerInfoObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("containerInfo");
+        JSONObject containerInfoObject=null;
+        try {
+            containerInfoObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("containerInfo");
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
+
         return CommonResult.success().add("containerInfo",containerInfoObject);
     }
 
@@ -216,8 +228,17 @@ public class TrainTaskWithYanFaController {
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
+        //打印研发返回了啥
+        System.out.println("研发返回的内容:  "+result);
+
         //JSON解析获取详细日志信息
-        JSONObject logObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("log");
+        JSONObject logObject=null;
+        try {
+            logObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("log");
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
+
 
         return CommonResult.success().add("logs",logObject);
     }
@@ -257,10 +278,15 @@ public class TrainTaskWithYanFaController {
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
         System.out.println(result);
         //JSON解析获取详细日志信息
+        JSONObject memoryObject=null;
+        JSONArray GPUsArray=null;
+        try {
+            memoryObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("serverInfo").getJSONObject("memory");
+            GPUsArray = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("serverInfo").getJSONArray("GPUs");
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
 
-        JSONObject memoryObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("serverInfo").getJSONObject("memory");
-
-        JSONArray GPUsArray = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("serverInfo").getJSONArray("GPUs");
         return CommonResult.success().add("memory",memoryObject).add("GPUS",GPUsArray);
     }
 
@@ -370,9 +396,18 @@ public class TrainTaskWithYanFaController {
         if (dataFromYanFa==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
 
+        //打印研发到底返回了啥
+        System.out.println(dataFromYanFa);
+
         //提取研发里面的有用信息
-        String extendContent = JSONUtil.parse(dataFromYanFa).getByPath("extend", String.class);
-        String messageContent = JSONUtil.parse(extendContent).getByPath("Message", String.class);
+        String extendContent=null;
+        String messageContent=null;
+        try{
+            extendContent = JSONUtil.parse(dataFromYanFa).getByPath("extend", String.class);
+            messageContent = JSONUtil.parse(extendContent).getByPath("Message", String.class);
+        }catch (Exception e){
+            return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
+        }
 
 
         //根据message内容修改训练任务的状态值
