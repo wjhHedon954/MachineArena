@@ -232,15 +232,15 @@ public class TrainTaskWithYanFaController {
         System.out.println("研发返回的内容:  "+result);
 
         //JSON解析获取详细日志信息
-        JSONObject logObject=null;
+        String extendContent=null;
+        String logContent=null;
         try {
-            logObject = JSONUtil.parseObj(result).getJSONObject("extend").getJSONObject("log");
+            extendContent= JSONUtil.parseObj(result).getByPath("extend",String.class);
+            logContent = JSONUtil.parseObj(extendContent).get("log", String.class);
         }catch (Exception e){
             return CommonResult.fail(ResultCode.FAIL_TO_PARSE_JSON);
         }
-
-
-        return CommonResult.success().add("logs",logObject);
+        return CommonResult.success().add("logs",logContent);
     }
 
 
@@ -276,7 +276,6 @@ public class TrainTaskWithYanFaController {
         //检查返回结果是不是为空
         if (result==null)
             return CommonResult.fail(ResultCode.NO_RESPONSE_DATA);
-        System.out.println(result);
         //JSON解析获取详细日志信息
         JSONObject memoryObject=null;
         JSONArray GPUsArray=null;
