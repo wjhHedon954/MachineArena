@@ -33,4 +33,21 @@
         from tbl_train_task
         where  train_task_name like '%${keyWord}%'
     </select>
+
+    <select id="getTrainTasksByStatus"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_train_task
+        where  train_task_name like '%${keyWord}%'
+        AND train_task_status = '${status}'
+    </select>
+
+    <select id="getUsersTrainTasksByStatus"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_train_task
+        where train_task_user_id = '${userId}'
+        AND  train_task_name like '%${keyWord}%'
+        AND train_task_status = '${status}'
+    </select>
 </mapper>

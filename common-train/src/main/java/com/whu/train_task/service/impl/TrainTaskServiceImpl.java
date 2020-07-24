@@ -309,4 +309,35 @@ public class TrainTaskServiceImpl extends ServiceImpl<TrainTaskMapper, TrainTask
     }
 
 
+    /**
+     * 根据根据算训练任务id查询训练TaskIpContainer
+     * @author Jiahan Wang
+     * @create 2020-07-24 10:00
+     * @updator
+     * @upadte
+     * @param keyWord 关键字
+     * @param status 状态
+     * @return
+     */
+    @Override
+    public List<TrainTaskResponseVo> getTrainTasksWithStatus(String keyWord, Integer status) {
+        List<TrainTaskResponseVo> trainTasksByStatus = trainTaskMapper.getTrainTasksByStatus(keyWord, status);
+        return trainTasksByStatus;
+    }
+
+    /**
+     * 模糊查询某用户下的某状态的作业
+     * @author Jihan Wang
+     * @create 2020-07-24 10:57
+     * @updator
+     * @update
+     * @param userId  用户ID
+     * @param keyWord 关键字
+     * @param status  状态
+     * @return
+     */
+    @Override
+    public List<TrainTaskResponseVo> getTrainTasksByUserIdWithStatus(Integer userId, String keyWord, Integer status) {
+        return trainTaskMapper.getUsersTrainTasksByStatus(userId,keyWord,status);
+    }
 }

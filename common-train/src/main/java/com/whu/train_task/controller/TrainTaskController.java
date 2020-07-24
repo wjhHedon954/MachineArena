@@ -15,6 +15,7 @@ import com.responsevo.TrainTaskAndTrainTaskConfig;
 import com.responsevo.TrainTaskResponseVo;
 import com.results.CommonResult;
 import com.whu.train_task.service.impl.TrainTaskServiceImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -244,6 +245,48 @@ public class TrainTaskController {
 
     }
 
+    /**
+     * 分页查询当前用户下的某状态的训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-18 15:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-18 15:59
+     * @param userId    用户ID
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @param status 状态
+     * @return
+     */
+    @ApiOperation(value = " 分页查询当前用户下的某状态的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId",value = "当前用户ID",paramType = "path",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true),
+            @ApiImplicitParam(name = "status",value = "状态",paramType = "query",dataType = "Integer",required = true)
+    })
+    @GetMapping("/trainTasks/status/{userId}")
+    public CommonResult getUserTrainTasksWithStatus(@PathVariable(value = "userId")Integer userId,
+                                          @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord,
+                                          @RequestParam(value = "status")Integer status){
+        //1. 检查用户ID是否为空
+        if (userId == null){
+            return CommonResult.fail(ResultCode.EMPTY_USER_ID);
+        }
+        //1. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize);
+        //2. 从数据库中拉取数据
+        List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasksByUserIdWithStatus(userId,keyWord,status);
+        //3. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
+        //4. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
+    }
+
 
     /**
      * 6.2.1.3 按ID查询作业
@@ -289,6 +332,42 @@ public class TrainTaskController {
         PageHelper.startPage(pageNum,pageSize);
         //2. 从数据库中拉取数据
         List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasks(keyWord);
+        //3. 封装到 PageInfo 中
+        PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
+        //4. 传给前端
+        return CommonResult.success().add("pageInfo",pageInfo);
+
+    }
+
+
+    /**
+     * 分页查询某状态的训练作业
+     * @author Jiahan Wang
+     * @create 2020-07-24 10:59
+     * @updator Jiahan Wang
+     * @upadte 2020-07-24 10:59
+     * @param pageNum   当前页吗
+     * @param pageSize  页面大小
+     * @param keyWord   搜索关键字
+     * @param status 状态
+     * @return
+     */
+    @ApiOperation(value = " 分页查询某状态的训练作业 ",httpMethod = "GET",notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum",value = "当前页码",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "页面大小",paramType = "query",dataType = "Integer",required = true),
+            @ApiImplicitParam(name = "keyWord",value = "搜索关键字",paramType = "query",dataType = "String",required = true),
+            @ApiImplicitParam(name = "status",value = "状态",paramType = "query",dataType = "Integer",required = true)
+    })
+    @GetMapping("/trainTasks/status")
+    public CommonResult getUserTrainTasksWithStatus(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                                    @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                                    @RequestParam(value = "keyWord",defaultValue = "")String keyWord,
+                                                    @RequestParam(value = "status")Integer status){
+        //1. 开启分页查询
+        PageHelper.startPage(pageNum,pageSize);
+        //2. 从数据库中拉取数据
+        List<TrainTaskResponseVo> trainTaskResponseVos= trainTaskService.getTrainTasksWithStatus(keyWord,status);
         //3. 封装到 PageInfo 中
         PageInfo pageInfo = new PageInfo(trainTaskResponseVos,5);
         //4. 传给前端

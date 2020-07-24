@@ -80,9 +80,13 @@ public interface IAlgorithmService extends IService<Algorithm> {
 
     /**
      * 根据用户ID和关键字查询算法
+     * @author Jiahan Wang
+     * @create 2020-07-17 08:55
+     * @update 2020-07-17 08:55
      * @param userId  用户ID
      * @param keyWord 关键字
      * @return
      */
     List<AlgorithmResponseVo> getAlgorithmsByUserId(Integer userId, String keyWord);
+
 }
