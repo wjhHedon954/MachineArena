@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class TrainTaskController {
 
-
     @Autowired
     private TrainFeignService service;
 
@@ -274,5 +273,21 @@ public class TrainTaskController {
     @GetMapping("/trainTask/container/status/{trainTaskId}")
     public CommonResult showContainerStatus(@PathVariable("trainTaskId") Integer trainTaskId){
         return service.showContainerStatus(trainTaskId);
+    }
+
+
+
+    /**
+     * 接口 6.2.1.15 接收前端返回的训练作业id,从研发获取日志信息进行字符串处理，处理后根据结果返给前端不同的数据
+     * @author Yi Zheng
+     * @create 2020-07-23 20:10
+     * @updator Yi Zheng
+     * @upadte
+     * @param trainTaskId  训练作业id
+     * @return CommonResult  通用返回结果
+     */
+    @GetMapping("/trainTask/processdata/{trainTaskId}")
+    CommonResult showTrainTaskProcessdata(@PathVariable("trainTaskId") Integer trainTaskId){
+        return service.showTrainTaskProcessdata(trainTaskId);
     }
 }

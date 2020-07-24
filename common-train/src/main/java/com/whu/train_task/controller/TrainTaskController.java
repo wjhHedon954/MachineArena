@@ -116,7 +116,7 @@ public class TrainTaskController {
         }catch (Exception e){
             return CommonResult.fail(ResultCode.FAIL_MKDIRS);
         }
-        return CommonResult.success();
+        return CommonResult.success().add("trainTaskId",ints[2]);
     }
 
 
