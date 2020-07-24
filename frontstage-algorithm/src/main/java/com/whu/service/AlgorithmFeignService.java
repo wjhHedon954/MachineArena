@@ -164,4 +164,7 @@ public interface AlgorithmFeignService {
     @PostMapping("/algorithm/description")
     AlgorithmDescription addDescription (@RequestBody AlgorithmDescription description);
 
+    @GetMapping("/engines")
+    CommonResult getAiEngines();
+
 }

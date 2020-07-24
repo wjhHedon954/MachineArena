@@ -11,8 +11,6 @@ import com.whu.service.ImageFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-
 /**
  * @ClassName ImageController
  * @Description 用于镜像的增删改查
@@ -47,7 +45,7 @@ public class ImageController {
                 .body();
         System.out.println(result);
         JSONObject response = JSONUtil.parseObj(result);
-        Algorithm algorithm = imageFeignService.getAlgorithmObjectById(image.getAigorithmId());
+        Algorithm algorithm = imageFeignService.getAlgorithmObjectById(image.getAlgorithmId());
         algorithm.setAlgorithmImageId((String)response.getJSONObject("extend").get("imageID"));
 //        algorithm.setAlgorithmImageId("testid");
 
@@ -74,7 +72,7 @@ public class ImageController {
                 .body();
         System.out.println(result);
         JSONObject response = JSONUtil.parseObj(result);
-        Algorithm algorithm = imageFeignService.getAlgorithmObjectById(image.getAigorithmId());
+        Algorithm algorithm = imageFeignService.getAlgorithmObjectById(image.getAlgorithmId());
         algorithm.setAlgorithmImageId((String)response.getJSONObject("extend").get("imageID"));
 //        algorithm.setAlgorithmImageId("testid");
 
@@ -89,17 +87,17 @@ public class ImageController {
      * @param [userId, alogrithomId, imageId]
      * @return com.results.CommonResult
      **/
-    @DeleteMapping("/image/{userId}/{alogrithomId}/{imageId}")
+    @DeleteMapping("/image/{userId}/{algorithmId}/{imageId}")
     public CommonResult deleteImage(@PathVariable(value = "userId")Integer userId,
-                                    @PathVariable(value = "alogrithomId")Integer alogrithomId,
+                                    @PathVariable(value = "algorithmId")Integer algorithmId,
                                     @PathVariable(value = "imageId")String imageId) {
         String result = HttpRequest.delete("10.10.10.209:7777/image" + "/" + userId.toString()
-                + "/" + alogrithomId.toString() + "/" + imageId)
+                + "/" + algorithmId.toString() + "/" + imageId)
                 .execute()
                 .body();
         JSONObject response = JSONUtil.parseObj(result);
         if (response.get("code").equals("00000")) {
-            Algorithm algorithm = imageFeignService.getAlgorithmObjectById(alogrithomId);
+            Algorithm algorithm = imageFeignService.getAlgorithmObjectById(algorithmId);
             algorithm.setAlgorithmImageId("");
             return imageFeignService.updateAlgorithm(algorithm);
         }

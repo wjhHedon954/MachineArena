@@ -122,7 +122,6 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
      */
     @Override
     public List<ModelResponseVo> getModels(String keyWord) {
-        List<ModelResponseVo> modelResponseVos = modelMapper.selectModelsWithType(keyWord);
-        return modelResponseVos;
+        return modelMapper.selectModelsWithType(keyWord);
     }
 }
