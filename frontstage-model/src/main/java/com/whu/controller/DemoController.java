@@ -18,6 +18,7 @@ import java.util.List;
  * @create 2020-07-17 22:07
  */
 @RestController
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class DemoController {
 
 

@@ -27,14 +27,22 @@ public class ImageController {
 
     /**
      * @author Huiri Tan
-     * @description 创建镜像
+     * @description 🉑️前端请求，创建镜像创建镜像
      * @create 2020/7/20 12:16 下午
      * @update 2020/7/20 12:16 下午
      * @param [image]
      * @return com.results.CommonResult
      **/
-    @PostMapping("/image")
-    public CommonResult createImage(@RequestBody ImageVO image) {
+    @GetMapping("/image/{algorithmID}")
+    public CommonResult createImage(@PathVariable(value = "algorithmID")Integer algorithmId) {
+        Algorithm algorithm = imageFeignService.getAlgorithmObjectById(algorithmId);
+        ImageVO image = new ImageVO();
+        image.setAlgorithm_engine_id(algorithm.getAlgorithmEngineId());
+        image.setAlgorithm_input_reflect(algorithm.getAlgorithmSaveUrl());
+        image.setAlgorithm_output_reflect(algorithm.getAlgorithmOutputReflect());
+        image.setAlgorithm_starter_URL(algorithm.getAlgorithmStarterUrl());
+        image.setAlgorithmId(algorithmId);
+        image.setUserId(1);
         JSONObject imageJson = JSONUtil.parseObj(image, false);
         System.out.println(imageJson.toString());
         System.out.println(imageJson.toStringPretty());
@@ -45,7 +53,7 @@ public class ImageController {
                 .body();
         System.out.println(result);
         JSONObject response = JSONUtil.parseObj(result);
-        Algorithm algorithm = imageFeignService.getAlgorithmObjectById(image.getAlgorithmId());
+        algorithm = imageFeignService.getAlgorithmObjectById(image.getAlgorithmId());
         algorithm.setAlgorithmImageId((String)response.getJSONObject("extend").get("imageID"));
 //        algorithm.setAlgorithmImageId("testid");
 
