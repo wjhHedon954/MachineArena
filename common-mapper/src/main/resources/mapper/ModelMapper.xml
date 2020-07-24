@@ -32,6 +32,7 @@
         FROM tbl_model tm
         LEFT JOIN tbl_model_type tmt  ON tm.model_type_id = tmt.model_type_id
         WHERE tm.model_name like '%${value}%'
+        ORDER BY tm.model_id DESC
     </select>
 
     <select id="selectUsersModelsWithType" resultMap="ModelWithTypeMap">
@@ -43,5 +44,6 @@
         WHERE
         tm.model_name like '%${keyWord}%' AND
         tmu.model_owner_id = '${userId}'
+        ORDER BY tm.model_id DESC
     </select>
 </mapper>

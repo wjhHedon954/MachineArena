@@ -24,6 +24,7 @@
         from tbl_train_task
         where train_task_user_id = '${userId}'
         and train_task_name like '%${keyWord}%'
+        ORDER BY train_task_id DESC
     </select>
 
 
@@ -32,6 +33,7 @@
         <include refid="Base_Column_List" />
         from tbl_train_task
         where  train_task_name like '%${keyWord}%'
+        ORDER BY train_task_id DESC
     </select>
 
     <select id="getTrainTasksByStatus"  resultMap="BaseResultMap">
@@ -40,6 +42,7 @@
         from tbl_train_task
         where  train_task_name like '%${keyWord}%'
         AND train_task_status = '${status}'
+        ORDER BY train_task_id DESC
     </select>
 
     <select id="getUsersTrainTasksByStatus"  resultMap="BaseResultMap">
@@ -49,5 +52,6 @@
         where train_task_user_id = '${userId}'
         AND  train_task_name like '%${keyWord}%'
         AND train_task_status = '${status}'
+        ORDER BY train_task_id DESC
     </select>
 </mapper>

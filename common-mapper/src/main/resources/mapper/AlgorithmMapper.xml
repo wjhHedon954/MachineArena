@@ -85,6 +85,7 @@
         FROM tbl_algorithm al
         LEFT JOIN tbl_algorithm_type alt  ON al.algorithm_type_id = alt.algorithm_type_id
         WHERE al.algorithm_name like '%${value}%'
+        ORDER BY al.algorithm_id DESC
     </select>
 
 
@@ -97,6 +98,7 @@
         WHERE
         al.algorithm_name like '%${keyWord}%' AND
         au.user_id = '${userId}'
+        ORDER BY al.algorithm_id DESC
     </select>
 
 
