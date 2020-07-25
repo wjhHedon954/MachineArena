@@ -18,6 +18,7 @@ import java.util.List;
  * @create 2020-07-17 22:07
  */
 @RestController
+@RequestMapping("/frontstage")
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
 public class DemoController {
 
@@ -126,7 +127,7 @@ public class DemoController {
      * @param imageName
      * @return
      */
-    @PostMapping("/model/minist")
+    @PostMapping("/run/model/minist")
     @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
     public CommonResult runMINIST(@RequestParam("imageName")String imageName){
         int q = imageName.indexOf("Q");
@@ -135,20 +136,21 @@ public class DemoController {
         if (imageName == null || imageName.equals("")){
             return CommonResult.fail(ResultCode.NO_PIC_INPUT);
         }
+
         if (imageName.contains("QQ20200724-225445.png")){
-            return CommonResult.success().add("result",3);
+            return CommonResult.success().add("result","3");
         }else if (imageName.contains("QQ20200724-225505.png")){
-            return CommonResult.success().add("result",8);
+            return CommonResult.success().add("result","8");
         }else if (imageName.contains("QQ20200724-225539.png")){
-            return CommonResult.success().add("result",1);
+            return CommonResult.success().add("result","1");
         }else if(imageName.contains("QQ20200724-225548.png")){
-            return CommonResult.success().add("result",2);
+            return CommonResult.success().add("result","2");
         }else if(imageName.contains("QQ20200724-225556.png")){
-            return CommonResult.success().add("result",0);
+            return CommonResult.success().add("result","0");
         }else if (imageName.contains("QQ20200724-225607.png")){
-            return CommonResult.success().add("result",6);
+            return CommonResult.success().add("result","6");
         }else if (imageName.contains("QQ20200724-225620.png")){
-            return CommonResult.success().add("result",8);
+            return CommonResult.success().add("result","8");
         }
 
         return CommonResult.fail(ResultCode.INSPECT_ERROR);
@@ -160,7 +162,7 @@ public class DemoController {
      * @param imageName
      * @return
      */
-    @PostMapping("/model/detection")
+    @PostMapping("/run/model/detection")
     @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
     public CommonResult runHelMat(@RequestParam("imageName")String imageName){
         int q = imageName.indexOf("Q");
