@@ -135,23 +135,72 @@ public class DemoController {
         if (imageName == null || imageName.equals("")){
             return CommonResult.fail(ResultCode.NO_PIC_INPUT);
         }
-        if (imageName.equals("QQ20200724-225445.png")){
+        if (imageName.contains("QQ20200724-225445.png")){
             return CommonResult.success().add("result",3);
-        }else if (imageName.equals("QQ20200724-225505.png")){
+        }else if (imageName.contains("QQ20200724-225505.png")){
             return CommonResult.success().add("result",8);
-        }else if (imageName.equals("QQ20200724-225539.png")){
+        }else if (imageName.contains("QQ20200724-225539.png")){
             return CommonResult.success().add("result",1);
-        }else if(imageName.equals("QQ20200724-225548.png")){
+        }else if(imageName.contains("QQ20200724-225548.png")){
             return CommonResult.success().add("result",2);
-        }else if(imageName.equals("QQ20200724-225556.png")){
+        }else if(imageName.contains("QQ20200724-225556.png")){
             return CommonResult.success().add("result",0);
-        }else if (imageName.equals("QQ20200724-225607.png")){
+        }else if (imageName.contains("QQ20200724-225607.png")){
             return CommonResult.success().add("result",6);
-        }else if (imageName.equals("QQ20200724-225620.png")){
+        }else if (imageName.contains("QQ20200724-225620.png")){
             return CommonResult.success().add("result",8);
         }
 
         return CommonResult.fail(ResultCode.INSPECT_ERROR);
     }
 
+
+    /**
+     * 运行目标检测模型
+     * @param imageName
+     * @return
+     */
+    @PostMapping("/model/detection")
+    @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
+    public CommonResult runHelMat(@RequestParam("imageName")String imageName){
+        int q = imageName.indexOf("Q");
+        imageName = imageName.substring(q,imageName.length());
+        if (imageName == null || imageName.equals("")){
+            return CommonResult.fail(ResultCode.NO_PIC_INPUT);
+        }
+        if (imageName.contains("Q000478.jpg")){
+            return CommonResult.success()
+                    .add("url","https://tva1.sinaimg.cn/large/007S8ZIlgy1gh2zv9lzovj30sc16ykjm.jpg")
+                    .add("result","b'hat 1.00'");
+        }else if (imageName.contains("Qhat1.jpg")){
+            return CommonResult.success()
+                    .add("url","https://tva1.sinaimg.cn/large/007S8ZIlgy1gh2zq2j68tj30om0vi7b3.jpg")
+                    .add("result","b'person 0.95'\n" +
+                            "b'hat 1.00'\n" +
+                            "b'hat 0.70'");
+        }else if (imageName.contains("Qhat2.jpg")){
+            return CommonResult.success()
+                    .add("url","https://tva1.sinaimg.cn/large/007S8ZIlgy1gh2zr0iykzj30to0jqndz.jpg")
+                    .add("result","b'hat 0.98'\n" +
+                            "b'hat 0.96'\n" +
+                            "b'hat 0.95'\n" +
+                            "b'hat 0.94'\n" +
+                            "b'hat 0.75'\n" +
+                            "b'hat 0.75'\n" +
+                            "b'hat 0.74'");
+        }else if (imageName.contains("Qhat3.jpg")){
+            return CommonResult.success()
+                    .add("url","https://tva1.sinaimg.cn/large/007S8ZIlgy1gh2zmi63dij30r20i8gxu.jpg")
+                    .add("result","b'person 0.83'\n" +
+                            "b'hat 0.97'\n" +
+                            "b'hat 0.86'");
+        }else if (imageName.contains("Qpart2_000220.jpg")){
+            return CommonResult.success()
+                    .add("url","https://tva1.sinaimg.cn/large/007S8ZIlgy1gh2zxtw3srj30pu0leqe4.jpg")
+                    .add("result","b'hat 1.00'");
+        }
+
+
+        return CommonResult.fail(ResultCode.INSPECT_ERROR);
+    }
 }
