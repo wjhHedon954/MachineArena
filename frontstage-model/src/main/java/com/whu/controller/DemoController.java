@@ -8,6 +8,7 @@ import com.results.CommonResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.ws.rs.GET;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +128,7 @@ public class DemoController {
      * @param imageName
      * @return
      */
-    @PostMapping("/run/model/minist")
+    @GetMapping("/run/model/minist")
     @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
     public CommonResult runMINIST(@RequestParam("imageName")String imageName){
         int q = imageName.indexOf("Q");
@@ -162,7 +163,7 @@ public class DemoController {
      * @param imageName
      * @return
      */
-    @PostMapping("/run/model/detection")
+    @GetMapping("/run/model/detection")
     @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
     public CommonResult runHelMat(@RequestParam("imageName")String imageName){
         int q = imageName.indexOf("Q");
