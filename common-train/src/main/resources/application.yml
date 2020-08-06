@@ -19,7 +19,7 @@ eureka:
     fetch-registry: true
     #入驻哪里
     service-url:
-      defaultZone: http://localhost:7001/eureka/
+      defaultZone: http://10.10.10.208:7001/eureka/
   instance:
     instance-id: commonTrain20001
     prefer-ip-address: true

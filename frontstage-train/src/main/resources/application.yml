@@ -25,7 +25,7 @@ eureka:
     fetch-registry: true
     #入驻哪里
     service-url:
-      defaultZone: http://localhost:7001/eureka
+      defaultZone: http://10.10.10.208:7001/eureka
   instance:
     instance-id: frontstageTrain20003
     prefer-ip-address: true

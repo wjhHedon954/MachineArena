@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/frontstage")
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
@@ -34,7 +35,8 @@ public class TrainTaskController {
             @ApiImplicitParam(name = "param", value = "训练作业和训练作业参数", paramType = "body", dataType = "TrainTaskAndTrainTaskConfig", required = true),
     })
     @PostMapping("/trainTask")
-    CommonResult addTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param) {
+    @CrossOrigin(allowCredentials = "true", allowedHeaders = "*", origins = "*")
+    public CommonResult addTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param) {
         return service.addTrainTask(param);
     }
 
@@ -54,7 +56,7 @@ public class TrainTaskController {
             @ApiImplicitParam(name = "trainTaskId", value = "训练作业Id", paramType = "body", dataType = "Integer", required = true)
     })
     @DeleteMapping("/trainTask/{trainTaskID}")
-    CommonResult deleteTrainTaskById(@PathVariable("trainTaskID") Integer trainTaskID) {
+    public CommonResult deleteTrainTaskById(@PathVariable("trainTaskID") Integer trainTaskID) {
         return service.deleteTrainTaskById(trainTaskID);
     }
 
@@ -74,7 +76,7 @@ public class TrainTaskController {
             @ApiImplicitParam(name = "param", value = "训练作业和训练作业参数", paramType = "body", dataType = "TrainTaskAndTrainTaskConfig", required = true),
     })
     @PutMapping("/trainTask")
-    CommonResult updateTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param) {
+    public CommonResult updateTrainTask(@RequestBody TrainTaskAndTrainTaskConfig param) {
         return service.updateTrainTask(param);
     }
 
@@ -343,10 +345,11 @@ public class TrainTaskController {
     })
     @GetMapping("/trainTasks/status/{userId}")
     public CommonResult getUserTrainTasksWithStatus(@PathVariable(value = "userId")Integer userId,
-                                          @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
-                                          @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
-                                          @RequestParam(value = "keyWord",defaultValue = "")String keyWord,
-                                          @RequestParam(value = "status")Integer status){
+                                                    @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                                    @RequestParam(value = "pageSize",defaultValue = "6")Integer pageSize,
+                                                    @RequestParam(value = "keyWord",defaultValue = "")String keyWord,
+                                                    @RequestParam(value = "status")Integer status){
         return service.getUserTrainTasksWithStatus(userId,pageNum,pageSize,keyWord,status);
     }
 }
+
